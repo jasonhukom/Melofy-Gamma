@@ -24,8 +24,9 @@
   --radius-lg: 18px;
   --radius-full: 999px;
 
-  --sidebar-width: 232px;
+  --sidebar-width: 240px;
   --player-height: 88px;
+  --player-height-mobile: 64px;
   --topbar-height: 60px;
   --tabbar-height: 56px;
 

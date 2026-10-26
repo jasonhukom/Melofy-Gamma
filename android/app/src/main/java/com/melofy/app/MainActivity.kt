@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -30,10 +31,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
 
     companion object {
-        // Point this at your deployed backend (Vercel URL, custom domain,
-        // etc.) — Google OAuth needs a real public HTTPS URL, so unlike the
-        // earlier bundled-assets version, this can't just be a local copy.
-        private const val APP_URL = "https://your-app.vercel.app/"
+        // Point this at your deployed backend (e.g. https://your-app.vercel.app/)
+        // or local development backend (10.0.2.2 maps to host machine 127.0.0.1 in Android emulator).
+        private const val APP_URL = "http://10.0.2.2:8000/"
         private const val ANDROID_UA_SUFFIX = " MelofyAndroidApp/1.0"
     }
 
@@ -98,6 +98,99 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             return false
+        }
+
+        override fun onReceivedError(
+            view: WebView,
+            request: WebResourceRequest,
+            error: WebResourceError
+        ) {
+            super.onReceivedError(view, request, error)
+            if (request.isForMainFrame) {
+                val failingUrl = request.url.toString()
+                val html = """
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <style>
+                            body {
+                                background-color: #0b0d13;
+                                color: #f0f2f5;
+                                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                                margin: 0;
+                                padding: 24px;
+                                box-sizing: border-box;
+                                text-align: center;
+                            }
+                            .logo {
+                                font-size: 2rem;
+                                font-weight: 800;
+                                margin-bottom: 8px;
+                                background: linear-gradient(135deg, #a855f7, #6366f1);
+                                -webkit-background-clip: text;
+                                -webkit-text-fill-color: transparent;
+                            }
+                            .badge {
+                                display: inline-block;
+                                background: rgba(255,255,255,0.08);
+                                border: 1px solid rgba(255,255,255,0.15);
+                                padding: 4px 12px;
+                                border-radius: 9999px;
+                                font-size: 0.8rem;
+                                color: #a1a1aa;
+                                margin-bottom: 20px;
+                            }
+                            h2 {
+                                font-size: 1.25rem;
+                                margin: 0 0 12px;
+                                color: #ffffff;
+                            }
+                            p {
+                                font-size: 0.95rem;
+                                color: #94a3b8;
+                                line-height: 1.5;
+                                margin: 0 0 16px;
+                                max-width: 320px;
+                            }
+                            code {
+                                background: #181b24;
+                                padding: 3px 6px;
+                                border-radius: 4px;
+                                font-size: 0.85rem;
+                                color: #e2e8f0;
+                                word-break: break-all;
+                            }
+                            .btn {
+                                margin-top: 16px;
+                                background: #6366f1;
+                                color: white;
+                                border: none;
+                                border-radius: 9999px;
+                                padding: 12px 28px;
+                                font-size: 0.95rem;
+                                font-weight: 600;
+                                cursor: pointer;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="logo">Melofy</div>
+                        <div class="badge">Android Companion</div>
+                        <h2>Backend Connecting...</h2>
+                        <p>Attempted to reach: <code>$failingUrl</code></p>
+                        <p>To use Melofy, ensure your backend is deployed or running locally, and update <code>APP_URL</code> in <code>MainActivity.kt</code>.</p>
+                        <button class="btn" onclick="location.reload()">Retry Connection</button>
+                    </body>
+                    </html>
+                """.trimIndent()
+                view.loadDataWithBaseURL(null, html, "text/html", "utf-8", null)
+            }
         }
     }
 
