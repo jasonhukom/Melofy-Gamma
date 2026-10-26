@@ -47,7 +47,7 @@
                 android:orientation="horizontal"
                 android:weightSum="5">
 
-                <!-- 1. Home Tab (Simple House Icon) -->
+                <!-- 1. Home Tab -->
                 <LinearLayout
                     android:id="@+id/btn_nav_home"
                     android:layout_width="0dp"
@@ -153,7 +153,7 @@
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <!-- 5. Profile Tab -->
+                <!-- 5. Profile Tab (Anonymous PFP Icon) -->
                 <LinearLayout
                     android:id="@+id/btn_nav_profile"
                     android:layout_width="0dp"
@@ -167,7 +167,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:contentDescription="Profile"
-                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:src="@drawable/ic_anonymous_pfp"
                         app:tint="@color/text_muted" />
 
                     <TextView

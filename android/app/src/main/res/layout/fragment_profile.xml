@@ -21,19 +21,31 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Avatar -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/img_profile_avatar"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+            <!-- Anonymous / User Profile Picture Container -->
+            <FrameLayout
+                android:layout_width="92dp"
+                android:layout_height="92dp"
+                android:background="@drawable/bg_avatar_circle"
+                android:padding="3dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/img_profile_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Profile Picture"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_anonymous_pfp"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:tint="@color/yellow_primary" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/text_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="Anonymous Listener"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
@@ -44,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif"
                 android:text="Guest Mode • Offline Listening Available"
                 android:textColor="@color/text_muted"
                 android:textSize="12sp" />
@@ -54,6 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:background="#1A000000"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:padding="14dp">
 
@@ -68,6 +82,7 @@
                         android:id="@+id/text_stat_liked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:text="0"
                         android:textColor="@color/red_liked"
                         android:textSize="18sp"
@@ -76,6 +91,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
                         android:text="Liked Songs"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -92,6 +108,7 @@
                         android:id="@+id/text_stat_downloaded"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:text="0"
                         android:textColor="@color/cyan_accent"
                         android:textSize="18sp"
@@ -100,6 +117,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
                         android:text="Offline Tracks"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -115,14 +133,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
                         android:text="320k"
-                        android:textColor="@color/purple_primary"
+                        android:textColor="@color/yellow_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
                         android:text="Audio Quality"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -134,9 +154,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:backgroundTint="@color/purple_primary"
+                android:backgroundTint="@color/yellow_primary"
+                android:fontFamily="sans-serif-medium"
                 android:text="Connect YouTube / Google Account"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/bg_void"
                 android:textStyle="bold"
                 app:cornerRadius="14dp" />
 
@@ -146,6 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
+            android:fontFamily="sans-serif-medium"
             android:text="App Settings"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
@@ -170,6 +192,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="sans-serif"
                     android:text="High Quality Audio (320 kbps)"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp" />
@@ -196,6 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="sans-serif"
                     android:text="Download Over Wi-Fi Only"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp" />
