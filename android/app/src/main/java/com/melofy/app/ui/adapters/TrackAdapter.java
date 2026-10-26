@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.melofy.app.R;
 import com.melofy.app.databinding.ItemTrackRowBinding;
 import com.melofy.app.model.Track;
 
@@ -91,12 +92,12 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
 
             if (track.isDownloaded()) {
                 binding.tagOfflineItem.setVisibility(View.VISIBLE);
-                binding.btnDownload.setImageResource(android.R.drawable.stat_sys_download_done);
+                binding.btnDownload.setImageResource(R.drawable.ic_download_done_solid);
                 binding.btnDownload.setColorFilter(Color.parseColor("#FEF08A"));
             } else {
                 binding.tagOfflineItem.setVisibility(View.GONE);
-                binding.btnDownload.setImageResource(android.R.drawable.stat_sys_download);
-                binding.btnDownload.setColorFilter(Color.parseColor("#A1A096"));
+                binding.btnDownload.setImageResource(R.drawable.ic_download_solid);
+                binding.btnDownload.setColorFilter(Color.parseColor("#FFFFFF"));
             }
 
             if (isDownloading) {

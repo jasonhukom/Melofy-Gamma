@@ -127,7 +127,7 @@
                     </FrameLayout>
                 </FrameLayout>
 
-                <!-- 4. Download Tab -->
+                <!-- 4. Download Tab (Full Solid White Download Icon) -->
                 <LinearLayout
                     android:id="@+id/btn_nav_download"
                     android:layout_width="0dp"
@@ -141,7 +141,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:contentDescription="Downloads"
-                        android:src="@android:drawable/stat_sys_download"
+                        android:src="@drawable/ic_download_solid"
                         app:tint="#FFFFFF" />
 
                     <TextView

@@ -152,7 +152,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:contentDescription="Download Song"
-                    android:src="@android:drawable/stat_sys_download"
+                    android:src="@drawable/ic_download_solid"
                     app:tint="@color/text_muted" />
 
                 <ProgressBar

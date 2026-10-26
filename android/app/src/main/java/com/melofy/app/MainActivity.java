@@ -284,12 +284,12 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
 
                     if (currentTrack.isDownloaded()) {
                         dialogBinding.tagOffline.setVisibility(View.VISIBLE);
-                        dialogBinding.btnFullDownload.setImageResource(android.R.drawable.stat_sys_download_done);
+                        dialogBinding.btnFullDownload.setImageResource(R.drawable.ic_download_done_solid);
                         dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#FEF08A"));
                     } else {
                         dialogBinding.tagOffline.setVisibility(View.GONE);
-                        dialogBinding.btnFullDownload.setImageResource(android.R.drawable.stat_sys_download);
-                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#A1A096"));
+                        dialogBinding.btnFullDownload.setImageResource(R.drawable.ic_download_solid);
+                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#FFFFFF"));
                     }
 
                     boolean isDownloading = repository.getDownloadingTrackIds().contains(currentTrack.getId());
