@@ -28,11 +28,11 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <!-- Flat Dark Yellow Bottom Navigation Bar -->
+        <!-- Bottom Navigation Bar -->
         <RelativeLayout
             android:id="@+id/bottom_nav_bar"
             android:layout_width="match_parent"
-            android:layout_height="68dp"
+            android:layout_height="72dp"
             android:background="@color/nav_bg">
 
             <View
@@ -62,7 +62,7 @@
                         android:layout_height="22dp"
                         android:contentDescription="Home"
                         android:src="@drawable/ic_house"
-                        app:tint="@color/yellow_primary" />
+                        app:tint="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/text_nav_home"
@@ -71,7 +71,7 @@
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Home"
-                        android:textColor="@color/yellow_primary"
+                        android:textColor="#FFFFFF"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -97,11 +97,11 @@
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Trending"
-                        android:textColor="@color/text_muted"
+                        android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <!-- 3. Center Circular Search Tab -->
+                <!-- 3. Center Circular Search Tab (Bigger 62dp Button) -->
                 <FrameLayout
                     android:id="@+id/btn_nav_search"
                     android:layout_width="0dp"
@@ -110,14 +110,16 @@
                     android:gravity="center">
 
                     <FrameLayout
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
+                        android:id="@+id/container_search_circle"
+                        android:layout_width="62dp"
+                        android:layout_height="62dp"
                         android:layout_gravity="center"
                         android:background="@drawable/bg_circle_purple_gradient">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:id="@+id/icon_center_search"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_gravity="center"
                             android:contentDescription="Search"
                             android:src="@android:drawable/ic_menu_search"
@@ -140,7 +142,7 @@
                         android:layout_height="22dp"
                         android:contentDescription="Downloads"
                         android:src="@android:drawable/stat_sys_download"
-                        app:tint="@color/text_muted" />
+                        app:tint="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/text_nav_download"
@@ -149,11 +151,11 @@
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Downloads"
-                        android:textColor="@color/text_muted"
+                        android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
 
-                <!-- 5. Profile Tab (Anonymous PFP Icon) -->
+                <!-- 5. Profile Tab -->
                 <LinearLayout
                     android:id="@+id/btn_nav_profile"
                     android:layout_width="0dp"
@@ -168,7 +170,7 @@
                         android:layout_height="22dp"
                         android:contentDescription="Profile"
                         android:src="@drawable/ic_anonymous_pfp"
-                        app:tint="@color/text_muted" />
+                        app:tint="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/text_nav_profile"
@@ -177,7 +179,7 @@
                         android:layout_marginTop="2dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="Profile"
-                        android:textColor="@color/text_muted"
+                        android:textColor="#FFFFFF"
                         android:textSize="11sp" />
                 </LinearLayout>
             </LinearLayout>

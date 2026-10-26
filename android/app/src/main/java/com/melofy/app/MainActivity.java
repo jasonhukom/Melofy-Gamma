@@ -104,20 +104,33 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
     }
 
     private void updateNavColors(int selectedIndex) {
-        int activeColor = Color.parseColor("#FACC15");
-        int inactiveColor = Color.parseColor("#A1A096");
+        int activeColor = Color.parseColor("#FACC15");   // Yellow when open / selected
+        int inactiveColor = Color.parseColor("#FFFFFF"); // White when inactive / closed
 
+        // Home (0)
         binding.iconNavHome.setColorFilter(selectedIndex == 0 ? activeColor : inactiveColor);
         binding.textNavHome.setTextColor(selectedIndex == 0 ? activeColor : inactiveColor);
 
+        // Trending (1)
         binding.iconNavTrending.setTintColor(selectedIndex == 1 ? activeColor : inactiveColor);
         binding.textNavTrending.setTextColor(selectedIndex == 1 ? activeColor : inactiveColor);
 
+        // Downloads (3)
         binding.iconNavDownload.setColorFilter(selectedIndex == 3 ? activeColor : inactiveColor);
         binding.textNavDownload.setTextColor(selectedIndex == 3 ? activeColor : inactiveColor);
 
+        // Profile (4)
         binding.iconNavProfile.setColorFilter(selectedIndex == 4 ? activeColor : inactiveColor);
         binding.textNavProfile.setTextColor(selectedIndex == 4 ? activeColor : inactiveColor);
+
+        // Search Button (2)
+        if (selectedIndex == 2) {
+            binding.containerSearchCircle.setBackgroundResource(R.drawable.bg_circle_yellow_active);
+            binding.iconCenterSearch.setColorFilter(Color.parseColor("#0A0905"));
+        } else {
+            binding.containerSearchCircle.setBackgroundResource(R.drawable.bg_circle_purple_gradient);
+            binding.iconCenterSearch.setColorFilter(Color.parseColor("#0A0905"));
+        }
     }
 
     private void initMiniPlayer() {
