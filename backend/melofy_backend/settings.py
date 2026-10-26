@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --- Core ---------------------------------------------------------------
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-insecure-key-change-me")
-DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+DEBUG = os.environ.get("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -100,11 +100,12 @@ AUTH_PASSWORD_VALIDATORS = []  # no password-based accounts — auth is via Fire
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "frontend"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+if not DEBUG:
+    STORAGES = {
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 # --- Sessions (used to remember a logged-in Firebase user + linked YouTube account) --
 
