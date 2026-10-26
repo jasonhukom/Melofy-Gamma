@@ -28,7 +28,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
     private Track currentPlayingTrack = null;
     private Set<String> downloadingTrackIds = null;
     private boolean showRank = false;
-    private TrackActionListener listener;
+    private final TrackActionListener listener;
 
     public TrackAdapter(TrackActionListener listener) {
         this.listener = listener;
@@ -78,7 +78,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             boolean isDownloading = downloadingIds != null && downloadingIds.contains(track.getId());
 
             binding.textTitle.setText(track.getTitle());
-            binding.textTitle.setTextColor(isCurrent ? Color.parseColor("#A855F7") : Color.parseColor("#F8FAFC"));
+            binding.textTitle.setTextColor(isCurrent ? Color.parseColor("#FACC15") : Color.parseColor("#FFFFFF"));
 
             binding.textArtist.setText(track.getArtist() + " • " + track.getGenre());
 
@@ -92,11 +92,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             if (track.isDownloaded()) {
                 binding.tagOfflineItem.setVisibility(View.VISIBLE);
                 binding.btnDownload.setImageResource(android.R.drawable.stat_sys_download_done);
-                binding.btnDownload.setColorFilter(Color.parseColor("#06B6D4"));
+                binding.btnDownload.setColorFilter(Color.parseColor("#FEF08A"));
             } else {
                 binding.tagOfflineItem.setVisibility(View.GONE);
                 binding.btnDownload.setImageResource(android.R.drawable.stat_sys_download);
-                binding.btnDownload.setColorFilter(Color.parseColor("#94A3B8"));
+                binding.btnDownload.setColorFilter(Color.parseColor("#A1A096"));
             }
 
             if (isDownloading) {
@@ -112,7 +112,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
                 binding.btnLike.setColorFilter(Color.parseColor("#EF4444"));
             } else {
                 binding.btnLike.setImageResource(android.R.drawable.btn_star_big_off);
-                binding.btnLike.setColorFilter(Color.parseColor("#94A3B8"));
+                binding.btnLike.setColorFilter(Color.parseColor("#A1A096"));
             }
 
             Glide.with(binding.imgCover.getContext())

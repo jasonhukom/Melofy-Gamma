@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_bar_container" />
 
-    <!-- Bottom Container (Mini Player + Navbar) -->
+    <!-- Persistent Bottom Footer (Mini Player + Bottom Navbar) -->
     <LinearLayout
         android:id="@+id/bottom_bar_container"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <!-- Custom Bottom Navigation Bar -->
+        <!-- Flat Dark Yellow Bottom Navigation Bar -->
         <RelativeLayout
             android:id="@+id/bottom_nav_bar"
             android:layout_width="match_parent"
@@ -43,6 +43,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="5">
 
@@ -59,16 +60,18 @@
                         android:id="@+id/icon_nav_home"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
+                        android:contentDescription="Home"
                         android:src="@android:drawable/ic_menu_today"
-                        app:tint="@color/purple_primary" />
+                        app:tint="@color/yellow_primary" />
 
                     <TextView
                         android:id="@+id/text_nav_home"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Home"
-                        android:textColor="@color/purple_primary"
+                        android:textColor="@color/yellow_primary"
                         android:textSize="11sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -92,6 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Trending"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -115,8 +119,9 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="center"
+                            android:contentDescription="Search"
                             android:src="@android:drawable/ic_menu_search"
-                            app:tint="#FFFFFF" />
+                            app:tint="@color/bg_void" />
                     </FrameLayout>
                 </FrameLayout>
 
@@ -133,6 +138,7 @@
                         android:id="@+id/icon_nav_download"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
+                        android:contentDescription="Downloads"
                         android:src="@android:drawable/stat_sys_download"
                         app:tint="@color/text_muted" />
 
@@ -141,6 +147,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Downloads"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -159,6 +166,7 @@
                         android:id="@+id/icon_nav_profile"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
+                        android:contentDescription="Profile"
                         android:src="@android:drawable/ic_menu_myplaces"
                         app:tint="@color/text_muted" />
 
@@ -167,6 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="Profile"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />

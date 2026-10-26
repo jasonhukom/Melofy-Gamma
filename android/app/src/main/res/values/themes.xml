@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Melofy" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_primary</item>
-        <item name="colorSecondary">@color/indigo_secondary</item>
+        <item name="colorPrimary">@color/yellow_primary</item>
+        <item name="colorSecondary">@color/amber_secondary</item>
         <item name="android:statusBarColor">@color/bg_void</item>
         <item name="android:navigationBarColor">@color/nav_bg</item>
         <item name="android:windowBackground">@color/bg_void</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 </resources>

@@ -104,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
     }
 
     private void updateNavColors(int selectedIndex) {
-        int activeColor = Color.parseColor("#A855F7");
-        int inactiveColor = Color.parseColor("#94A3B8");
+        int activeColor = Color.parseColor("#FACC15");
+        int inactiveColor = Color.parseColor("#A1A096");
 
         binding.iconNavHome.setColorFilter(selectedIndex == 0 ? activeColor : inactiveColor);
         binding.textNavHome.setTextColor(selectedIndex == 0 ? activeColor : inactiveColor);
@@ -263,20 +263,20 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
                     dialogBinding.textFullAlbum.setText(currentTrack.getAlbum().isEmpty() ? "Melofy Player" : currentTrack.getAlbum());
 
                     dialogBinding.imgFullPlayIcon.setImageResource(isPlaying ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                    dialogBinding.btnFullShuffle.setColorFilter(isShuffle ? Color.parseColor("#A855F7") : Color.parseColor("#94A3B8"));
-                    dialogBinding.btnFullRepeat.setColorFilter(isRepeat ? Color.parseColor("#A855F7") : Color.parseColor("#94A3B8"));
+                    dialogBinding.btnFullShuffle.setColorFilter(isShuffle ? Color.parseColor("#FACC15") : Color.parseColor("#A1A096"));
+                    dialogBinding.btnFullRepeat.setColorFilter(isRepeat ? Color.parseColor("#FACC15") : Color.parseColor("#A1A096"));
 
-                    dialogBinding.btnFullLike.setColorFilter(currentTrack.isLiked() ? Color.parseColor("#EF4444") : Color.parseColor("#94A3B8"));
+                    dialogBinding.btnFullLike.setColorFilter(currentTrack.isLiked() ? Color.parseColor("#EF4444") : Color.parseColor("#A1A096"));
                     dialogBinding.btnFullLike.setImageResource(currentTrack.isLiked() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
 
                     if (currentTrack.isDownloaded()) {
                         dialogBinding.tagOffline.setVisibility(View.VISIBLE);
                         dialogBinding.btnFullDownload.setImageResource(android.R.drawable.stat_sys_download_done);
-                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#06B6D4"));
+                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#FEF08A"));
                     } else {
                         dialogBinding.tagOffline.setVisibility(View.GONE);
                         dialogBinding.btnFullDownload.setImageResource(android.R.drawable.stat_sys_download);
-                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#94A3B8"));
+                        dialogBinding.btnFullDownload.setColorFilter(Color.parseColor("#A1A096"));
                     }
 
                     boolean isDownloading = repository.getDownloadingTrackIds().contains(currentTrack.getId());
