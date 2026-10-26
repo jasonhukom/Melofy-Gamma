@@ -47,7 +47,7 @@
                 android:orientation="horizontal"
                 android:weightSum="5">
 
-                <!-- 1. Home Tab -->
+                <!-- 1. Home Tab (Simple House Icon) -->
                 <LinearLayout
                     android:id="@+id/btn_nav_home"
                     android:layout_width="0dp"
@@ -61,7 +61,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:contentDescription="Home"
-                        android:src="@android:drawable/ic_menu_today"
+                        android:src="@drawable/ic_house"
                         app:tint="@color/yellow_primary" />
 
                     <TextView
