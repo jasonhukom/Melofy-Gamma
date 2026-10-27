@@ -1,7 +1,7 @@
-/* playerbar.js — builds the persistent now-playing bar and wires it to
-   player.js. The small square on the left is the actual YouTube player,
-   styled to sit like album art. Volume now lives in the floating sound
-   mixer (soundMixer.js), not in this bar. */
+/* playerbar.js — builds the persistent YouTube Music-style bottom player bar
+   and wires it to player.js. Includes top-edge full-width red progress bar,
+   left transport controls + time counter, center track art/info/like, and
+   right repeat/shuffle controls. */
 const PlayerBar = (() => {
   let progressTimer = null;
 
@@ -10,7 +10,39 @@ const PlayerBar = (() => {
     root.innerHTML = '';
     const bar = UI.el('div', { class: 'player-bar' });
 
-    const left = UI.el('div', { class: 'pb-left' });
+    // Top-edge full-width YouTube Music progress bar
+    const progressRow = UI.el('div', { class: 'pb-progress-row' });
+    const progressInput = UI.el('input', {
+      class: 'pb-progress',
+      attrs: { id: 'pb-progress', type: 'range', min: '0', max: '100', value: '0', 'aria-label': 'Seek' }
+    });
+    progressRow.appendChild(progressInput);
+
+    const mk = (id, label, icon) => {
+      const b = UI.el('button', { class: 'icon-btn', attrs: { id, 'aria-label': label } });
+      b.innerHTML = icon;
+      return b;
+    };
+
+    // Left: Transport controls + Time counter (YouTube Music layout)
+    const controlsWrap = UI.el('div', { class: 'pb-transport' });
+    const controls = UI.el('div', { class: 'pb-controls' });
+    const prevBtn = mk('pb-prev', 'Previous', UI.icons.prev);
+    const playBtn = UI.el('button', { class: 'icon-btn pb-play', attrs: { id: 'pb-play', 'aria-label': 'Play' } });
+    playBtn.innerHTML = UI.icons.play;
+    const nextBtn = mk('pb-next', 'Next', UI.icons.next);
+    controls.append(prevBtn, playBtn, nextBtn);
+
+    const timeWrap = UI.el('div', { class: 'pb-time-wrap' });
+    timeWrap.append(
+      UI.el('span', { class: 'pb-time', text: '0:00', attrs: { id: 'pb-current-time' } }),
+      UI.el('span', { class: 'pb-time-sep', text: ' / ' }),
+      UI.el('span', { class: 'pb-time', text: '0:00', attrs: { id: 'pb-duration' } })
+    );
+    controlsWrap.append(controls, timeWrap);
+
+    // Center: Album/Video Art + Track Info + Like/Add buttons
+    const center = UI.el('div', { class: 'pb-left pb-track-center' });
     const artWrap = UI.el('div', { class: 'pb-art', attrs: { id: 'pb-art' } });
     const mount = UI.el('div', { attrs: { id: 'yt-player-mount' } });
     const eqBadge = UI.el('div', { class: 'pb-eq-badge' });
@@ -20,37 +52,28 @@ const PlayerBar = (() => {
     const info = UI.el('div', { class: 'pb-info' });
     info.append(
       UI.el('div', { class: 'pb-title', text: 'Not playing', attrs: { id: 'pb-title' } }),
-      UI.el('div', { class: 'pb-artist', text: 'Search to start listening', attrs: { id: 'pb-artist' } })
+      UI.el('div', { class: 'pb-artist', text: 'Select a song or search to start listening', attrs: { id: 'pb-artist' } })
     );
     const likeBtn = UI.el('button', { class: 'icon-btn pb-like', attrs: { id: 'pb-like', 'aria-label': 'Like' } });
     likeBtn.innerHTML = UI.icons.heart;
-    left.append(artWrap, info, likeBtn);
+    center.append(artWrap, info, likeBtn);
 
-    const center = UI.el('div', { class: 'pb-center' });
-    const controls = UI.el('div', { class: 'pb-controls' });
-    const mk = (id, label, icon) => {
-      const b = UI.el('button', { class: 'icon-btn', attrs: { id, 'aria-label': label } });
-      b.innerHTML = icon; return b;
-    };
+    // Right: Shuffle + Repeat controls
+    const right = UI.el('div', { class: 'pb-right' });
     const shuffleBtn = mk('pb-shuffle', 'Shuffle', UI.icons.shuffle);
-    const prevBtn = mk('pb-prev', 'Previous', UI.icons.prev);
-    const playBtn = UI.el('button', { class: 'icon-btn pb-play', attrs: { id: 'pb-play', 'aria-label': 'Play' } });
-    playBtn.innerHTML = UI.icons.play;
-    const nextBtn = mk('pb-next', 'Next', UI.icons.next);
     const repeatBtn = mk('pb-repeat', 'Repeat', UI.icons.repeat);
-    controls.append(shuffleBtn, prevBtn, playBtn, nextBtn, repeatBtn);
+    right.append(repeatBtn, shuffleBtn);
 
-    const progressRow = UI.el('div', { class: 'pb-progress-row' });
-    progressRow.append(
-      UI.el('span', { class: 'pb-time', text: '0:00', attrs: { id: 'pb-current-time' } }),
-      UI.el('input', { class: 'pb-progress', attrs: { id: 'pb-progress', type: 'range', min: '0', max: '100', value: '0' } }),
-      UI.el('span', { class: 'pb-time', text: '0:00', attrs: { id: 'pb-duration' } })
-    );
-    center.append(controls, progressRow);
-
-    bar.append(left, center);
+    bar.append(progressRow, controlsWrap, center, right);
     root.appendChild(bar);
     wireEvents();
+  }
+
+  function updateProgressStyle(pct) {
+    const progressEl = document.getElementById('pb-progress');
+    if (!progressEl) return;
+    const clamped = Math.max(0, Math.min(100, Number(pct) || 0));
+    progressEl.style.setProperty('--progress-pct', `${clamped}%`);
   }
 
   function wireEvents() {
@@ -65,8 +88,13 @@ const PlayerBar = (() => {
       const mode = Player.cycleRepeat();
       e.currentTarget.classList.toggle('active', mode !== 'off');
     });
-    document.getElementById('pb-progress').addEventListener('change', (e) => {
+    const progressEl = document.getElementById('pb-progress');
+    progressEl.addEventListener('input', (e) => {
+      updateProgressStyle(e.target.value);
+    });
+    progressEl.addEventListener('change', (e) => {
       const state = Player.getState();
+      updateProgressStyle(e.target.value);
       Player.seekTo((Number(e.target.value) / 100) * (state.duration || 0));
     });
     document.getElementById('pb-like').addEventListener('click', () => {
@@ -111,7 +139,10 @@ const PlayerBar = (() => {
       if (!state.duration) return;
       const pct = (state.position / state.duration) * 100;
       const progressEl = document.getElementById('pb-progress');
-      if (progressEl && document.activeElement !== progressEl) progressEl.value = String(pct);
+      if (progressEl && document.activeElement !== progressEl) {
+        progressEl.value = String(pct);
+        updateProgressStyle(pct);
+      }
       document.getElementById('pb-current-time').textContent = UI.formatTime(state.position);
       document.getElementById('pb-duration').textContent = UI.formatTime(state.duration);
     }, 500);

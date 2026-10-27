@@ -1,13 +1,11 @@
-/* ui.js — shared DOM helpers, icon set, and reusable components (song rows,
-   modals, toasts). All remote data (titles, artist names) is inserted with
-   textContent, never innerHTML, to avoid injecting markup. No emoji are used
-   anywhere in the UI — every icon below is a small inline SVG. */
+/* ui.js — shared DOM helpers, icon set, and reusable YouTube Music components
+   (song rows with play overlay, shelf media cards, modals, toasts). */
 const UI = (() => {
   function el(tag, opts = {}) {
     const node = document.createElement(tag);
     if (opts.class) node.className = opts.class;
     if (opts.text !== undefined) node.textContent = opts.text;
-    if (opts.html !== undefined) node.innerHTML = opts.html; // only ever used with the static icon strings below
+    if (opts.html !== undefined) node.innerHTML = opts.html;
     if (opts.attrs) Object.entries(opts.attrs).forEach(([k, v]) => node.setAttribute(k, v));
     if (opts.children) opts.children.forEach(c => node.appendChild(c));
     return node;
@@ -15,16 +13,16 @@ const UI = (() => {
 
   const icons = {
     play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
-    pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
-    next: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l10 7-10 7V5zm12 0h2v14h-2z"/></svg>',
-    prev: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 5l-10 7 10 7V5zM6 5H4v14h2z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>',
+    next: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>',
+    prev: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>',
     heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.65-9.5 9-9.5 9z"/></svg>',
     heartFilled: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.65-9.5 9-9.5 9z"/></svg>',
     shuffle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h3l11 12h4M14 6h5v5M3 18h3l4-5"/></svg>',
     repeat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 2l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
-    volumeHigh: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>',
-    volumeMute: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 9l4 6M20 9l-4 6"/></svg>',
+    volumeHigh: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>',
+    volumeMute: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
     trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
@@ -73,11 +71,15 @@ const UI = (() => {
 
   function songRow(song, opts = {}) {
     const row = el('div', { class: 'song-row', attrs: { 'data-id': song.id } });
+    const thumbWrap = el('div', { class: 'song-thumb-wrap' });
     const thumb = el('img', { class: 'song-thumb', attrs: { src: song.thumbnail || '', alt: '', loading: 'lazy' } });
+    const overlay = el('div', { class: 'song-thumb-overlay', html: icons.play });
+    thumbWrap.append(thumb, overlay);
+
     const info = el('div', { class: 'song-info' });
     info.append(
       el('div', { class: 'song-title', text: song.title }),
-      el('div', { class: 'song-artist', text: song.artist })
+      el('div', { class: 'song-artist', text: `${song.artist} • Song` })
     );
 
     const actions = el('div', { class: 'song-actions' });
@@ -104,14 +106,29 @@ const UI = (() => {
       actions.append(removeBtn);
     }
 
-    row.append(thumb, info, actions);
+    row.append(thumbWrap, info, actions);
     row.addEventListener('click', () => Player.playNow(song, opts.context || null));
     return row;
   }
 
+  function mediaCard(song, opts = {}) {
+    const card = el('div', { class: 'ytm-media-card', attrs: { 'data-id': song.id } });
+    const artWrap = el('div', { class: 'ytm-media-art-wrap' });
+    const img = el('img', { class: 'ytm-media-art', attrs: { src: song.thumbnail || '', alt: '', loading: 'lazy' } });
+    const playBtn = el('button', { class: 'ytm-media-play-btn', attrs: { type: 'button', 'aria-label': 'Play' }, html: icons.play });
+    artWrap.append(img, playBtn);
+
+    const title = el('div', { class: 'ytm-media-title', text: song.title });
+    const subtitle = el('div', { class: 'ytm-media-subtitle', text: song.artist });
+
+    card.append(artWrap, title, subtitle);
+    card.addEventListener('click', () => Player.playNow(song, opts.context || null));
+    return card;
+  }
+
   function openAddToPlaylist(song) {
     const wrap = el('div', {});
-    wrap.appendChild(el('h3', { text: 'Add to playlist' }));
+    wrap.appendChild(el('h3', { text: 'Save to playlist' }));
     const list = el('div', { class: 'playlist-check-list' });
     const playlists = Storage.getPlaylists();
     if (!playlists.length) {
@@ -138,7 +155,7 @@ const UI = (() => {
       if (!name) return;
       const pl = Storage.createPlaylist(name);
       Storage.addToPlaylist(pl.id, song);
-      toast(`Added to ${name}`);
+      toast(`Saved to ${name}`);
       closeModal();
     });
     newRow.append(input, createBtn);
@@ -151,5 +168,5 @@ const UI = (() => {
     openModal(wrap);
   }
 
-  return { el, icons, formatTime, debounce, toast, openModal, closeModal, songRow, openAddToPlaylist };
+  return { el, icons, formatTime, debounce, toast, openModal, closeModal, songRow, mediaCard, openAddToPlaylist };
 })();

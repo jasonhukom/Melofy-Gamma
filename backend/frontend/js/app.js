@@ -1,24 +1,30 @@
-/* app.js — boots the whole app: player + player bar, sidebar drawer, sound
-   mixer, the router and its routes, and the account section. This is the
-   only file that runs on DOMContentLoaded; everything else is called from
-   here so there's one clear startup order. */
+/* app.js — boots the whole app: player + player bar, sidebar navigation rail,
+   topbar search box, sound mixer, the router and its routes, and the account
+   section. */
 
 function renderSidebarPlaylists() {
   const container = document.getElementById('sidebar-playlists');
   if (!container) return;
   container.innerHTML = '';
   Storage.getPlaylists().forEach(pl => {
-    container.appendChild(UI.el('a', {
-      class: 'sidebar-playlist-link', text: pl.name,
+    const link = UI.el('a', {
+      class: 'sidebar-playlist-link',
       attrs: { href: `#/playlist?id=${pl.id}` }
-    }));
+    });
+    const meta = UI.el('div', { class: 'sidebar-playlist-meta' });
+    meta.append(
+      UI.el('span', { class: 'sidebar-playlist-title', text: pl.name }),
+      UI.el('span', { class: 'sidebar-playlist-sub', text: `${pl.songs.length} song${pl.songs.length === 1 ? '' : 's'}` })
+    );
+    link.appendChild(meta);
+    container.appendChild(link);
   });
 }
 
 function openCreatePlaylistModal() {
   const wrap = UI.el('div', {});
   wrap.appendChild(UI.el('h3', { text: 'New playlist' }));
-  const input = UI.el('input', { attrs: { type: 'text', placeholder: 'Playlist name' } });
+  const input = UI.el('input', { attrs: { type: 'text', placeholder: 'Title' } });
   const createBtn = UI.el('button', { class: 'btn-primary', text: 'Create' });
   createBtn.addEventListener('click', () => {
     const name = input.value.trim() || 'My Playlist';
@@ -35,8 +41,28 @@ window.openCreatePlaylistModal = openCreatePlaylistModal;
 
 function renderAccountSection() {
   const container = document.getElementById('sidebar-account');
+  const topbarAccount = document.getElementById('topbar-account');
+  const user = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
+
+  if (topbarAccount) {
+    topbarAccount.innerHTML = '';
+    if (!user) {
+      const signInPill = UI.el('button', { class: 'ytm-signin-pill', text: 'Sign in' });
+      signInPill.addEventListener('click', () => window.FirebaseAuth && window.FirebaseAuth.signIn());
+      topbarAccount.appendChild(signInPill);
+    } else {
+      const initial = (user.displayName || user.email || 'U').trim().charAt(0).toUpperCase();
+      const avatarBtn = UI.el('button', {
+        class: 'ytm-avatar-btn',
+        text: initial,
+        attrs: { title: user.displayName || user.email || 'Account', 'aria-label': 'Account' }
+      });
+      avatarBtn.addEventListener('click', () => Router.navigate('/library'));
+      topbarAccount.appendChild(avatarBtn);
+    }
+  }
+
   if (!container || !window.FirebaseAuth) return;
-  const user = window.FirebaseAuth.getUser();
   container.innerHTML = '';
 
   if (!user) {
@@ -66,15 +92,53 @@ function renderAccountSection() {
   container.appendChild(signOutBtn);
 }
 
+function wireTopbarSearch() {
+  const input = document.getElementById('topbar-search-input');
+  const clearBtn = document.getElementById('topbar-search-clear');
+  if (!input || !clearBtn) return;
+
+  const syncClear = () => {
+    clearBtn.hidden = !input.value.trim();
+  };
+
+  const triggerSearch = UI.debounce((q) => {
+    if (q.length >= 2) {
+      Router.navigate(`/search?q=${encodeURIComponent(q)}`);
+    }
+  }, 450);
+
+  input.addEventListener('input', () => {
+    syncClear();
+    const q = input.value.trim();
+    if (q.length >= 2) triggerSearch(q);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = input.value.trim();
+      if (q) Router.navigate(`/search?q=${encodeURIComponent(q)}`);
+      else Router.navigate('/search');
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    syncClear();
+    input.focus();
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   PlayerBar.render();
   Player.init('yt-player-mount');
   Sidebar.render();
   SoundMixer.render();
   renderSidebarPlaylists();
+  wireTopbarSearch();
+  renderAccountSection();
 
   Router.register('/', (c) => HomeView.render(c));
-  Router.register('/trending', (c) => HomeView.render(c));
+  Router.register('/trending', (c) => HomeView.render(c, { mode: 'explore' }));
   Router.register('/search', (c, p) => SearchView.render(c, p));
   Router.register('/library', (c) => LibraryView.render(c));
   Router.register('/profile', (c) => LibraryView.render(c));
