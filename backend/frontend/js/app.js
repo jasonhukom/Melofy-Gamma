@@ -1,95 +1,48 @@
-/* app.js — boots the whole app: player + player bar, sidebar drawer, sound
-   mixer, the router and its routes, and the account section. This is the
-   only file that runs on DOMContentLoaded; everything else is called from
-   here so there's one clear startup order. */
+/* app.js — boots the Melofy Gamma SPA with the 5-tab Android footer navigation */
 
-function renderSidebarPlaylists() {
-  const container = document.getElementById('sidebar-playlists');
-  if (!container) return;
-  container.innerHTML = '';
-  Storage.getPlaylists().forEach(pl => {
-    container.appendChild(UI.el('a', {
-      class: 'sidebar-playlist-link', text: pl.name,
-      attrs: { href: `#/playlist?id=${pl.id}` }
-    }));
-  });
-}
+function updateFooterProfileAvatar() {
+  const svgIcon = document.getElementById('icon-nav-profile-svg');
+  const imgIcon = document.getElementById('icon-nav-profile-img');
+  if (!svgIcon || !imgIcon) return;
 
-function openCreatePlaylistModal() {
-  const wrap = UI.el('div', {});
-  wrap.appendChild(UI.el('h3', { text: 'New playlist' }));
-  const input = UI.el('input', { attrs: { type: 'text', placeholder: 'Playlist name' } });
-  const createBtn = UI.el('button', { class: 'btn-primary', text: 'Create' });
-  createBtn.addEventListener('click', () => {
-    const name = input.value.trim() || 'My Playlist';
-    const pl = Storage.createPlaylist(name);
-    UI.closeModal();
-    renderSidebarPlaylists();
-    Router.navigate(`/playlist?id=${pl.id}`);
-  });
-  wrap.append(input, createBtn);
-  UI.openModal(wrap);
-  setTimeout(() => input.focus(), 50);
-}
-window.openCreatePlaylistModal = openCreatePlaylistModal;
+  const fbUser = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
+  const guestAuth = window.__melofyGuestSignedIn || false;
+  const isSignedIn = !!fbUser || guestAuth;
 
-function renderAccountSection() {
-  const container = document.getElementById('sidebar-account');
-  if (!container || !window.FirebaseAuth) return;
-  const user = window.FirebaseAuth.getUser();
-  container.innerHTML = '';
-
-  if (!user) {
-    const signInBtn = UI.el('button', { class: 'btn-secondary', text: 'Sign in with Google' });
-    signInBtn.style.width = '100%';
-    signInBtn.addEventListener('click', () => window.FirebaseAuth.signIn());
-    container.appendChild(signInBtn);
-    return;
-  }
-
-  container.appendChild(UI.el('div', { class: 'sidebar-account-name', text: user.displayName || user.email || 'Signed in' }));
-
-  if (user.youtubeConnected) {
-    const badge = UI.el('div', { class: 'status-badge connected' });
-    badge.append(UI.el('span', { class: 'dot' }), document.createTextNode('YouTube connected'));
-    container.appendChild(badge);
+  if (isSignedIn) {
+    const photoUrl = (fbUser && fbUser.photoURL) || 'https://picsum.photos/id/64/200/200';
+    imgIcon.src = photoUrl;
+    imgIcon.style.display = 'block';
+    svgIcon.style.display = 'none';
   } else {
-    const connectBtn = UI.el('button', { class: 'btn-secondary', text: 'Connect YouTube' });
-    connectBtn.style.width = '100%';
-    connectBtn.addEventListener('click', () => window.FirebaseAuth.connectYouTube());
-    container.appendChild(connectBtn);
+    imgIcon.style.display = 'none';
+    svgIcon.style.display = 'block';
   }
-
-  const signOutBtn = UI.el('button', { class: 'sidebar-account-sub', text: 'Sign out' });
-  signOutBtn.style.textAlign = 'left';
-  signOutBtn.addEventListener('click', () => window.FirebaseAuth.signOutEverywhere());
-  container.appendChild(signOutBtn);
 }
+window.updateFooterProfileAvatar = updateFooterProfileAvatar;
 
 document.addEventListener('DOMContentLoaded', async () => {
   PlayerBar.render();
   Player.init('yt-player-mount');
   Sidebar.render();
   SoundMixer.render();
-  renderSidebarPlaylists();
 
   Router.register('/', (c) => HomeView.render(c));
+  Router.register('/trending', (c) => TrendingView.render(c));
   Router.register('/search', (c, p) => SearchView.render(c, p));
-  Router.register('/library', (c) => LibraryView.render(c));
+  Router.register('/downloads', (c) => DownloadsView.render(c));
+  Router.register('/library', (c) => DownloadsView.render(c));
+  Router.register('/profile', (c) => ProfileView.render(c));
   Router.register('/liked', (c) => LikedView.render(c));
   Router.register('/playlist', (c, p) => PlaylistView.render(c, p));
   Router.start(document.getElementById('main-content'));
 
   if (window.FirebaseAuth) {
     window.FirebaseAuth.onChange(() => {
-      renderAccountSection();
-      if (location.hash.startsWith('#/library')) Router.navigate('/library');
+      updateFooterProfileAvatar();
+      if (location.hash.startsWith('#/profile')) Router.refresh();
     });
     await window.FirebaseAuth.init();
-    renderAccountSection();
-
-    const hashQuery = new URLSearchParams((location.hash.split('?')[1]) || '');
-    if (hashQuery.get('youtube') === 'connected') UI.toast('YouTube account connected');
-    if (hashQuery.get('youtube') === 'error') UI.toast('Could not connect YouTube — try again');
+    updateFooterProfileAvatar();
   }
 });

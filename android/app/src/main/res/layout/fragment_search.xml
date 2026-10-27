@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Search &amp; Explore"
+            android:fontFamily="@font/space_grotesk" android:text="Search &amp; Explore"
             android:textColor="@color/text_primary"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -40,7 +40,7 @@
         android:background="@drawable/bg_card_surface"
         android:drawableStart="@android:drawable/ic_menu_search"
         android:drawablePadding="12dp"
-        android:hint="Search songs, artists, genres..."
+        android:fontFamily="@font/manrope" android:hint="Search songs, artists, genres..."
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingHorizontal="16dp"
@@ -54,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:text="Browse Categories"
+        android:fontFamily="@font/space_grotesk" android:text="Browse Categories"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold" />

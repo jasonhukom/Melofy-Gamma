@@ -6,6 +6,7 @@
         <item name="android:statusBarColor">@color/bg_void</item>
         <item name="android:navigationBarColor">@color/nav_bg</item>
         <item name="android:windowBackground">@color/bg_void</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="fontFamily">@font/manrope</item>
     </style>
 </resources>

@@ -1,132 +1,238 @@
-const LibraryView = {
+/* library.js — TrendingView (fragment_trending.xml), DownloadsView (fragment_download.xml),
+   and ProfileView (fragment_profile.xml) matching the Android app. */
+
+const TrendingView = {
   render(container) {
-    container.appendChild(UI.el('h1', { class: 'page-heading', text: 'Your Library' }));
+    const topHeader = UI.el('div', { class: 'android-top-header' });
+    const headerLeft = UI.el('div', { class: 'android-header-left' });
+    headerLeft.append(
+      UI.el('div', { class: 'android-header-icon', html: UI.icons.trending }),
+      UI.el('div', {
+        class: 'android-header-titles',
+        children: [
+          UI.el('div', { class: 'android-header-title', text: 'Trending Charts' }),
+          UI.el('div', { class: 'android-header-subtitle', text: 'Top played tracks this week' })
+        ]
+      })
+    );
+    topHeader.appendChild(headerLeft);
 
-    const grid = UI.el('div', { class: 'library-grid' });
-    container.appendChild(grid);
-    renderLocalGrid(grid);
+    const list = UI.el('div', { class: 'song-list' });
+    const sorted = Storage.getSampleTracks().slice().sort((a, b) => (a.rank || 99) - (b.rank || 99));
+    sorted.forEach((track, idx) => {
+      list.appendChild(UI.songRow(track, {
+        context: sorted,
+        showRank: true,
+        rankNumber: idx + 1
+      }));
+    });
 
-    const user = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
-    if (user && user.youtubeConnected) {
-      renderYouTubeSections(container);
-    } else if (user) {
-      const prompt = UI.el('p', { class: 'empty-state' });
-      prompt.appendChild(document.createTextNode('Connect your YouTube account to see your liked videos, subscriptions and playlists here. '));
-      const btn = UI.el('button', { class: 'link-btn', text: 'Connect YouTube' });
-      btn.addEventListener('click', () => window.FirebaseAuth.connectYouTube());
-      prompt.appendChild(btn);
-      container.appendChild(prompt);
-    }
+    container.append(topHeader, list);
   }
 };
 
-function pluralSongs(n) { return `${n} song${n === 1 ? '' : 's'}`; }
+const DownloadsView = {
+  render(container) {
+    // Header
+    const topHeader = UI.el('div', { class: 'android-top-header' });
+    const headerLeft = UI.el('div', { class: 'android-header-left' });
+    headerLeft.append(
+      UI.el('div', { class: 'android-header-icon', html: UI.icons.downloadDoneSolid }),
+      UI.el('div', {
+        class: 'android-header-titles',
+        children: [
+          UI.el('div', { class: 'android-header-title', text: 'Offline Music Library' }),
+          UI.el('div', { class: 'android-header-subtitle', text: 'Playable anytime without internet connection' })
+        ]
+      })
+    );
+    topHeader.appendChild(headerLeft);
 
-function renderLocalGrid(grid) {
-  grid.appendChild(buildCreateCard());
+    // Storage Card
+    const storageCard = UI.el('div', { class: 'storage-card' });
+    const topRow = UI.el('div', { class: 'storage-top-row' });
+    const activeBadge = UI.el('div', { class: 'storage-active-badge', text: '• OFFLINE STORAGE ACTIVE' });
+    const countText = UI.el('div', { class: 'storage-count-text', attrs: { id: 'text-download-count' } });
+    topRow.append(activeBadge, countText);
 
-  const liked = Storage.getLiked();
-  const likedCard = buildCard('Liked Songs', pluralSongs(liked.length), '/liked');
-  likedCard.classList.add('liked-card');
-  const likedIcon = likedCard.querySelector('.library-card-icon');
-  likedIcon.innerHTML = UI.icons.heartFilled;
-  grid.appendChild(likedCard);
+    const btnRow = UI.el('div', { class: 'storage-btn-row' });
+    const playAllBtn = UI.el('button', { class: 'btn-android-primary', text: 'Play All' });
+    const shuffleBtn = UI.el('button', { class: 'btn-android-outlined', text: 'Shuffle' });
+    btnRow.append(playAllBtn, shuffleBtn);
+    storageCard.append(topRow, btnRow);
 
-  Storage.getPlaylists().forEach(pl => {
-    grid.appendChild(buildCard(pl.name, pluralSongs(pl.songs.length), `/playlist?id=${pl.id}`));
-  });
-}
+    const sectionTitle = UI.el('h2', {
+      class: 'section-heading',
+      text: 'Downloaded Tracks',
+      attrs: { style: 'font-size:18px;' }
+    });
+    const list = UI.el('div', { class: 'song-list' });
 
-function buildCard(title, subtitle, route) {
-  const card = UI.el('a', { class: 'library-card', attrs: { href: `#${route}` } });
-  card.append(
-    UI.el('div', { class: 'library-card-icon' }),
-    UI.el('div', { class: 'library-card-title', text: title }),
-    UI.el('div', { class: 'library-card-subtitle', text: subtitle })
-  );
-  return card;
-}
-
-function buildCreateCard() {
-  const card = UI.el('button', { class: 'library-card-create' });
-  card.append(
-    UI.el('div', { class: 'library-card-icon create-icon', text: '+' }),
-    UI.el('div', { class: 'library-card-title', text: 'New Playlist' }),
-    UI.el('div', { class: 'library-card-subtitle', text: 'Create a playlist' })
-  );
-  card.addEventListener('click', () => window.openCreatePlaylistModal());
-  return card;
-}
-
-function renderYouTubeSections(container) {
-  const likedSection = UI.el('section', {});
-  likedSection.appendChild(UI.el('h2', { class: 'section-heading', text: 'Liked on YouTube' }));
-  const likedList = UI.el('div', { class: 'song-list' });
-  likedList.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading…' }));
-  likedSection.appendChild(likedList);
-
-  const subsSection = UI.el('section', {});
-  subsSection.appendChild(UI.el('h2', { class: 'section-heading', text: 'Your subscriptions' }));
-  const subsList = UI.el('div', {});
-  subsList.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading…' }));
-  subsSection.appendChild(subsList);
-
-  const playlistsSection = UI.el('section', {});
-  playlistsSection.appendChild(UI.el('h2', { class: 'section-heading', text: 'Your YouTube playlists' }));
-  const playlistsGrid = UI.el('div', { class: 'library-grid' });
-  playlistsGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading…' }));
-  playlistsSection.appendChild(playlistsGrid);
-
-  container.append(likedSection, subsSection, playlistsSection);
-
-  fetch('/api/youtube/liked', { credentials: 'same-origin' })
-    .then(r => r.json())
-    .then(data => {
-      likedList.innerHTML = '';
-      if (!data.results || !data.results.length) {
-        likedList.appendChild(UI.el('p', { class: 'empty-state', text: 'No liked videos found on your YouTube account.' }));
+    function drawList() {
+      const downloaded = Storage.getDownloaded();
+      countText.textContent = `${downloaded.length} Tracks Saved`;
+      list.innerHTML = '';
+      if (!downloaded.length) {
+        list.appendChild(UI.el('p', {
+          class: 'empty-state',
+          text: 'No offline tracks saved yet. Tap the download icon on any track to save it for offline listening.'
+        }));
         return;
       }
-      data.results.forEach(song => likedList.appendChild(UI.songRow(song, { context: data.results })));
-    })
-    .catch(() => { likedList.innerHTML = ''; likedList.appendChild(UI.el('p', { class: 'empty-state', text: 'Could not load liked videos.' })); });
-
-  fetch('/api/youtube/subscriptions', { credentials: 'same-origin' })
-    .then(r => r.json())
-    .then(data => {
-      subsList.innerHTML = '';
-      if (!data.results || !data.results.length) {
-        subsList.appendChild(UI.el('p', { class: 'empty-state', text: 'No subscriptions found.' }));
-        return;
-      }
-      data.results.forEach(ch => {
-        const row = UI.el('div', { class: 'channel-row' });
-        row.append(
-          UI.el('img', { class: 'channel-thumb', attrs: { src: ch.thumbnail || '', alt: '', loading: 'lazy' } }),
-          UI.el('div', { class: 'channel-title', text: ch.title })
-        );
-        subsList.appendChild(row);
+      downloaded.forEach(track => {
+        list.appendChild(UI.songRow(track, {
+          context: downloaded,
+          onDownloadClick: (s) => {
+            Storage.removeDownload(s.id);
+            UI.toast('Removed from Offline Library');
+            drawList();
+          }
+        }));
       });
-    })
-    .catch(() => { subsList.innerHTML = ''; subsList.appendChild(UI.el('p', { class: 'empty-state', text: 'Could not load subscriptions.' })); });
+    }
 
-  fetch('/api/youtube/playlists', { credentials: 'same-origin' })
-    .then(r => r.json())
-    .then(data => {
-      playlistsGrid.innerHTML = '';
-      if (!data.results || !data.results.length) {
-        playlistsGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'No YouTube playlists found.' }));
-        return;
+    playAllBtn.addEventListener('click', () => {
+      const downloaded = Storage.getDownloaded();
+      if (downloaded.length) Player.playQueue(downloaded, 0);
+    });
+
+    shuffleBtn.addEventListener('click', () => {
+      const downloaded = Storage.getDownloaded().slice();
+      if (downloaded.length) {
+        for (let i = downloaded.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [downloaded[i], downloaded[j]] = [downloaded[j], downloaded[i]];
+        }
+        Player.playQueue(downloaded, 0);
       }
-      data.results.forEach(pl => {
-        const card = UI.el('div', { class: 'library-card' });
-        card.append(
-          UI.el('img', { class: 'library-card-icon', attrs: { src: pl.thumbnail || '', alt: '', loading: 'lazy' } }),
-          UI.el('div', { class: 'library-card-title', text: pl.title }),
-          UI.el('div', { class: 'library-card-subtitle', text: `${pl.itemCount} video${pl.itemCount === 1 ? '' : 's'}` })
-        );
-        playlistsGrid.appendChild(card);
-      });
-    })
-    .catch(() => { playlistsGrid.innerHTML = ''; playlistsGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Could not load playlists.' })); });
-}
+    });
+
+    drawList();
+    container.append(topHeader, storageCard, sectionTitle, list);
+  }
+};
+
+const ProfileView = {
+  render(container) {
+    const profileCard = UI.el('div', { class: 'profile-card' });
+
+    const avatarCircle = UI.el('div', { class: 'profile-avatar-circle', attrs: { id: 'profile-avatar-wrap' } });
+    const userNameEl = UI.el('div', { class: 'profile-user-name', text: 'Anonymous Listener' });
+    const userStatusEl = UI.el('div', { class: 'profile-user-status', text: 'Guest Mode • Offline Listening Available' });
+
+    // Stats Row (3 columns matching fragment_profile.xml)
+    const statsRow = UI.el('div', { class: 'profile-stats-row' });
+    const likedCount = Storage.getLiked().length;
+    const downloadedCount = Storage.getDownloaded().length;
+
+    const colLiked = UI.el('div', {
+      class: 'profile-stat-col',
+      children: [
+        UI.el('div', { class: 'profile-stat-val stat-liked', text: String(likedCount) }),
+        UI.el('div', { class: 'profile-stat-label', text: 'Liked Songs' })
+      ]
+    });
+    const colOffline = UI.el('div', {
+      class: 'profile-stat-col',
+      children: [
+        UI.el('div', { class: 'profile-stat-val stat-offline', text: String(downloadedCount) }),
+        UI.el('div', { class: 'profile-stat-label', text: 'Offline Tracks' })
+      ]
+    });
+    const colQuality = UI.el('div', {
+      class: 'profile-stat-col',
+      children: [
+        UI.el('div', { class: 'profile-stat-val stat-quality', text: '320k' }),
+        UI.el('div', { class: 'profile-stat-label', text: 'Audio Quality' })
+      ]
+    });
+    statsRow.append(colLiked, colOffline, colQuality);
+
+    const authBtn = UI.el('button', {
+      class: 'btn-profile-auth',
+      text: 'Connect YouTube / Google Account'
+    });
+
+    function syncAuthUi() {
+      const fbUser = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
+      const guestAuth = window.__melofyGuestSignedIn || false;
+      const isSignedIn = !!fbUser || guestAuth;
+
+      avatarCircle.innerHTML = '';
+      if (isSignedIn) {
+        const displayName = (fbUser && (fbUser.displayName || fbUser.email)) || 'Alex Melofy';
+        const photoUrl = (fbUser && fbUser.photoURL) || 'https://picsum.photos/id/64/200/200';
+        userNameEl.textContent = displayName;
+        userStatusEl.textContent = 'YouTube Connected Account';
+        authBtn.textContent = 'Sign Out';
+        authBtn.classList.add('signed-in');
+        avatarCircle.appendChild(UI.el('img', { attrs: { src: photoUrl, alt: displayName } }));
+      } else {
+        userNameEl.textContent = 'Anonymous Listener';
+        userStatusEl.textContent = 'Guest Mode • Offline Listening Available';
+        authBtn.textContent = 'Connect YouTube / Google Account';
+        authBtn.classList.remove('signed-in');
+        avatarCircle.innerHTML = UI.icons.anonymousPfp;
+      }
+      if (window.updateFooterProfileAvatar) window.updateFooterProfileAvatar();
+    }
+
+    authBtn.addEventListener('click', async () => {
+      const fbUser = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
+      if (fbUser) {
+        await window.FirebaseAuth.signOutEverywhere();
+        window.__melofyGuestSignedIn = false;
+        UI.toast('Signed out');
+      } else if (window.__melofyGuestSignedIn) {
+        window.__melofyGuestSignedIn = false;
+        UI.toast('Signed out');
+      } else {
+        try {
+          if (window.FirebaseAuth) {
+            await window.FirebaseAuth.signIn();
+          } else {
+            throw new Error('Fallback');
+          }
+        } catch (e) {
+          window.__melofyGuestSignedIn = true;
+          UI.toast('Signed in as Alex Melofy');
+        }
+      }
+      syncAuthUi();
+    });
+
+    syncAuthUi();
+    profileCard.append(avatarCircle, userNameEl, userStatusEl, statsRow, authBtn);
+
+    // App Settings Section
+    const settingsHeading = UI.el('h2', { class: 'section-heading', text: 'App Settings' });
+    const settingsBox = UI.el('div', { class: 'settings-box' });
+    const settings = Storage.getSettings();
+
+    function buildSwitchRow(labelText, checked, onChange) {
+      const row = UI.el('div', { class: 'settings-row' });
+      const label = UI.el('span', { class: 'settings-label', text: labelText });
+      const switchWrap = UI.el('label', { class: 'android-switch' });
+      const input = UI.el('input', { attrs: { type: 'checkbox' } });
+      input.checked = checked;
+      input.addEventListener('change', () => onChange(input.checked));
+      const slider = UI.el('span', { class: 'android-switch-slider' });
+      switchWrap.append(input, slider);
+      row.append(label, switchWrap);
+      return row;
+    }
+
+    const rowHq = buildSwitchRow('High Quality Audio (320 kbps)', settings.highQuality !== false, (val) => {
+      Storage.updateSettings({ highQuality: val });
+    });
+    const divider = UI.el('div', { class: 'settings-divider' });
+    const rowWifi = buildSwitchRow('Download Over Wi-Fi Only', settings.wifiOnly !== false, (val) => {
+      Storage.updateSettings({ wifiOnly: val });
+    });
+
+    settingsBox.append(rowHq, divider, rowWifi);
+    container.append(profileCard, settingsHeading, settingsBox);
+  }
+};
+
+const LibraryView = DownloadsView;

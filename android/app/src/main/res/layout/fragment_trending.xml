@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending Charts"
+                android:fontFamily="@font/space_grotesk" android:text="Trending Charts"
                 android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Top played tracks this week"
+                android:fontFamily="@font/manrope" android:text="Top played tracks this week"
                 android:textColor="@color/text_muted"
                 android:textSize="12sp" />
         </LinearLayout>

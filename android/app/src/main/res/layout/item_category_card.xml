@@ -14,6 +14,6 @@
         android:layout_gravity="bottom|start"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:fontFamily="@font/space_grotesk" android:textStyle="bold" />
 
 </FrameLayout>

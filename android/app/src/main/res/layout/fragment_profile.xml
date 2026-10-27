@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/space_grotesk"
                 android:text="Anonymous Listener"
                 android:textColor="@color/text_primary"
                 android:textSize="20sp"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:fontFamily="sans-serif"
+                android:fontFamily="@font/manrope"
                 android:text="Guest Mode • Offline Listening Available"
                 android:textColor="@color/text_muted"
                 android:textSize="12sp" />
@@ -82,7 +82,7 @@
                         android:id="@+id/text_stat_liked"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/space_grotesk"
                         android:text="0"
                         android:textColor="@color/red_liked"
                         android:textSize="18sp"
@@ -91,7 +91,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
+                        android:fontFamily="@font/manrope"
                         android:text="Liked Songs"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -108,7 +108,7 @@
                         android:id="@+id/text_stat_downloaded"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/space_grotesk"
                         android:text="0"
                         android:textColor="@color/cyan_accent"
                         android:textSize="18sp"
@@ -117,7 +117,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
+                        android:fontFamily="@font/manrope"
                         android:text="Offline Tracks"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -133,7 +133,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="@font/space_grotesk"
                         android:text="320k"
                         android:textColor="@color/yellow_primary"
                         android:textSize="18sp"
@@ -142,7 +142,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif"
+                        android:fontFamily="@font/manrope"
                         android:text="Audio Quality"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp" />
@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/yellow_primary"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="@font/space_grotesk"
                 android:text="Connect YouTube / Google Account"
                 android:textColor="@color/bg_void"
                 android:textStyle="bold"
@@ -167,7 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/space_grotesk"
             android:text="App Settings"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
@@ -192,7 +192,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/manrope"
                     android:text="High Quality Audio (320 kbps)"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp" />
@@ -219,7 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:fontFamily="sans-serif"
+                    android:fontFamily="@font/manrope"
                     android:text="Download Over Wi-Fi Only"
                     android:textColor="@color/text_primary"
                     android:textSize="14sp" />
