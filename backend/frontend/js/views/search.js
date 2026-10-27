@@ -7,7 +7,7 @@ const SearchView = {
     icon.innerHTML = UI.icons.search;
     const input = UI.el('input', {
       class: 'search-input',
-      attrs: { type: 'text', placeholder: 'Search songs, albums, artists, podcasts', autocomplete: 'off' }
+      attrs: { type: 'text', placeholder: 'What do you want to listen to?', autocomplete: 'off' }
     });
     searchBarWrap.append(icon, input);
 
@@ -42,7 +42,7 @@ const SearchView = {
     });
 
     async function runSearch(query) {
-      status.textContent = 'Searching YouTube Music…';
+      status.textContent = 'Searching…';
       results.innerHTML = '';
       try {
         const songs = await YouTubeAPI.search(query);

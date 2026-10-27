@@ -1,34 +1,37 @@
-/* YouTube Music Components — Buttons, Chips, Quick Picks, Shelves, Modals */
+/* Lyra Melofy Components — YouTube Music Shelving & Logic with Lyra Melofy Theme */
 
 /* Buttons */
 .btn-primary {
-  background: #FFFFFF;
-  color: #030303;
-  font-weight: 600;
+  background: var(--accent);
+  color: #1A1206;
+  font-weight: 700;
   font-size: 14px;
-  padding: 9px 20px;
+  padding: 10px 22px;
   border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform var(--transition-fast), background var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(242, 169, 60, 0.25);
+  transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 .btn-primary:hover {
-  background: #E5E5E5;
+  background: var(--accent-hover);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 18px rgba(242, 169, 60, 0.35);
 }
 .btn-primary:active {
   transform: scale(0.98);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-highlight);
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
-  padding: 9px 18px;
+  padding: 10px 20px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -36,40 +39,42 @@
   transition: background var(--transition-fast), transform var(--transition-fast);
 }
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--bg-card);
+  transform: translateY(-1px);
 }
 .btn-secondary:active {
   transform: scale(0.98);
 }
 
 .btn-play-all {
-  background: #FFFFFF;
-  color: #030303;
+  background: var(--accent);
+  color: #1A1206;
   font-weight: 700;
   font-size: 14px;
-  padding: 10px 24px;
+  padding: 11px 26px;
   border-radius: var(--radius-full);
   margin-bottom: 20px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 16px rgba(242, 169, 60, 0.3);
   transition: background var(--transition-fast), transform var(--transition-fast);
 }
 .btn-play-all:hover {
-  background: #E5E5E5;
-  transform: scale(1.02);
+  background: var(--accent-hover);
+  transform: scale(1.03);
 }
 .btn-play-all:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 .btn-play-all svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .icon-btn {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -79,22 +84,22 @@
   transition: color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
 }
 .icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 .icon-btn:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--bg-highlight);
 }
 .icon-btn:active {
   transform: scale(0.92);
 }
 .icon-btn.active {
-  color: #FFFFFF;
+  color: var(--accent);
 }
 .like-btn.active,
 .pb-like.active {
-  color: var(--accent);
+  color: var(--love);
 }
 .icon-btn.small {
   width: 28px;
@@ -103,13 +108,13 @@
   font-weight: 700;
 }
 
-/* YouTube Music Mood / Genre Filter Chips */
+/* Mood / Genre Filter Chips (YouTube Music filter bar with Lyra Melofy styling) */
 .chip-row {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   gap: 10px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   padding-bottom: 4px;
   scrollbar-width: none;
 }
@@ -118,38 +123,41 @@
 }
 
 .genre-chip {
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
   background: var(--bg-chip);
   color: var(--text-primary);
-  font-weight: 500;
-  font-size: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
   white-space: nowrap;
   flex-shrink: 0;
 }
 .genre-chip:hover {
-  background: var(--bg-chip-hover);
+  background: var(--bg-highlight);
+  border-color: var(--accent);
+  transform: translateY(-1px);
 }
 .genre-chip.active {
-  background: #FFFFFF;
-  color: #030303;
-  border-color: #FFFFFF;
-  font-weight: 600;
+  background: var(--accent);
+  color: #1A1206;
+  border-color: var(--accent);
+  font-weight: 700;
+  box-shadow: 0 3px 12px rgba(242, 169, 60, 0.25);
 }
 
-/* Section Headers (with Kicker + Heading + Play All button) */
+/* Section Headers (Kicker + Heading + Play All button) */
 .ytm-section-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin: 32px 0 16px;
+  margin: 30px 0 14px;
 }
 
 .ytm-section-header:first-of-type {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .ytm-section-header .section-heading {
@@ -157,25 +165,27 @@
 }
 
 .ytm-pill-outline-btn {
-  padding: 6px 14px;
+  padding: 7px 16px;
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-card);
   color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 700;
   white-space: nowrap;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 .ytm-pill-outline-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: var(--bg-highlight);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-/* YouTube Music Quick Picks Grid (Multi-column compact tracks) */
+/* Quick Picks 3-Column Grid */
 .ytm-quick-picks-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 24px;
+  column-gap: 20px;
   row-gap: 4px;
 }
 
@@ -191,19 +201,29 @@
   }
 }
 
-/* YouTube Music Shelf Cards ("Mixed for you" / "Recommended music videos") */
+/* Shelf Cards ("Mixed for you" / "New releases & mixes") */
 .ytm-shelf-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
-  gap: 20px;
+  gap: 18px;
 }
 
 .ytm-media-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   cursor: pointer;
-  group: media;
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.ytm-media-card:hover {
+  background: var(--bg-highlight);
+  border-color: var(--border-strong);
+  transform: translateY(-3px);
 }
 
 .ytm-media-art-wrap {
@@ -212,7 +232,8 @@
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background: var(--bg-card);
+  background: var(--bg-elevated);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 .ytm-media-art {
@@ -223,31 +244,31 @@
 }
 
 .ytm-media-card:hover .ytm-media-art {
-  filter: brightness(0.72);
-  transform: scale(1.02);
+  filter: brightness(0.78);
+  transform: scale(1.03);
 }
 
 .ytm-media-play-btn {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
-  width: 42px;
-  height: 42px;
+  right: 10px;
+  bottom: 10px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: rgba(3, 3, 3, 0.82);
-  color: #FFFFFF;
+  background: var(--accent);
+  color: #1A1206;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity var(--transition-fast), transform var(--transition-fast), background var(--transition-fast);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
 .ytm-media-play-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 .ytm-media-card:hover .ytm-media-play-btn {
@@ -256,13 +277,13 @@
 }
 
 .ytm-media-play-btn:hover {
-  background: var(--accent);
+  background: var(--accent-hover);
   transform: scale(1.08) !important;
 }
 
 .ytm-media-title {
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 13.5px;
   color: var(--text-primary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -272,7 +293,7 @@
 }
 
 .ytm-media-subtitle {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -280,7 +301,7 @@
   margin-top: -4px;
 }
 
-/* Song rows (Quick Picks & Track Tables) */
+/* Song rows (Quick Picks & Track Lists) */
 .song-list {
   display: flex;
   flex-direction: column;
@@ -293,13 +314,15 @@
   align-items: center;
   gap: 14px;
   padding: 8px 10px;
-  border-radius: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 .song-row:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-highlight);
+}
+.song-row:active {
+  transform: scale(0.99);
 }
 
 .song-thumb-wrap {
@@ -310,6 +333,7 @@
   overflow: hidden;
   flex-shrink: 0;
   background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .song-thumb {
@@ -323,17 +347,17 @@
 .song-thumb-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(18, 15, 12, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: var(--accent);
   opacity: 0;
   transition: opacity var(--transition-fast);
 }
 .song-thumb-overlay svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 .song-row:hover .song-thumb-overlay {
   opacity: 1;
@@ -343,15 +367,15 @@
   min-width: 0;
 }
 .song-title {
-  font-weight: 500;
-  font-size: 14.5px;
+  font-weight: 600;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-primary);
 }
 .song-artist {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -381,20 +405,20 @@
 
 @media (max-width: 480px) {
   .song-row {
-    grid-template-columns: 44px 1fr auto;
+    grid-template-columns: 42px 1fr auto;
     gap: 10px;
-    padding: 6px 6px;
+    padding: 6px 8px;
   }
   .song-thumb-wrap,
   .song-thumb {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
   }
   .song-title {
-    font-size: 14px;
+    font-size: 13.5px;
   }
   .song-artist {
-    font-size: 12px;
+    font-size: 11.5px;
   }
   .ytm-shelf-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -405,36 +429,37 @@
 /* Library grid */
 .library-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 16px;
 }
 
 .library-card, .library-card-create {
-  background: transparent;
+  background: var(--bg-card);
   border-radius: var(--radius-md);
-  padding: 0;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   text-align: left;
-  transition: transform var(--transition-fast);
+  border: 1px solid transparent;
+  transition: background var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
 }
-.library-card:hover .library-card-icon,
-.library-card-create:hover .library-card-icon {
-  filter: brightness(1.12);
+.library-card:hover, .library-card-create:hover {
+  background: var(--bg-elevated);
+  transform: translateY(-3px);
+  border-color: var(--border);
 }
 
 .library-card-icon {
   width: 100%;
   aspect-ratio: 1;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, #272727, #121212);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, var(--accent), #7A4A16);
   object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: filter var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 .library-card-icon svg {
   width: 38%;
@@ -443,92 +468,91 @@
 }
 
 .liked-card .library-card-icon {
-  background: linear-gradient(135deg, #FF0033 0%, #630885 55%, #121212 100%);
+  background: linear-gradient(135deg, var(--love), #6B2430);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .create-icon {
-  background: #181818;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: var(--bg-highlight);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
-  font-weight: 300;
-  color: var(--text-primary);
+  font-size: 30px;
+  color: var(--text-secondary);
 }
 
 .library-card-title {
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 13.5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--text-primary);
-  margin-top: 2px;
 }
 .library-card-subtitle {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: -4px;
 }
 
 @media (max-width: 600px) {
   .library-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    gap: 12px;
+  }
+  .library-card, .library-card-create {
+    padding: 10px;
+    gap: 8px;
   }
 }
 
-/* Detail header (Liked Music / Playlist pages — YouTube Music header style) */
+/* Detail header (Liked Songs / Playlist pages) */
 .detail-header {
   display: flex;
-  align-items: center;
-  gap: 28px;
-  margin-bottom: 24px;
+  align-items: flex-end;
+  gap: 22px;
+  margin-bottom: 22px;
   flex-wrap: wrap;
 }
 
 .detail-art {
-  width: 160px;
-  height: 160px;
+  width: 132px;
+  height: 132px;
   border-radius: var(--radius-md);
   flex-shrink: 0;
-  background: linear-gradient(135deg, #272727, #121212);
+  background: linear-gradient(135deg, var(--accent), #7A4A16);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
-  color: #FFFFFF;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  font-size: 42px;
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 .detail-art svg {
-  width: 64px;
-  height: 64px;
+  width: 52px;
+  height: 52px;
 }
 .liked-art {
-  background: linear-gradient(135deg, #FF0033 0%, #630885 60%, #121212 100%);
+  background: linear-gradient(135deg, var(--love), #6B2430);
 }
 
 .detail-kicker {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--text-secondary);
 }
 
 .detail-title {
   font-family: var(--font-display);
-  font-size: clamp(24px, 3.8vw, 38px);
-  font-weight: 800;
-  margin-top: 6px;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 700;
+  margin-top: 4px;
   line-height: 1.15;
 }
 
@@ -540,84 +564,72 @@
   flex-wrap: wrap;
 }
 
-@media (max-width: 640px) {
-  .detail-header {
-    gap: 16px;
-    margin-bottom: 18px;
-  }
-  .detail-art {
-    width: 108px;
-    height: 108px;
-  }
-}
-
 /* Search Page */
 .search-bar-wrap {
   position: relative;
-  max-width: 560px;
-  margin-bottom: 18px;
+  max-width: 500px;
+  margin-bottom: 14px;
   width: 100%;
 }
 
 .search-input {
   width: 100%;
   padding: 13px 18px 13px 44px;
-  border-radius: 8px;
-  background: #181818;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   color: var(--text-primary);
-  font-size: 15px;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
+  font-size: 14px;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 .search-input:focus {
   outline: none;
-  border-color: #FFFFFF;
-  background: #212121;
+  border-color: var(--accent);
+  background: var(--bg-elevated);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 .search-icon {
   position: absolute;
-  left: 15px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--text-secondary);
+  opacity: 0.7;
 }
 .search-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
 }
 
 .search-status {
   color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 500;
-  margin: 8px 2px 12px;
+  margin: 10px 2px 8px;
 }
 
 .empty-state {
   color: var(--text-secondary);
-  padding: 20px 4px;
+  padding: 20px 8px;
   font-size: 14px;
   line-height: 1.6;
 }
 
 .link-btn {
-  color: #FFFFFF;
-  font-weight: 600;
-  text-decoration: underline;
+  color: var(--accent);
+  font-weight: 700;
 }
 .link-btn:hover {
-  color: var(--accent);
+  color: var(--accent-hover);
 }
 
 /* Modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(10, 8, 6, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -631,8 +643,8 @@
 }
 
 .modal-box {
-  background: #212121;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 24px;
   width: min(440px, 100%);
@@ -647,16 +659,16 @@
 .modal-box input[type="text"] {
   width: 100%;
   padding: 12px 14px;
-  border-radius: 6px;
-  background: #121212;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   margin-bottom: 14px;
   font-size: 14px;
   transition: border-color var(--transition-fast);
 }
 .modal-box input[type="text"]:focus {
   outline: none;
-  border-color: #FFFFFF;
+  border-color: var(--accent);
 }
 
 .playlist-check-list {
@@ -677,7 +689,7 @@
   cursor: pointer;
 }
 .playlist-check-row:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-highlight);
 }
 .playlist-check-row input {
   accent-color: var(--accent);
@@ -697,14 +709,14 @@
 
 .modal-done {
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-full);
-  padding: 10px;
+  background: var(--bg-highlight);
+  border-radius: var(--radius-md);
+  padding: 12px;
   font-weight: 600;
   transition: background var(--transition-fast);
 }
 .modal-done:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--bg-card);
 }
 
 /* Toast */
@@ -728,11 +740,12 @@
 }
 
 .toast {
-  background: #FFFFFF;
-  color: #030303;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   padding: 10px 20px;
-  border-radius: 6px;
-  font-size: 13.5px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
   font-weight: 600;
   opacity: 0;
   transform: translateY(10px);
@@ -750,41 +763,41 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-card);
   color: var(--text-secondary);
 }
 .status-badge.connected {
-  color: #FFFFFF;
+  color: var(--accent);
 }
 .status-badge .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
+  background: currentColor;
 }
 
 .channel-row {
   display: grid;
-  grid-template-columns: 44px 1fr;
+  grid-template-columns: 40px 1fr;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 .channel-row:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-highlight);
 }
 .channel-thumb {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-card);
 }
 .channel-title {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
 }

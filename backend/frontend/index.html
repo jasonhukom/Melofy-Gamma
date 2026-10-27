@@ -4,15 +4,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Lyra Melofy — Music</title>
+<title>Lyra Melofy</title>
 <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
 <link rel="icon" type="image/png" href="{% static 'icons/favicon-32.png' %}" sizes="32x32">
 <link rel="apple-touch-icon" href="{% static 'icons/apple-touch-icon.png' %}">
 <link rel="manifest" href="{% static 'site.webmanifest' %}">
-<meta name="theme-color" content="#030303">
+<meta name="theme-color" content="#120F0C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/variables.css' %}">
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
 <link rel="stylesheet" href="{% static 'css/layout.css' %}">
@@ -26,43 +26,39 @@
 <header class="topbar" id="topbar">
   <div class="topbar-left">
     <button id="menu-btn" class="icon-btn topbar-menu-btn" aria-label="Menu">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
     <a href="#/" class="ytm-brand" aria-label="Lyra Melofy Home">
       <span class="ytm-logo-badge">
         <svg viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="12" fill="#FF0033"/>
-          <circle cx="12" cy="12" r="6.4" fill="none" stroke="#FFFFFF" stroke-width="1.3"/>
-          <polygon points="10.2,9.1 15.4,12 10.2,14.9" fill="#FFFFFF"/>
+          <circle cx="12" cy="12" r="11" fill="#F2A93C"/>
+          <circle cx="12" cy="12" r="6.6" fill="none" stroke="#17130F" stroke-width="1.5"/>
+          <polygon points="10.3,9.1 15.5,12 10.3,14.9" fill="#17130F"/>
         </svg>
       </span>
-      <span class="topbar-title">Music</span>
-      <span class="topbar-brand-sub">Lyra Melofy</span>
+      <span class="topbar-title">Lyra Melofy</span>
     </a>
   </div>
 
   <div class="topbar-center">
     <div class="ytm-search-box" id="topbar-search-box">
       <span class="ytm-search-icon">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       </span>
       <input
         type="text"
         id="topbar-search-input"
         class="ytm-search-input"
-        placeholder="Search songs, albums, artists, podcasts"
+        placeholder="Search songs, albums, artists..."
         autocomplete="off"
       >
       <button type="button" id="topbar-search-clear" class="icon-btn ytm-search-clear" aria-label="Clear search" hidden>
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
   </div>
 
   <div class="topbar-right">
-    <button type="button" class="icon-btn topbar-cast-btn" aria-label="Connect device" title="YouTube Music Connected">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v3h2V5h18v14h-7v2h7c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM1 18v3h3c0-1.66-1.34-3-3-3zm0-4v2c2.76 0 5 2.24 5 5h2c0-3.87-3.13-7-7-7zm0-4v2c4.97 0 9 4.03 9 9h2c0-6.08-4.93-11-11-11z"/></svg>
-    </button>
     <div id="topbar-account" class="topbar-account"></div>
   </div>
 </header>
@@ -70,19 +66,19 @@
 <aside class="sidebar open" id="sidebar">
   <nav class="sidebar-nav">
     <a class="nav-link" href="#/" data-route="/">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.33l7 6.12V20h-4v-6H9v6H5v-9.55l7-6.12M12 3L4 10v11h6v-6h4v6h6V10l-8-7z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
       <span>Home</span>
     </a>
     <a class="nav-link" href="#/trending" data-route="/trending">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
       <span>Explore</span>
     </a>
     <a class="nav-link" href="#/library" data-route="/library">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16M4 4l14 2.5v13L4 17"/><path d="M18 9.5v6"/></svg>
       <span>Library</span>
     </a>
     <a class="nav-link" href="#/search" data-route="/search">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       <span>Search</span>
     </a>
   </nav>
@@ -91,18 +87,18 @@
 
   <div class="sidebar-section">
     <button id="create-playlist-btn" class="ytm-new-playlist-btn" aria-label="Create playlist" onclick="openCreatePlaylistModal()">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
       <span>New playlist</span>
     </button>
 
     <div class="sidebar-playlists-wrap">
       <a class="sidebar-playlist-link nav-link" href="#/liked" data-route="/liked">
         <div class="sidebar-playlist-meta">
-          <span class="sidebar-playlist-title">Liked Music</span>
-          <span class="sidebar-playlist-sub">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/></svg>
-            Auto playlist
+          <span class="sidebar-playlist-title">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;display:inline;vertical-align:-2px;margin-right:6px;color:var(--love);"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.65-9.5 9-9.5 9z"/></svg>
+            Liked Songs
           </span>
+          <span class="sidebar-playlist-sub">Auto playlist</span>
         </div>
       </a>
       <div id="sidebar-playlists"></div>
@@ -141,7 +137,7 @@
       <polygon points="7.8,5.2 20.3,2.8 20.3,5.0 7.8,7.4"/>
       <polygon points="7.8,8.3 20.3,5.9 20.3,7.9 7.8,10.3"/>
     </svg>
-    <span>Explore</span>
+    <span>Trending</span>
   </a>
   <a class="tab-link-search nav-link" href="#/search" data-route="/search" aria-label="Search">
     <span class="mobile-search-circle" id="mobile-search-circle">
@@ -149,8 +145,8 @@
     </span>
   </a>
   <a class="tab-link nav-link" href="#/library" data-route="/library">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2z"/></svg>
-    <span>Library</span>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    <span>Downloads</span>
   </a>
   <a class="tab-link nav-link" href="#/profile" data-route="/profile">
     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
