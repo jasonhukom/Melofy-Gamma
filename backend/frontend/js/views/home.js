@@ -1,50 +1,49 @@
-/* home.js — matches Android fragment_home.xml & HomeFragment.java */
 const HomeView = {
   render(container) {
-    // 1. Top Header with Simple House Icon & "• Offline Ready" Badge
-    const topHeader = UI.el('div', { class: 'android-top-header' });
-    const headerLeft = UI.el('div', { class: 'android-header-left' });
-    headerLeft.append(
-      UI.el('div', { class: 'android-header-icon', html: UI.icons.house }),
-      UI.el('div', { class: 'android-header-title', text: 'Home' })
-    );
-    const badge = UI.el('div', { class: 'offline-ready-badge', text: '• Offline Ready' });
-    topHeader.append(headerLeft, badge);
+    const heading = UI.el('h1', { class: 'page-heading', text: 'Good to see you' });
 
-    // 2. Simple Clean Hero Banner
-    const hero = UI.el('div', { class: 'hero-banner' });
-    hero.append(
-      UI.el('div', { class: 'hero-kicker', text: 'MELOFY MUSIC' }),
-      UI.el('div', { class: 'hero-title', text: 'Your Home Music Hub' }),
-      UI.el('div', { class: 'hero-subtitle', text: 'Listen online or offline to your saved songs.' })
-    );
-
-    // 3. Quick Picks (Horizontal Track Cards)
-    const quickHeading = UI.el('h2', { class: 'section-heading', text: 'Quick Picks' });
-    const quickRow = UI.el('div', { class: 'quick-picks-row' });
-
-    const allTracks = Storage.getSampleTracks();
-    const quickPicks = allTracks.slice(0, 4);
-    quickPicks.forEach(track => {
-      quickRow.appendChild(UI.trackCard(track, { context: allTracks }));
+    const chipRow = UI.el('section', { class: 'chip-row' });
+    [['Pop', 'pop hits'], ['Hip-Hop', 'hip hop'], ['Rock', 'rock'], ['Electronic', 'electronic dance'],
+     ['Chill', 'chill lofi'], ['R&B', 'r&b soul'], ['Indie', 'indie'], ['K-Pop', 'k-pop'],
+     ['Jazz', 'jazz'], ['Classical', 'classical piano']].forEach(([label, query]) => {
+      const chip = UI.el('button', { class: 'genre-chip', text: label });
+      chip.addEventListener('click', () => Router.navigate(`/search?q=${encodeURIComponent(query)}`));
+      chipRow.appendChild(chip);
     });
 
-    // 4. Recommended For You (Track Rows)
-    const recHeading = UI.el('h2', { class: 'section-heading', text: 'Recommended For You' });
-    const recList = UI.el('div', { class: 'song-list' });
-    allTracks.forEach(track => {
-      recList.appendChild(UI.songRow(track, { context: allTracks }));
-    });
+    const discoverSection = UI.el('section', {});
+    discoverSection.appendChild(UI.el('h2', { class: 'section-heading', text: 'Discover something new' }));
+    const discoverRow = UI.el('div', { class: 'song-list' });
+    discoverRow.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading picks…' }));
+    discoverSection.appendChild(discoverRow);
 
-    container.append(topHeader, hero, quickHeading, quickRow, recHeading, recList);
+    const recentSection = UI.el('section', {});
+    recentSection.appendChild(UI.el('h2', { class: 'section-heading', text: 'Recently played' }));
+    const recentRow = UI.el('div', { class: 'song-list' });
+    const recents = Storage.getRecent();
+    if (recents.length) {
+      recents.forEach(song => recentRow.appendChild(UI.songRow(song, { context: recents })));
+    } else {
+      recentRow.appendChild(UI.el('p', { class: 'empty-state', text: 'Nothing played yet — try a genre above, or search for a song.' }));
+    }
+    recentSection.appendChild(recentRow);
 
-    // Also fetch server random picks if YouTube API key is configured
+    container.append(heading, chipRow, discoverSection, recentSection);
+
+    const fallbackPicks = [
+      { id: 'jfKfPfyJRdk', title: 'lofi hip hop radio - beats to relax/study to', artist: 'Lofi Girl', thumbnail: 'https://i.ytimg.com/vi/jfKfPfyJRdk/hqdefault.jpg' },
+      { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio 24/7', artist: 'Lofi Girl', thumbnail: 'https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg' },
+      { id: 'DWcJFNfaw9c', title: 'Chillhop Radio - jazzy & lofi hip hop beats', artist: 'Chillhop Music', thumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg' },
+      { id: '21qNxnCS8WU', title: 'Japanese City Pop / Chill Vibes', artist: 'Plastic Love Mix', thumbnail: 'https://i.ytimg.com/vi/21qNxnCS8WU/hqdefault.jpg' }
+    ];
+
     YouTubeAPI.randomPicks().then(songs => {
-      if (songs && songs.length) {
-        songs.slice(0, 6).forEach(s => {
-          recList.appendChild(UI.songRow({ ...s, genre: 'YouTube' }, { context: allTracks.concat(songs) }));
-        });
-      }
-    }).catch(() => {});
+      discoverRow.innerHTML = '';
+      const list = (songs && songs.length) ? songs : fallbackPicks;
+      list.forEach(song => discoverRow.appendChild(UI.songRow(song, { context: list })));
+    }).catch(() => {
+      discoverRow.innerHTML = '';
+      fallbackPicks.forEach(song => discoverRow.appendChild(UI.songRow(song, { context: fallbackPicks })));
+    });
   }
 };

@@ -1,4 +1,8 @@
-/* router.js — hash-based SPA router with Android 5-tab footer color updates */
+/* router.js — a tiny hash-based router. This is what lets the app be a
+   true single-page app: switching "pages" swaps content inside #main-content
+   without a browser navigation, so the YouTube player never reloads and
+   music keeps playing across the whole session (including in the
+   background, if the tab/app loses focus — nothing here ever pauses it). */
 const Router = (() => {
   const routes = {};
   let container = null;
@@ -22,28 +26,14 @@ const Router = (() => {
     container.innerHTML = '';
     renderFn(container, params);
     highlightActiveNav(path.split('?')[0]);
+    if (window.Sidebar) window.Sidebar.closeOnNavigate();
     container.scrollTop = 0;
   }
 
   function highlightActiveNav(path) {
-    const normalized = path === '/library' ? '/downloads' : path;
-    const isSearch = normalized === '/search';
-
-    // Outer 4 tabs: white when inactive (and all white when search is active), yellow when selected
-    document.querySelectorAll('.bottom-nav-item').forEach(link => {
-      const route = link.getAttribute('data-route');
-      link.classList.toggle('active', !isSearch && route === normalized);
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-route') === path);
     });
-
-    // Center circular Search button: white stroke when active
-    const searchCircle = document.getElementById('container-search-circle');
-    if (searchCircle) {
-      searchCircle.classList.toggle('active', isSearch);
-    }
-  }
-
-  function refresh() {
-    if (container) handle();
   }
 
   function start(mountEl) {
@@ -52,5 +42,5 @@ const Router = (() => {
     handle();
   }
 
-  return { register, navigate, refresh, start };
+  return { register, navigate, start };
 })();

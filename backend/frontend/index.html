@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" href="{% static 'icons/favicon-32.png' %}" sizes="32x32">
 <link rel="apple-touch-icon" href="{% static 'icons/apple-touch-icon.png' %}">
 <link rel="manifest" href="{% static 'site.webmanifest' %}">
-<meta name="theme-color" content="#0A0905">
+<meta name="theme-color" content="#120F0C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,72 +21,91 @@
 </head>
 <body>
 
+<div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo"><span class="logo-mark">&#9679;</span> Melofy Gamma</div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-link" href="#/" data-route="/">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+      Home
+    </a>
+    <a class="nav-link" href="#/search" data-route="/search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Search
+    </a>
+    <a class="nav-link" href="#/library" data-route="/library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v16M4 4l14 2.5v13L4 17"/><path d="M18 9.5v6"/></svg>
+      Your Library
+    </a>
+  </nav>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-head">
+      <span>Playlists</span>
+      <button id="create-playlist-btn" class="icon-btn small" aria-label="Create playlist" onclick="openCreatePlaylistModal()">+</button>
+    </div>
+    <a class="sidebar-playlist-link" href="#/liked" style="padding-left:12px;">
+      <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;display:inline;vertical-align:-2px;margin-right:6px;"><path d="M12 21s-7-4.35-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.65-9.5 9-9.5 9z"/></svg>
+      Liked Songs
+    </a>
+    <div id="sidebar-playlists"></div>
+  </div>
+
+  <div class="sidebar-account" id="sidebar-account"></div>
+</aside>
+
 <div class="app-shell">
+  <header class="topbar">
+    <button id="menu-btn" class="icon-btn" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="topbar-title">Melofy Gamma</div>
+  </header>
   <main class="main-content" id="main-content"></main>
 </div>
 
-<!-- Persistent Bottom Footer (Mini Player + 5-Button Android Bottom Navbar) -->
-<div class="bottom-bar-container" id="bottom-bar-container">
-  <div id="player-bar-root"></div>
-
-  <nav class="bottom-nav-bar" id="mobile-tabbar" aria-label="Bottom Navigation">
-    <!-- 1. Home Tab -->
-    <a class="bottom-nav-item nav-link active" href="#/" data-route="/" id="btn-nav-home">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-      </svg>
-      <span class="nav-label">Home</span>
-    </a>
-
-    <!-- 2. Trending Tab (Sixteenth Note Icon matching SixteenthNoteView) -->
-    <a class="bottom-nav-item nav-link" href="#/trending" data-route="/trending" id="btn-nav-trending">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <circle cx="6.7" cy="18.7" r="2.9"/>
-        <circle cx="17.3" cy="16.3" r="2.9"/>
-        <rect x="7.8" y="5.2" width="1.9" height="13.5"/>
-        <rect x="18.4" y="2.8" width="1.9" height="13.5"/>
-        <polygon points="7.8,5.2 20.3,2.8 20.3,5.0 7.8,7.4"/>
-        <polygon points="7.8,8.3 20.3,5.9 20.3,7.9 7.8,10.3"/>
-      </svg>
-      <span class="nav-label">Trending</span>
-    </a>
-
-    <!-- 3. Center Circular Search Tab (Bigger 62px Button) -->
-    <a class="bottom-nav-center" href="#/search" data-route="/search" id="btn-nav-search" aria-label="Search">
-      <div class="search-circle-container" id="container-search-circle">
-        <svg class="search-center-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"/>
-          <path d="M20 20l-4.2-4.2"/>
-        </svg>
-      </div>
-    </a>
-
-    <!-- 4. Downloads Tab (Full Solid White Download Icon) -->
-    <a class="bottom-nav-item nav-link" href="#/downloads" data-route="/downloads" id="btn-nav-download">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-      </svg>
-      <span class="nav-label">Downloads</span>
-    </a>
-
-    <!-- 5. Profile Tab (Anonymous Avatar Silhouette / Dynamic User Avatar) -->
-    <a class="bottom-nav-item nav-link" href="#/profile" data-route="/profile" id="btn-nav-profile">
-      <svg class="nav-icon" id="icon-nav-profile-svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-      </svg>
-      <img class="nav-avatar-img" id="icon-nav-profile-img" src="" alt="Profile" style="display:none;">
-      <span class="nav-label">Profile</span>
-    </a>
-  </nav>
+<div class="sound-mixer" id="sound-mixer">
+  <div class="sound-mixer-panel" id="sound-mixer-panel">
+    <span class="sound-mixer-value" id="sound-mixer-value">80</span>
+    <input class="sound-mixer-slider" id="sound-mixer-slider" type="range" min="0" max="100" value="80">
+  </div>
+  <button class="sound-mixer-btn" id="sound-mixer-btn" aria-label="Sound mixer"></button>
 </div>
 
-<!-- Full Player Dialog Overlay (matching dialog_full_player.xml) -->
-<div class="full-player-dialog" id="full-player-dialog" aria-hidden="true"></div>
+<div id="player-bar-root"></div>
 
-<!-- Hidden YouTube IFrame Mount -->
-<div id="yt-hidden-wrap" style="position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;overflow:hidden;pointer-events:none;">
-  <div id="yt-player-mount"></div>
-</div>
+<nav class="mobile-tabbar" id="mobile-tabbar" aria-label="Mobile Navigation">
+  <a class="tab-link nav-link" href="#/" data-route="/">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <span class="tab-label-home">Home</span>
+  </a>
+  <a class="tab-link nav-link" href="#/trending" data-route="/trending">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="6.7" cy="18.7" r="2.9"/>
+      <circle cx="17.3" cy="16.3" r="2.9"/>
+      <rect x="7.8" y="5.2" width="1.9" height="13.5"/>
+      <rect x="18.4" y="2.8" width="1.9" height="13.5"/>
+      <polygon points="7.8,5.2 20.3,2.8 20.3,5.0 7.8,7.4"/>
+      <polygon points="7.8,8.3 20.3,5.9 20.3,7.9 7.8,10.3"/>
+    </svg>
+    <span>Trending</span>
+  </a>
+  <a class="tab-link-search nav-link" href="#/search" data-route="/search" aria-label="Search">
+    <span class="mobile-search-circle" id="mobile-search-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    </span>
+  </a>
+  <a class="tab-link nav-link" href="#/library" data-route="/library">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    <span>Downloads</span>
+  </a>
+  <a class="tab-link nav-link" href="#/profile" data-route="/profile">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <span>Profile</span>
+  </a>
+</nav>
 
 <div id="modal-root"></div>
 <div id="toast-root"></div>

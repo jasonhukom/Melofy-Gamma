@@ -1,43 +1,17 @@
-/* player.js — unified playback engine supporting both HTML5 Audio (for Melofy sample/offline tracks)
-   and YouTube IFrame Player API (for YouTube tracks). */
+/* player.js — wraps the official YouTube IFrame Player API. This is the
+   legitimate, documented way to embed YouTube playback in a page:
+   https://developers.google.com/youtube/iframe_api_reference
+   It does not (and cannot) strip YouTube's own ads — those are controlled
+   by YouTube/content owners, not by the embedding page. */
 const Player = (() => {
   let ytPlayer = null;
-  let ytReady = false;
-  let htmlAudio = new Audio();
-  let activeEngine = 'audio'; // 'audio' | 'yt'
-
   let queue = [];
   let queueIndex = -1;
-  let isPlayingState = false;
+  let isReady = false;
   let listeners = [];
 
   function onEvent(cb) { listeners.push(cb); }
   function emit(type, data) { listeners.forEach(cb => { try { cb(type, data); } catch (e) {} }); }
-
-  function setupHtmlAudio() {
-    htmlAudio.preload = 'metadata';
-    htmlAudio.addEventListener('play', () => {
-      if (activeEngine === 'audio') {
-        isPlayingState = true;
-        emit('play');
-      }
-    });
-    htmlAudio.addEventListener('pause', () => {
-      if (activeEngine === 'audio') {
-        isPlayingState = false;
-        emit('pause');
-      }
-    });
-    htmlAudio.addEventListener('ended', () => {
-      if (activeEngine === 'audio') handleEnded();
-    });
-    htmlAudio.addEventListener('error', () => {
-      if (activeEngine === 'audio') {
-        emit('error');
-        setTimeout(() => next(), 1200);
-      }
-    });
-  }
 
   function loadYouTubeAPI() {
     return new Promise((resolve) => {
@@ -53,55 +27,60 @@ const Player = (() => {
   }
 
   async function init(containerId) {
-    setupHtmlAudio();
+    await loadYouTubeAPI();
+    ytPlayer = new YT.Player(containerId, {
+      height: '100%',
+      width: '100%',
+      playerVars: { autoplay: 0, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1 },
+      events: { onReady: handleReady, onStateChange: handleStateChange, onError: handleError }
+    });
+  }
+
+  function handleReady() {
+    isReady = true;
     const settings = Storage.getSettings();
-    htmlAudio.volume = (settings.volume ?? 80) / 100;
+    ytPlayer.setVolume(settings.volume ?? 80);
 
+    const saved = Storage.getPlayerState();
+    if (saved && saved.videoId && saved.queue && saved.queue.length) {
+      queue = saved.queue;
+      queueIndex = saved.queueIndex ?? 0;
+      ytPlayer.cueVideoById(saved.videoId, saved.positionSeconds || 0);
+      emit('trackchange', currentSong());
+      if (saved.isPlaying) {
+        // Resuming playback after a page navigation. Browsers may block
+        // autoplay here until the user interacts with the new page — if so
+        // the bar will simply show a paused state, which is expected.
+        setTimeout(() => {
+          try { ytPlayer.seekTo(saved.positionSeconds || 0, true); ytPlayer.playVideo(); } catch (e) {}
+        }, 300);
+      }
+    }
+    setInterval(savePlayerState, 3000);
+    window.addEventListener('beforeunload', savePlayerState);
     emit('ready');
+  }
 
-    try {
-      await loadYouTubeAPI();
-      ytPlayer = new YT.Player(containerId, {
-        height: '100%',
-        width: '100%',
-        playerVars: { autoplay: 0, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1 },
-        events: {
-          onReady: () => {
-            ytReady = true;
-            ytPlayer.setVolume(Storage.getSettings().volume ?? 80);
-          },
-          onStateChange: (e) => {
-            if (activeEngine !== 'yt') return;
-            const S = window.YT.PlayerState;
-            if (e.data === S.PLAYING) { isPlayingState = true; emit('play'); }
-            if (e.data === S.PAUSED) { isPlayingState = false; emit('pause'); }
-            if (e.data === S.ENDED) handleEnded();
-          },
-          onError: () => {
-            if (activeEngine === 'yt') {
-              emit('error');
-              setTimeout(() => next(), 1200);
-            }
-          }
-        }
-      });
-    } catch (e) {}
+  function handleStateChange(e) {
+    const S = window.YT.PlayerState;
+    if (e.data === S.PLAYING) emit('play');
+    if (e.data === S.PAUSED) emit('pause');
+    if (e.data === S.ENDED) handleEnded();
+    if (e.data === S.PLAYING || e.data === S.PAUSED) savePlayerState();
+  }
+
+  function handleError() {
+    emit('error');
+    setTimeout(() => next(), 1200); // skip a track that fails to load/play
   }
 
   function handleEnded() {
     const settings = Storage.getSettings();
-    if (settings.repeat === 'one') {
-      seekTo(0);
-      if (activeEngine === 'audio') htmlAudio.play().catch(() => {});
-      else if (ytPlayer && ytReady) ytPlayer.playVideo();
-      return;
-    }
+    if (settings.repeat === 'one') { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); return; }
     next();
   }
 
   function currentSong() { return queue[queueIndex] || null; }
-
-  function isPlaying() { return isPlayingState; }
 
   function playQueue(songs, startIndex = 0) {
     if (!songs || !songs.length) return;
@@ -113,27 +92,11 @@ const Player = (() => {
 
   function playCurrent() {
     const song = currentSong();
-    if (!song) return;
-
-    if (song.audioUrl) {
-      // Stop YouTube if running
-      if (ytPlayer && ytReady && ytPlayer.pauseVideo) {
-        try { ytPlayer.pauseVideo(); } catch (e) {}
-      }
-      activeEngine = 'audio';
-      htmlAudio.src = song.audioUrl;
-      htmlAudio.play().catch(() => {});
-    } else {
-      // Stop HTML5 Audio if running
-      htmlAudio.pause();
-      activeEngine = 'yt';
-      if (ytPlayer && ytReady) {
-        ytPlayer.loadVideoById(song.id);
-      }
-    }
-
+    if (!song || !ytPlayer || !isReady) return;
+    ytPlayer.loadVideoById(song.id);
     Storage.addRecent(song);
     emit('trackchange', song);
+    savePlayerState();
   }
 
   function playNow(song, contextList) {
@@ -147,50 +110,30 @@ const Player = (() => {
 
   function next() {
     if (!queue.length) return;
+    const settings = Storage.getSettings();
     if (queueIndex < queue.length - 1) queueIndex++;
-    else queueIndex = 0;
+    else if (settings.repeat === 'all') queueIndex = 0;
+    else { emit('pause'); return; }
     playCurrent();
   }
 
   function prev() {
-    if (!queue.length) return;
-    const state = getState();
-    if (state.position > 3) { seekTo(0); return; }
+    if (!queue.length || !ytPlayer) return;
+    if (ytPlayer.getCurrentTime() > 3) { ytPlayer.seekTo(0, true); return; }
     if (queueIndex > 0) queueIndex--;
-    else queueIndex = queue.length - 1;
     playCurrent();
   }
 
   function togglePlay() {
-    const song = currentSong();
-    if (!song) {
-      const samples = Storage.getSampleTracks();
-      if (samples.length) playQueue(samples, 0);
-      return;
-    }
-    if (activeEngine === 'audio') {
-      if (htmlAudio.paused) htmlAudio.play().catch(() => {});
-      else htmlAudio.pause();
-    } else if (ytPlayer && ytReady) {
-      const st = ytPlayer.getPlayerState();
-      if (st === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
-      else ytPlayer.playVideo();
-    }
+    if (!ytPlayer) return;
+    const state = ytPlayer.getPlayerState();
+    if (state === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+    else ytPlayer.playVideo();
   }
 
-  function seekTo(seconds) {
-    if (activeEngine === 'audio') {
-      htmlAudio.currentTime = seconds;
-    } else if (ytPlayer && ytReady) {
-      ytPlayer.seekTo(seconds, true);
-    }
-  }
+  function seekTo(seconds) { ytPlayer && ytPlayer.seekTo(seconds, true); }
 
-  function setVolume(v) {
-    htmlAudio.volume = Math.max(0, Math.min(1, v / 100));
-    if (ytPlayer && ytReady) ytPlayer.setVolume(v);
-    Storage.updateSettings({ volume: v });
-  }
+  function setVolume(v) { ytPlayer && ytPlayer.setVolume(v); Storage.updateSettings({ volume: v }); }
 
   function shuffleQueue(keepCurrentFirst) {
     const current = queue[queueIndex];
@@ -204,39 +147,37 @@ const Player = (() => {
   }
 
   function toggleShuffle() {
-    const nextVal = !Storage.getSettings().shuffle;
-    Storage.updateSettings({ shuffle: nextVal });
-    if (nextVal && queue.length) shuffleQueue(true);
-    emit('shufflechange', nextVal);
-    return nextVal;
+    const next = !Storage.getSettings().shuffle;
+    Storage.updateSettings({ shuffle: next });
+    if (next) shuffleQueue(true);
+    emit('shufflechange', next);
+    return next;
   }
 
   function cycleRepeat() {
-    const current = Storage.getSettings().repeat || 'off';
-    const nextMode = current === 'off' ? 'one' : 'off';
-    Storage.updateSettings({ repeat: nextMode });
-    emit('repeatchange', nextMode);
-    return nextMode;
+    const order = ['off', 'all', 'one'];
+    const mode = order[(order.indexOf(Storage.getSettings().repeat || 'off') + 1) % order.length];
+    Storage.updateSettings({ repeat: mode });
+    emit('repeatchange', mode);
+    return mode;
+  }
+
+  function savePlayerState() {
+    if (!ytPlayer || !isReady) return;
+    try {
+      Storage.setPlayerState({
+        videoId: currentSong()?.id,
+        positionSeconds: ytPlayer.getCurrentTime ? ytPlayer.getCurrentTime() : 0,
+        isPlaying: ytPlayer.getPlayerState() === YT.PlayerState.PLAYING,
+        queue, queueIndex, savedAt: Date.now()
+      });
+    } catch (e) {}
   }
 
   function getState() {
-    const song = currentSong();
-    if (activeEngine === 'audio') {
-      const dur = (htmlAudio.duration && !isNaN(htmlAudio.duration))
-        ? htmlAudio.duration
-        : (song && song.durationMs ? song.durationMs / 1000 : 0);
-      return {
-        isReady: true,
-        queue,
-        queueIndex,
-        duration: dur,
-        position: htmlAudio.currentTime || 0
-      };
-    }
     return {
-      isReady: ytReady,
-      queue,
-      queueIndex,
+      isReady,
+      queue, queueIndex,
       duration: (ytPlayer && ytPlayer.getDuration) ? ytPlayer.getDuration() : 0,
       position: (ytPlayer && ytPlayer.getCurrentTime) ? ytPlayer.getCurrentTime() : 0
     };
@@ -244,6 +185,6 @@ const Player = (() => {
 
   return {
     init, onEvent, playNow, playQueue, next, prev, togglePlay,
-    seekTo, setVolume, toggleShuffle, cycleRepeat, currentSong, isPlaying, getState
+    seekTo, setVolume, toggleShuffle, cycleRepeat, currentSong, getState
   };
 })();
