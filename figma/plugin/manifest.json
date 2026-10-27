@@ -1,6 +1,6 @@
 {
-  "name": "Melofy Gamma — Phone UI Generator",
-  "id": "melofy-gamma-phone-ui-generator",
+  "name": "Lyra Melofy — Phone UI Generator",
+  "id": "lyra-melofy-phone-ui-generator",
   "api": "1.0.0",
   "main": "code.js",
   "editorType": ["figma"]

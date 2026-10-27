@@ -214,13 +214,13 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
             Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show();
         } else {
             try {
-                Uri authUrl = Uri.parse("https://melofy-gamma.vercel.app/api/auth/google");
+                Uri authUrl = Uri.parse("https://lyra-melofy.vercel.app/api/auth/google");
                 new CustomTabsIntent.Builder().build().launchUrl(this, authUrl);
             } catch (Exception e) {
                 isLoggedIn = true;
-                userName = "Alex Melofy";
+                userName = "Alex Lyra Melofy";
                 userAvatarUrl = "https://picsum.photos/id/64/200/200";
-                Toast.makeText(this, "Signed in as Alex Melofy", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Signed in as Alex Lyra Melofy", Toast.LENGTH_SHORT).show();
             }
         }
         notifyUiUpdate();
@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements TrackRepository.R
                 if (fullPlayerDialog.isShowing()) {
                     dialogBinding.textFullTitle.setText(currentTrack.getTitle());
                     dialogBinding.textFullArtist.setText(currentTrack.getArtist());
-                    dialogBinding.textFullAlbum.setText(currentTrack.getAlbum().isEmpty() ? "Melofy Player" : currentTrack.getAlbum());
+                    dialogBinding.textFullAlbum.setText(currentTrack.getAlbum().isEmpty() ? "Lyra Melofy Player" : currentTrack.getAlbum());
 
                     dialogBinding.imgFullPlayIcon.setImageResource(isPlaying ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
                     dialogBinding.btnFullShuffle.setColorFilter(isShuffle ? Color.parseColor("#FACC15") : Color.parseColor("#A1A096"));

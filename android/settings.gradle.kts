@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Melofy"
+rootProject.name = "Lyra-Melofy"
 include(":app")

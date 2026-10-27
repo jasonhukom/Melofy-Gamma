@@ -1,4 +1,4 @@
-// Melofy Gamma — Native Figma Plugin Generator
+// Lyra Melofy — Native Figma Plugin Generator
 // Creates all 6 Android Phone Screens (Home, Trending, Search, Downloads, Profile, Full Player)
 // as editable Figma frames with Space Grotesk & Manrope typography and the Dark Yellow palette.
 
@@ -173,7 +173,7 @@ async function run() {
 
       // Hero Banner
       frame.appendChild(createRect("Hero Banner", 20, 68, 350, 92, COLORS.heroBanner, 16, COLORS.yellow, 1.5));
-      frame.appendChild(createText("MELOFY MUSIC", 38, 84, 11, "Bold", COLORS.yellow));
+      frame.appendChild(createText("LYRA MELOFY", 38, 84, 11, "Bold", COLORS.yellow));
       frame.appendChild(createText("Your Home Music Hub", 38, 102, 18, "Bold", COLORS.white));
       frame.appendChild(createText("Listen online or offline to your saved songs.", 38, 128, 12, "Regular", COLORS.muted));
 
@@ -314,7 +314,7 @@ async function run() {
   });
 
   figma.viewport.scrollAndZoomIntoView(created);
-  figma.closePlugin("Created all 6 Melofy Gamma phone screens on the Figma canvas!");
+  figma.closePlugin("Created all 6 Lyra Melofy phone screens on the Figma canvas!");
 }
 
 run();

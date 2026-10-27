@@ -1,5 +1,5 @@
 """
-Django settings for the Melofy backend.
+Django settings for the Lyra Melofy backend.
 
 Every secret (Django's own secret key, the YouTube API key, Google OAuth
 client secret, Firebase service account) is read from an environment

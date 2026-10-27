@@ -1,4 +1,4 @@
-# Melofy
+# Lyra Melofy
 
 A free, YouTube-powered music player with a Spotify-style UI — now rebuilt
 as a proper Django + Python backend, with Google/YouTube account sign-in
@@ -6,7 +6,7 @@ and a single-page app frontend so music never stops when you navigate. Plus
 an Android Studio project that wraps the whole thing.
 
 ```
-melofy/
+lyra-melofy/
 ├── backend/            Django project — the API and the app itself
 │   ├── melofy_backend/ settings, urls, wsgi
 │   ├── core/           search + "discover" endpoints (server-side YouTube key)
