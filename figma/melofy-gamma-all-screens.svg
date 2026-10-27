@@ -1,0 +1,527 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2660" height="920" viewBox="0 0 2660 920" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap');
+      .font-display { font-family: 'Space Grotesk', sans-serif; }
+      .font-body { font-family: 'Manrope', sans-serif; }
+    </style>
+
+    <!-- Reusable Vector Icons -->
+    <g id="ic-house">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor"/>
+    </g>
+    <g id="ic-trending">
+      <circle cx="6.7" cy="18.7" r="2.9" fill="currentColor"/>
+      <circle cx="17.3" cy="16.3" r="2.9" fill="currentColor"/>
+      <rect x="7.8" y="5.2" width="1.9" height="13.5" fill="currentColor"/>
+      <rect x="18.4" y="2.8" width="1.9" height="13.5" fill="currentColor"/>
+      <polygon points="7.8,5.2 20.3,2.8 20.3,5.0 7.8,7.4" fill="currentColor"/>
+      <polygon points="7.8,8.3 20.3,5.9 20.3,7.9 7.8,10.3" fill="currentColor"/>
+    </g>
+    <g id="ic-search-dark">
+      <circle cx="11" cy="11" r="7" stroke="#0A0905" stroke-width="2.6" fill="none"/>
+      <path d="M20 20l-4.2-4.2" stroke="#0A0905" stroke-width="2.6" stroke-linecap="round"/>
+    </g>
+    <g id="ic-search-yellow">
+      <circle cx="11" cy="11" r="7" stroke="#FACC15" stroke-width="2.4" fill="none"/>
+      <path d="M20 20l-4.2-4.2" stroke="#FACC15" stroke-width="2.4" stroke-linecap="round"/>
+    </g>
+    <g id="ic-download-solid">
+      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"/>
+    </g>
+    <g id="ic-download-done">
+      <path d="M5 18h14v2H5v-2zM19 9l-1.41-1.41L11 14.17l-3.59-3.58L6 12l5 5 8-8z" fill="currentColor"/>
+    </g>
+    <g id="ic-anonymous-pfp">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+    </g>
+  </defs>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 01: HOME (x=20, y=40, 390x844)                                      -->
+  <!-- ========================================================================= -->
+  <g id="Screen_01_Home" transform="translate(20, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <!-- Top Header -->
+    <g id="Home_Header" transform="translate(20, 24)">
+      <g transform="translate(0, 2)" color="#FACC15"><use href="#ic-house"/></g>
+      <text x="34" y="20" fill="#FFFFFF" class="font-display" font-size="22" font-weight="700">Home</text>
+      <rect x="248" y="0" width="102" height="28" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <text x="260" y="18" fill="#10B981" class="font-body" font-size="11" font-weight="700">• Offline Ready</text>
+    </g>
+
+    <!-- Hero Banner -->
+    <g id="Home_Hero_Banner" transform="translate(20, 72)">
+      <rect width="350" height="90" rx="16" fill="#1C180A" stroke="#FACC15" stroke-width="1.5"/>
+      <text x="18" y="28" fill="#FACC15" class="font-display" font-size="11" font-weight="700">MELOFY MUSIC</text>
+      <text x="18" y="52" fill="#FFFFFF" class="font-display" font-size="18" font-weight="700">Your Home Music Hub</text>
+      <text x="18" y="72" fill="#A1A096" class="font-body" font-size="12">Listen online or offline to your saved songs.</text>
+    </g>
+
+    <!-- Quick Picks -->
+    <text x="20" y="196" fill="#FFFFFF" class="font-display" font-size="16" font-weight="700">Quick Picks</text>
+    <g id="Home_Quick_Picks" transform="translate(20, 210)">
+      <g id="Card_1">
+        <rect width="140" height="176" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="124" height="118" rx="10" fill="#1E1B12"/>
+        <circle cx="70" cy="67" r="22" fill="#FACC15" fill-opacity="0.2"/>
+        <text x="8" y="144" fill="#FFFFFF" class="font-display" font-size="13" font-weight="700">Midnight Horizon</text>
+        <text x="8" y="162" fill="#A1A096" class="font-body" font-size="11">Lofi Sunset</text>
+      </g>
+      <g id="Card_2" transform="translate(152, 0)">
+        <rect width="140" height="176" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="124" height="118" rx="10" fill="#1E1B12"/>
+        <circle cx="70" cy="67" r="22" fill="#F59E0B" fill-opacity="0.2"/>
+        <text x="8" y="144" fill="#FFFFFF" class="font-display" font-size="13" font-weight="700">Neon Synthwave</text>
+        <text x="8" y="162" fill="#A1A096" class="font-body" font-size="11">Aetherium</text>
+      </g>
+    </g>
+
+    <!-- Recommended For You -->
+    <text x="20" y="418" fill="#FFFFFF" class="font-display" font-size="16" font-weight="700">Recommended For You</text>
+    <g id="Home_Recommended_List" transform="translate(16, 430)">
+      <g id="Row_1">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="68" y="28" fill="#FACC15" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+        <text x="68" y="46" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+        <text x="178" y="46" fill="#10B981" class="font-display" font-size="11" font-weight="700">• Offline</text>
+        <text x="294" y="38" fill="#EF4444" font-size="18">★</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+      <g id="Row_2" transform="translate(0, 72)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="68" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Neon Synthwave Drift</text>
+        <text x="68" y="46" fill="#A1A096" class="font-body" font-size="12">Aetherium • Electronic</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      </g>
+      <g id="Row_3" transform="translate(0, 144)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="68" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Acoustic Morning Coffee</text>
+        <text x="68" y="46" fill="#A1A096" class="font-body" font-size="12">Luna &amp; The Pines • Pop</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+    </g>
+
+    <!-- Mini Player Bar -->
+    <g id="Home_Mini_Player" transform="translate(8, 704)">
+      <rect width="374" height="62" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <rect x="8" y="8" width="46" height="46" rx="10" fill="#16140E"/>
+      <text x="66" y="27" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+      <text x="66" y="45" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+      <text x="304" y="38" fill="#FACC15" font-size="18">⏸</text>
+      <text x="340" y="38" fill="#FFFFFF" font-size="18">⏭</text>
+      <rect x="0" y="60" width="374" height="2" fill="#2A261A"/>
+      <rect x="0" y="60" width="160" height="2" fill="#FACC15"/>
+    </g>
+
+    <!-- 5-Button Persistent Footer (Home Active = #FACC15) -->
+    <g id="Home_Bottom_Nav" transform="translate(0, 772)">
+      <rect width="390" height="72" fill="#0E0D08"/>
+      <line x1="0" y1="0" x2="390" y2="0" stroke="#2A261A" stroke-width="1"/>
+      <g transform="translate(27, 14)" color="#FACC15"><use href="#ic-house"/></g>
+      <text x="39" y="54" text-anchor="middle" fill="#FACC15" class="font-body" font-size="11" font-weight="700">Home</text>
+
+      <g transform="translate(105, 14)" color="#FFFFFF"><use href="#ic-trending"/></g>
+      <text x="117" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Trending</text>
+
+      <circle cx="195" cy="36" r="31" fill="#FACC15" stroke="#2A261A" stroke-width="2"/>
+      <g transform="translate(183, 24)"><use href="#ic-search-dark"/></g>
+
+      <g transform="translate(261, 14)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      <text x="273" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Downloads</text>
+
+      <g transform="translate(339, 14)" color="#FFFFFF"><use href="#ic-anonymous-pfp"/></g>
+      <text x="351" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Profile</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 02: TRENDING (x=460, y=40, 390x844)                                 -->
+  <!-- ========================================================================= -->
+  <g id="Screen_02_Trending" transform="translate(460, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <g id="Trending_Header" transform="translate(20, 24)">
+      <g transform="translate(0, 4)" color="#FACC15"><use href="#ic-trending"/></g>
+      <text x="36" y="20" fill="#FFFFFF" class="font-display" font-size="22" font-weight="700">Trending Charts</text>
+      <text x="36" y="38" fill="#A1A096" class="font-body" font-size="12">Top played tracks this week</text>
+    </g>
+
+    <g id="Trending_List" transform="translate(16, 86)">
+      <g transform="translate(0, 0)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#1</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FACC15" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+        <text x="294" y="38" fill="#EF4444" font-size="18">★</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+      <g transform="translate(0, 72)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#2</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Neon Synthwave Drift</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Aetherium • Electronic</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      </g>
+      <g transform="translate(0, 144)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#3</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Acoustic Morning Coffee</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Luna &amp; The Pines • Pop</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+      <g transform="translate(0, 216)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#4</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Ethereal Echoes</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Solaris Wave • Ambient</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      </g>
+      <g transform="translate(0, 288)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#5</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Urban Rhythm Groove</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Metro Beatmakers • Hip-Hop</text>
+        <text x="294" y="38" fill="#EF4444" font-size="18">★</text>
+        <g transform="translate(322, 20)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      </g>
+      <g transform="translate(0, 360)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="18" y="37" text-anchor="middle" fill="#FACC15" class="font-display" font-size="14" font-weight="700">#6</text>
+        <rect x="36" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="96" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Velvet Afterdark</text>
+        <text x="96" y="46" fill="#A1A096" class="font-body" font-size="12">Kira Sound • R&amp;B</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      </g>
+    </g>
+
+    <!-- Mini Player -->
+    <g transform="translate(8, 704)">
+      <rect width="374" height="62" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <rect x="8" y="8" width="46" height="46" rx="10" fill="#16140E"/>
+      <text x="66" y="27" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+      <text x="66" y="45" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+      <text x="304" y="38" fill="#FACC15" font-size="18">⏸</text>
+      <text x="340" y="38" fill="#FFFFFF" font-size="18">⏭</text>
+      <rect x="0" y="60" width="374" height="2" fill="#2A261A"/>
+      <rect x="0" y="60" width="160" height="2" fill="#FACC15"/>
+    </g>
+
+    <!-- 5-Button Footer (Trending Active = #FACC15) -->
+    <g transform="translate(0, 772)">
+      <rect width="390" height="72" fill="#0E0D08"/>
+      <line x1="0" y1="0" x2="390" y2="0" stroke="#2A261A" stroke-width="1"/>
+      <g transform="translate(27, 14)" color="#FFFFFF"><use href="#ic-house"/></g>
+      <text x="39" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="700">Home</text>
+
+      <g transform="translate(105, 14)" color="#FACC15"><use href="#ic-trending"/></g>
+      <text x="117" y="54" text-anchor="middle" fill="#FACC15" class="font-body" font-size="11" font-weight="500">Trending</text>
+
+      <circle cx="195" cy="36" r="31" fill="#FACC15" stroke="#2A261A" stroke-width="2"/>
+      <g transform="translate(183, 24)"><use href="#ic-search-dark"/></g>
+
+      <g transform="translate(261, 14)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      <text x="273" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Downloads</text>
+
+      <g transform="translate(339, 14)" color="#FFFFFF"><use href="#ic-anonymous-pfp"/></g>
+      <text x="351" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Profile</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 03: SEARCH & EXPLORE (x=900, y=40, 390x844)                         -->
+  <!-- ========================================================================= -->
+  <g id="Screen_03_Search" transform="translate(900, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <g id="Search_Header" transform="translate(20, 24)">
+      <g transform="translate(0, 2)"><use href="#ic-search-yellow"/></g>
+      <text x="36" y="20" fill="#FFFFFF" class="font-display" font-size="22" font-weight="700">Search &amp; Explore</text>
+    </g>
+
+    <!-- Search Input Box -->
+    <g id="Search_Box" transform="translate(20, 68)">
+      <rect width="350" height="52" rx="12" fill="#16140E" stroke="#2A261A"/>
+      <g transform="translate(14, 14)" opacity="0.7"><use href="#ic-search-yellow"/></g>
+      <text x="48" y="31" fill="#A1A096" class="font-body" font-size="14">Search songs, artists, genres...</text>
+    </g>
+
+    <text x="20" y="152" fill="#FFFFFF" class="font-display" font-size="16" font-weight="700">Browse Categories</text>
+
+    <!-- 2x3 Category Cards Grid -->
+    <g id="Search_Categories" transform="translate(20, 168)">
+      <g transform="translate(0, 0)">
+        <rect width="169" height="80" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Chill Lo-Fi</text>
+      </g>
+      <g transform="translate(181, 0)">
+        <rect width="169" height="80" rx="16" fill="#1C180A" stroke="#FACC15" stroke-width="1.5"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Synth Wave</text>
+      </g>
+      <g transform="translate(0, 92)">
+        <rect width="169" height="80" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Acoustic Vibes</text>
+      </g>
+      <g transform="translate(181, 92)">
+        <rect width="169" height="80" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Offline Tracks</text>
+      </g>
+      <g transform="translate(0, 184)">
+        <rect width="169" height="80" rx="16" fill="#1C180A" stroke="#FACC15" stroke-width="1.5"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Hip-Hop Beats</text>
+      </g>
+      <g transform="translate(181, 184)">
+        <rect width="169" height="80" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <text x="14" y="64" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Ambient &amp; Zen</text>
+      </g>
+    </g>
+
+    <!-- Mini Player -->
+    <g transform="translate(8, 704)">
+      <rect width="374" height="62" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <rect x="8" y="8" width="46" height="46" rx="10" fill="#16140E"/>
+      <text x="66" y="27" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+      <text x="66" y="45" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+      <text x="304" y="38" fill="#FACC15" font-size="18">⏸</text>
+      <text x="340" y="38" fill="#FFFFFF" font-size="18">⏭</text>
+      <rect x="0" y="60" width="374" height="2" fill="#2A261A"/>
+      <rect x="0" y="60" width="160" height="2" fill="#FACC15"/>
+    </g>
+
+    <!-- 5-Button Footer (Search Active = All 4 outer tabs #FFFFFF, Center Circle has 3px #FFFFFF stroke) -->
+    <g transform="translate(0, 772)">
+      <rect width="390" height="72" fill="#0E0D08"/>
+      <line x1="0" y1="0" x2="390" y2="0" stroke="#2A261A" stroke-width="1"/>
+      <g transform="translate(27, 14)" color="#FFFFFF"><use href="#ic-house"/></g>
+      <text x="39" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="700">Home</text>
+
+      <g transform="translate(105, 14)" color="#FFFFFF"><use href="#ic-trending"/></g>
+      <text x="117" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Trending</text>
+
+      <circle cx="195" cy="36" r="31" fill="#FACC15" stroke="#FFFFFF" stroke-width="3"/>
+      <g transform="translate(183, 24)"><use href="#ic-search-dark"/></g>
+
+      <g transform="translate(261, 14)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      <text x="273" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Downloads</text>
+
+      <g transform="translate(339, 14)" color="#FFFFFF"><use href="#ic-anonymous-pfp"/></g>
+      <text x="351" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Profile</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 04: DOWNLOADS / OFFLINE LIBRARY (x=1340, y=40, 390x844)             -->
+  <!-- ========================================================================= -->
+  <g id="Screen_04_Downloads" transform="translate(1340, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <g id="Downloads_Header" transform="translate(20, 24)">
+      <g transform="translate(0, 4)" color="#FACC15"><use href="#ic-download-done"/></g>
+      <text x="36" y="20" fill="#FFFFFF" class="font-display" font-size="22" font-weight="700">Offline Music Library</text>
+      <text x="36" y="38" fill="#A1A096" class="font-body" font-size="12">Playable anytime without internet connection</text>
+    </g>
+
+    <!-- Storage Card -->
+    <g id="Downloads_Storage_Card" transform="translate(20, 86)">
+      <rect width="350" height="106" rx="16" fill="#1C180A" stroke="#FACC15" stroke-width="1.5"/>
+      <text x="20" y="28" fill="#10B981" class="font-display" font-size="10" font-weight="700" letter-spacing="1">• OFFLINE STORAGE ACTIVE</text>
+      <text x="330" y="28" text-anchor="end" fill="#A1A096" class="font-body" font-size="12">2 Tracks Saved</text>
+
+      <rect x="20" y="46" width="149" height="42" rx="12" fill="#FACC15"/>
+      <text x="94.5" y="72" text-anchor="middle" fill="#0A0905" class="font-display" font-size="14" font-weight="700">Play All</text>
+
+      <rect x="181" y="46" width="149" height="42" rx="12" fill="none" stroke="#FACC15" stroke-width="1.5"/>
+      <text x="255.5" y="72" text-anchor="middle" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Shuffle</text>
+    </g>
+
+    <text x="20" y="224" fill="#FFFFFF" class="font-display" font-size="18" font-weight="700">Downloaded Tracks</text>
+
+    <g id="Downloads_Track_List" transform="translate(16, 240)">
+      <g transform="translate(0, 0)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="68" y="28" fill="#FACC15" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+        <text x="68" y="46" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+        <text x="178" y="46" fill="#10B981" class="font-display" font-size="11" font-weight="700">• Offline</text>
+        <text x="294" y="38" fill="#EF4444" font-size="18">★</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+      <g transform="translate(0, 72)">
+        <rect width="358" height="64" rx="12" fill="#16140E" stroke="#2A261A"/>
+        <rect x="8" y="8" width="48" height="48" rx="8" fill="#1E1B12"/>
+        <text x="68" y="28" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Acoustic Morning Coffee</text>
+        <text x="68" y="46" fill="#A1A096" class="font-body" font-size="12">Luna &amp; The Pines • Pop</text>
+        <text x="200" y="46" fill="#10B981" class="font-display" font-size="11" font-weight="700">• Offline</text>
+        <text x="294" y="38" fill="#A1A096" font-size="18">☆</text>
+        <g transform="translate(322, 20)" color="#FEF08A"><use href="#ic-download-done"/></g>
+      </g>
+    </g>
+
+    <!-- Mini Player -->
+    <g transform="translate(8, 704)">
+      <rect width="374" height="62" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <rect x="8" y="8" width="46" height="46" rx="10" fill="#16140E"/>
+      <text x="66" y="27" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+      <text x="66" y="45" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+      <text x="304" y="38" fill="#FACC15" font-size="18">⏸</text>
+      <text x="340" y="38" fill="#FFFFFF" font-size="18">⏭</text>
+      <rect x="0" y="60" width="374" height="2" fill="#2A261A"/>
+      <rect x="0" y="60" width="160" height="2" fill="#FACC15"/>
+    </g>
+
+    <!-- 5-Button Footer (Downloads Active = #FACC15) -->
+    <g transform="translate(0, 772)">
+      <rect width="390" height="72" fill="#0E0D08"/>
+      <line x1="0" y1="0" x2="390" y2="0" stroke="#2A261A" stroke-width="1"/>
+      <g transform="translate(27, 14)" color="#FFFFFF"><use href="#ic-house"/></g>
+      <text x="39" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="700">Home</text>
+
+      <g transform="translate(105, 14)" color="#FFFFFF"><use href="#ic-trending"/></g>
+      <text x="117" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Trending</text>
+
+      <circle cx="195" cy="36" r="31" fill="#FACC15" stroke="#2A261A" stroke-width="2"/>
+      <g transform="translate(183, 24)"><use href="#ic-search-dark"/></g>
+
+      <g transform="translate(261, 14)" color="#FACC15"><use href="#ic-download-solid"/></g>
+      <text x="273" y="54" text-anchor="middle" fill="#FACC15" class="font-body" font-size="11" font-weight="500">Downloads</text>
+
+      <g transform="translate(339, 14)" color="#FFFFFF"><use href="#ic-anonymous-pfp"/></g>
+      <text x="351" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Profile</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 05: PROFILE & SETTINGS (x=1780, y=40, 390x844)                      -->
+  <!-- ========================================================================= -->
+  <g id="Screen_05_Profile" transform="translate(1780, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <!-- User Profile Card -->
+    <g id="Profile_User_Card" transform="translate(20, 24)">
+      <rect width="350" height="312" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <circle cx="175" cy="66" r="46" fill="#1E1B12" stroke="#FACC15" stroke-width="2"/>
+      <g transform="translate(151, 42) scale(2)" color="#FACC15"><use href="#ic-anonymous-pfp"/></g>
+
+      <text x="175" y="142" text-anchor="middle" fill="#FFFFFF" class="font-display" font-size="20" font-weight="700">Anonymous Listener</text>
+      <text x="175" y="162" text-anchor="middle" fill="#A1A096" class="font-body" font-size="12">Guest Mode • Offline Listening Available</text>
+
+      <!-- Stats Row -->
+      <rect x="20" y="180" width="310" height="58" rx="10" fill="#0A0905" fill-opacity="0.55"/>
+      <text x="72" y="206" text-anchor="middle" fill="#EF4444" class="font-display" font-size="18" font-weight="700">2</text>
+      <text x="72" y="224" text-anchor="middle" fill="#A1A096" class="font-body" font-size="11">Liked Songs</text>
+
+      <text x="175" y="206" text-anchor="middle" fill="#FEF08A" class="font-display" font-size="18" font-weight="700">2</text>
+      <text x="175" y="224" text-anchor="middle" fill="#A1A096" class="font-body" font-size="11">Offline Tracks</text>
+
+      <text x="278" y="206" text-anchor="middle" fill="#FACC15" class="font-display" font-size="18" font-weight="700">320k</text>
+      <text x="278" y="224" text-anchor="middle" fill="#A1A096" class="font-body" font-size="11">Audio Quality</text>
+
+      <!-- Connect YouTube / Google Button -->
+      <rect x="20" y="252" width="310" height="44" rx="14" fill="#FACC15"/>
+      <text x="175" y="279" text-anchor="middle" fill="#0A0905" class="font-display" font-size="14" font-weight="700">Connect YouTube / Google Account</text>
+    </g>
+
+    <!-- App Settings -->
+    <text x="20" y="368" fill="#FFFFFF" class="font-display" font-size="16" font-weight="700">App Settings</text>
+    <g id="Profile_Settings_Box" transform="translate(20, 382)">
+      <rect width="350" height="108" rx="12" fill="#16140E" stroke="#2A261A"/>
+      <text x="16" y="34" fill="#FFFFFF" class="font-body" font-size="14">High Quality Audio (320 kbps)</text>
+      <rect x="290" y="16" width="44" height="24" rx="12" fill="#FACC15"/>
+      <circle cx="322" cy="28" r="9" fill="#0A0905"/>
+
+      <line x1="16" y1="54" x2="334" y2="54" stroke="#2A261A" stroke-width="1"/>
+
+      <text x="16" y="86" fill="#FFFFFF" class="font-body" font-size="14">Download Over Wi-Fi Only</text>
+      <rect x="290" y="68" width="44" height="24" rx="12" fill="#FACC15"/>
+      <circle cx="322" cy="80" r="9" fill="#0A0905"/>
+    </g>
+
+    <!-- Mini Player -->
+    <g transform="translate(8, 704)">
+      <rect width="374" height="62" rx="14" fill="#1E1B12" stroke="#2A261A"/>
+      <rect x="8" y="8" width="46" height="46" rx="10" fill="#16140E"/>
+      <text x="66" y="27" fill="#FFFFFF" class="font-display" font-size="14" font-weight="700">Midnight Horizon</text>
+      <text x="66" y="45" fill="#A1A096" class="font-body" font-size="12">Lofi Sunset • Lo-Fi</text>
+      <text x="304" y="38" fill="#FACC15" font-size="18">⏸</text>
+      <text x="340" y="38" fill="#FFFFFF" font-size="18">⏭</text>
+      <rect x="0" y="60" width="374" height="2" fill="#2A261A"/>
+      <rect x="0" y="60" width="160" height="2" fill="#FACC15"/>
+    </g>
+
+    <!-- 5-Button Footer (Profile Active = #FACC15) -->
+    <g transform="translate(0, 772)">
+      <rect width="390" height="72" fill="#0E0D08"/>
+      <line x1="0" y1="0" x2="390" y2="0" stroke="#2A261A" stroke-width="1"/>
+      <g transform="translate(27, 14)" color="#FFFFFF"><use href="#ic-house"/></g>
+      <text x="39" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="700">Home</text>
+
+      <g transform="translate(105, 14)" color="#FFFFFF"><use href="#ic-trending"/></g>
+      <text x="117" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Trending</text>
+
+      <circle cx="195" cy="36" r="31" fill="#FACC15" stroke="#2A261A" stroke-width="2"/>
+      <g transform="translate(183, 24)"><use href="#ic-search-dark"/></g>
+
+      <g transform="translate(261, 14)" color="#FFFFFF"><use href="#ic-download-solid"/></g>
+      <text x="273" y="54" text-anchor="middle" fill="#FFFFFF" class="font-body" font-size="11" font-weight="500">Downloads</text>
+
+      <g transform="translate(339, 14)" color="#FACC15"><use href="#ic-anonymous-pfp"/></g>
+      <text x="351" y="54" text-anchor="middle" fill="#FACC15" class="font-body" font-size="11" font-weight="500">Profile</text>
+    </g>
+  </g>
+
+  <!-- ========================================================================= -->
+  <!-- SCREEN 06: FULL PLAYER DIALOG (x=2220, y=40, 390x844)                      -->
+  <!-- ========================================================================= -->
+  <g id="Screen_06_Full_Player" transform="translate(2220, 40)">
+    <rect width="390" height="844" rx="28" fill="#0A0905" stroke="#2A261A" stroke-width="2"/>
+
+    <!-- Top Bar -->
+    <path d="M30 42l8 8 8-8" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="195" y="40" text-anchor="middle" fill="#A1A096" class="font-display" font-size="10" font-weight="700" letter-spacing="1">PLAYING FROM LIBRARY</text>
+    <text x="195" y="58" text-anchor="middle" fill="#FFFFFF" class="font-display" font-size="13" font-weight="700">Chill Vibes Vol. 1</text>
+
+    <!-- Full Cover Art -->
+    <rect x="55" y="110" width="280" height="280" rx="20" fill="#16140E" stroke="#FACC15" stroke-width="1.5"/>
+    <circle cx="195" cy="250" r="56" fill="#FACC15" fill-opacity="0.16"/>
+
+    <!-- Track Info & Actions -->
+    <text x="24" y="454" fill="#FFFFFF" class="font-display" font-size="22" font-weight="700">Midnight Horizon</text>
+    <text x="24" y="480" fill="#A1A096" class="font-body" font-size="15">Lofi Sunset</text>
+    <rect x="112" y="467" width="48" height="16" rx="4" fill="#10B981" fill-opacity="0.2"/>
+    <text x="136" y="478" text-anchor="middle" fill="#10B981" class="font-display" font-size="9" font-weight="700">OFFLINE</text>
+
+    <text x="306" y="468" fill="#EF4444" font-size="22">★</text>
+    <g transform="translate(338, 448)" color="#FEF08A"><use href="#ic-download-done"/></g>
+
+    <!-- Seeker -->
+    <rect x="24" y="524" width="342" height="4" rx="2" fill="#2A261A"/>
+    <rect x="24" y="524" width="148" height="4" rx="2" fill="#FACC15"/>
+    <circle cx="172" cy="526" r="7" fill="#FACC15"/>
+    <text x="24" y="548" fill="#A1A096" class="font-body" font-size="12">01:42</text>
+    <text x="366" y="548" text-anchor="end" fill="#A1A096" class="font-body" font-size="12">06:12</text>
+
+    <!-- Playback Controls -->
+    <text x="48" y="622" text-anchor="middle" fill="#FACC15" font-size="20">🔀</text>
+    <text x="114" y="624" text-anchor="middle" fill="#FFFFFF" font-size="26">⏮</text>
+    <circle cx="195" cy="616" r="32" fill="#FACC15" stroke="#2A261A" stroke-width="2"/>
+    <rect x="187" y="605" width="5" height="22" rx="1.5" fill="#0A0905"/>
+    <rect x="198" y="605" width="5" height="22" rx="1.5" fill="#0A0905"/>
+    <text x="276" y="624" text-anchor="middle" fill="#FFFFFF" font-size="26">⏭</text>
+    <text x="342" y="622" text-anchor="middle" fill="#A1A096" font-size="20">🔁</text>
+  </g>
+</svg>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Melofy Gamma — Figma Phone UI Kit (All 6 Pages)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #141414;
+      color: #FFFFFF;
+      font-family: 'Manrope', sans-serif;
+      padding: 28px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2A261A;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      color: #FACC15;
+    }
+    p.sub {
+      color: #A1A096;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .btn {
+      background: #FACC15;
+      color: #0A0905;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .canvas-wrap {
+      overflow-x: auto;
+      background: #1E1E1E;
+      border: 1px solid #2A261A;
+      border-radius: 16px;
+      padding: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Melofy Gamma — Figma Phone UI Kit (6 Pages)</h1>
+      <p class="sub">Click "Copy SVG for Figma" below and press Ctrl+V directly inside Figma to paste all 6 editable phone frames!</p>
+    </div>
+    <button class="btn" id="copy-btn">Copy All 6 Pages for Figma (Ctrl+V in Figma)</button>
+  </header>
+  <div class="canvas-wrap">
+    <object id="svg-obj" data="melofy-gamma-all-screens.svg" type="image/svg+xml" width="2660" height="920"></object>
+  </div>
+  <script>
+    document.getElementById('copy-btn').addEventListener('click', async () => {
+      const res = await fetch('melofy-gamma-all-screens.svg');
+      const svgText = await res.text();
+      await navigator.clipboard.writeText(svgText);
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = 'Copied! Now press Ctrl+V on your Figma canvas';
+      setTimeout(() => { btn.textContent = 'Copy All 6 Pages for Figma (Ctrl+V in Figma)'; }, 3000);
+    });
+  </script>
+</body>
+</html>
