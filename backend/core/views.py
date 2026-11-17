@@ -23,7 +23,7 @@ def search_view(request):
     except RuntimeError as exc:
         return JsonResponse({"error": str(exc)}, status=503)
     except Exception:
-        return JsonResponse({"error": "Search failed — check the server's YouTube API key and quota."}, status=502)
+        return JsonResponse({"error": "Search is unavailable right now. Please try again in a moment."}, status=502)
     return JsonResponse({"query": query, "results": songs})
 
 

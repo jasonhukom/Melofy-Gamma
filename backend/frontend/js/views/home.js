@@ -25,14 +25,14 @@ const HomeView = {
     const qpHeader = UI.el('div', { class: 'ytm-section-header' });
     const qpTitleWrap = UI.el('div', {});
     qpTitleWrap.append(
-      UI.el('div', { class: 'section-kicker', text: isExplore ? 'CHARTS & TRENDING' : 'START RADIO FROM A SONG' }),
-      UI.el('h2', { class: 'section-heading', text: isExplore ? 'Trending tracks' : 'Quick picks' })
+      UI.el('div', { class: 'section-kicker', text: isExplore ? 'Charts and risers' : 'Pick a vibe' }),
+      UI.el('h2', { class: 'section-heading', text: isExplore ? 'Rising now' : 'Spin something' })
     );
     const playAllBtn = UI.el('button', { class: 'ytm-pill-outline-btn', text: 'Play all' });
     qpHeader.append(qpTitleWrap, playAllBtn);
 
     const quickPicksGrid = UI.el('div', { class: 'ytm-quick-picks-grid' });
-    quickPicksGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading picks…' }));
+    quickPicksGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Tuning in...' }));
     quickPicksSection.append(qpHeader, quickPicksGrid);
 
     // Mixed For You / Recommended Shelf (Square cards with play overlay)
@@ -40,8 +40,8 @@ const HomeView = {
     const shelfHeader = UI.el('div', { class: 'ytm-section-header' });
     const shelfTitleWrap = UI.el('div', {});
     shelfTitleWrap.append(
-      UI.el('div', { class: 'section-kicker', text: 'RECOMMENDED FOR YOU' }),
-      UI.el('h2', { class: 'section-heading', text: isExplore ? 'New releases & mixes' : 'Mixed for you' })
+      UI.el('div', { class: 'section-kicker', text: 'Fresh in the mix' }),
+      UI.el('h2', { class: 'section-heading', text: isExplore ? 'New and next' : 'Worth a listen' })
     );
     shelfHeader.appendChild(shelfTitleWrap);
     const shelfGrid = UI.el('div', { class: 'ytm-shelf-grid' });
@@ -52,8 +52,8 @@ const HomeView = {
     const recentHeader = UI.el('div', { class: 'ytm-section-header' });
     const recentTitleWrap = UI.el('div', {});
     recentTitleWrap.append(
-      UI.el('div', { class: 'section-kicker', text: 'YOUR HISTORY' }),
-      UI.el('h2', { class: 'section-heading', text: 'Listen again' })
+      UI.el('div', { class: 'section-kicker', text: 'Your history' }),
+      UI.el('h2', { class: 'section-heading', text: 'Back on repeat' })
     );
     recentHeader.appendChild(recentTitleWrap);
     const recentRow = UI.el('div', { class: 'ytm-quick-picks-grid' });
@@ -67,27 +67,28 @@ const HomeView = {
 
     container.append(chipRow, quickPicksSection, shelfSection, recentSection);
 
-    const fallbackPicks = [
-      { id: 'jfKfPfyJRdk', title: 'lofi hip hop radio - beats to relax/study to', artist: 'Lofi Girl', thumbnail: 'https://i.ytimg.com/vi/jfKfPfyJRdk/hqdefault.jpg' },
-      { id: '5qap5aO4i9A', title: 'Lofi Hip Hop Radio 24/7', artist: 'Lofi Girl', thumbnail: 'https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg' },
-      { id: 'DWcJFNfaw9c', title: 'Chillhop Radio - jazzy & lofi hip hop beats', artist: 'Chillhop Music', thumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg' },
-      { id: '21qNxnCS8WU', title: 'Japanese City Pop / Chill Vibes', artist: 'Plastic Love Mix', thumbnail: 'https://i.ytimg.com/vi/21qNxnCS8WU/hqdefault.jpg' },
-      { id: '4xDzrJKXOOY', title: 'Synthwave Radio - chill synth / retro beats', artist: 'Lofi Girl Synthwave', thumbnail: 'https://i.ytimg.com/vi/4xDzrJKXOOY/hqdefault.jpg' },
-      { id: 'rUxyKA_-grg', title: 'Sleepy Lofi Beats - late night ambient', artist: 'Lofi Girl', thumbnail: 'https://i.ytimg.com/vi/rUxyKA_-grg/hqdefault.jpg' }
-    ];
+    let activeSongs = [];
+    let currentQuery = '';
 
-    let activeSongs = fallbackPicks;
+    function showState(message) {
+      quickPicksGrid.innerHTML = '';
+      shelfGrid.innerHTML = '';
+      const box = UI.el('div', { class: 'empty-state state-box' });
+      box.appendChild(UI.el('p', { text: message }));
+      const retry = UI.el('button', { class: 'btn-secondary', text: 'Try again' });
+      retry.addEventListener('click', () => loadFeed(currentQuery));
+      box.appendChild(retry);
+      quickPicksGrid.appendChild(box);
+    }
 
-    function populateSections(songs) {
-      const list = (songs && songs.length) ? songs : fallbackPicks;
+    function populateSections(list) {
+      if (!list || !list.length) { showState('Nothing came back for that one. Try another mood.'); return; }
       activeSongs = list;
-
       quickPicksGrid.innerHTML = '';
       list.slice(0, 9).forEach(song => quickPicksGrid.appendChild(UI.songRow(song, { context: list })));
-
       shelfGrid.innerHTML = '';
-      const shelfItems = list.length > 4 ? list.slice(0, 6) : fallbackPicks;
-      shelfItems.forEach(song => shelfGrid.appendChild(UI.mediaCard(song, { context: list })));
+      (list.length > 12 ? list.slice(9, 15) : list.slice(0, 6))
+        .forEach(song => shelfGrid.appendChild(UI.mediaCard(song, { context: list })));
     }
 
     playAllBtn.addEventListener('click', () => {
@@ -95,10 +96,14 @@ const HomeView = {
     });
 
     function loadFeed(query) {
+      currentQuery = query;
       quickPicksGrid.innerHTML = '';
-      quickPicksGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading picks…' }));
+      quickPicksGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Tuning in...' }));
       const req = query ? YouTubeAPI.search(query) : YouTubeAPI.randomPicks();
-      req.then(songs => populateSections(songs)).catch(() => populateSections(fallbackPicks));
+      req.then(populateSections).catch(err => {
+        const m = err && err.message;
+        showState(m && !/_FAILED$/.test(m) ? m : 'Could not load music right now.');
+      });
     }
 
     moods.forEach(([label, query], idx) => {

@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta
 
+from django.conf import settings
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -19,6 +20,18 @@ from .models import YouTubeAccount
 def _account_status(uid):
     connected = YouTubeAccount.objects.filter(firebase_uid=uid).exists()
     return connected
+
+
+@require_GET
+def public_config(request):
+    """What the browser needs to know to enable sign-in. Reports honestly
+    which features are configured on this server instead of failing silently."""
+    web = settings.FIREBASE_WEB_CONFIG
+    firebase_ready = all(web.values()) and bool(settings.FIREBASE_SERVICE_ACCOUNT_JSON)
+    return JsonResponse({
+        "firebase": web if firebase_ready else None,
+        "youtubeLinking": bool(settings.GOOGLE_OAUTH_CLIENT_ID and settings.GOOGLE_OAUTH_CLIENT_SECRET),
+    })
 
 
 @csrf_exempt
@@ -134,6 +147,8 @@ def youtube_connect(request):
     uid = request.session.get("firebase_uid")
     if not uid:
         return JsonResponse({"error": "Sign in first"}, status=401)
+    if not (settings.GOOGLE_OAUTH_CLIENT_ID and settings.GOOGLE_OAUTH_CLIENT_SECRET):
+        return HttpResponseRedirect("/#/library?youtube=unconfigured")
     platform = request.GET.get("platform", "web")
     state_token = handoff.mint(uid, platform=platform, purpose="youtube_connect")
     return HttpResponseRedirect(google_oauth.build_auth_url(state_token))

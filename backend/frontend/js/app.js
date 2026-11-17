@@ -156,6 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const hashQuery = new URLSearchParams((location.hash.split('?')[1]) || '');
     if (hashQuery.get('youtube') === 'connected') UI.toast('YouTube account connected');
+    if (hashQuery.get('youtube') === 'unconfigured') UI.toast('YouTube linking is not set up on this server yet');
     if (hashQuery.get('youtube') === 'error') UI.toast('Could not connect YouTube — try again');
   }
 });

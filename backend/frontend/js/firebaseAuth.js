@@ -1,79 +1,73 @@
-/* firebaseAuth.js — "Sign in with Google" + "Connect your YouTube account".
-   ES module (needs the Firebase JS SDK's modular imports), loaded with
-   type="module" in index.html; exposes window.FirebaseAuth so the rest of
-   the (non-module) app can use it.
-
-   Android note: a plain WebView is not allowed to complete Google sign-in
-   (Google blocks it as an "embedded user agent") — MainActivity.kt detects
-   navigation to accounts.google.com and opens a Chrome Custom Tab instead.
-   That Custom Tab is a separate browser context with its own cookies, so
-   completion is handed back to the app via a melofy://auth/complete deep
-   link + a one-time code rather than a normal redirect-result/cookie. */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
-  getRedirectResult, signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { firebaseConfig } from "./firebaseConfig.js";
-
+/* firebaseAuth.js - Google sign-in + "Connect your YouTube account".
+   The Firebase web config is fetched from /api/config (set via environment
+   variables on the server), so nothing is hardcoded here. If the server has
+   not been configured yet, the buttons say so instead of silently doing
+   nothing. Exposes window.FirebaseAuth for the non-module app code. */
+const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
 const IS_ANDROID = /MelofyAndroidApp/.test(navigator.userAgent);
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
-provider.addScope("https://www.googleapis.com/auth/youtube.readonly");
-
+let sdk = null, auth = null, provider = null;
+let serverConfig = { firebase: null, youtubeLinking: false };
 let currentUser = null;
 const listeners = [];
 function emit() { listeners.forEach(cb => { try { cb(currentUser); } catch (e) {} }); }
+function toast(msg) { if (window.UI) window.UI.toast(msg); }
+function asUser(d) { return { uid: d.uid, email: d.email, displayName: d.displayName, youtubeConnected: d.youtubeConnected }; }
+
+async function loadFirebase() {
+  try { serverConfig = await (await fetch("/api/config", { credentials: "same-origin" })).json(); } catch (e) {}
+  if (!serverConfig.firebase) return false;
+  try {
+    const [appMod, authMod] = await Promise.all([import(SDK + "firebase-app.js"), import(SDK + "firebase-auth.js")]);
+    sdk = authMod;
+    auth = authMod.getAuth(appMod.initializeApp(serverConfig.firebase));
+    provider = new authMod.GoogleAuthProvider();
+    return true;
+  } catch (e) { return false; }
+}
 
 async function refreshSessionFromServer() {
-  const res = await fetch("/api/auth/me", { credentials: "same-origin" });
-  const data = await res.json();
-  currentUser = data.signedIn
-    ? { uid: data.uid, email: data.email, displayName: data.displayName, youtubeConnected: data.youtubeConnected }
-    : null;
+  const data = await (await fetch("/api/auth/me", { credentials: "same-origin" })).json();
+  currentUser = data.signedIn ? asUser(data) : null;
   emit();
-  return currentUser;
 }
 
 async function establishSession(user) {
   const idToken = await user.getIdToken();
   const res = await fetch("/api/auth/session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
-    body: JSON.stringify({ idToken })
+    method: "POST", headers: { "Content-Type": "application/json" },
+    credentials: "same-origin", body: JSON.stringify({ idToken })
   });
   const data = await res.json();
-  if (res.ok) {
-    currentUser = { uid: data.uid, email: data.email, displayName: data.displayName, youtubeConnected: data.youtubeConnected };
-    emit();
-  }
-  return data;
+  if (!res.ok) throw new Error(data.error || "Sign-in failed");
+  currentUser = asUser(data);
+  emit();
 }
 
 async function signIn() {
-  if (IS_ANDROID) {
-    // Continues in MainActivity's Custom Tab; completion arrives later via
-    // window.completeAndroidHandoff(), not here.
-    await signInWithRedirect(auth, provider);
-    return;
+  if (!auth) { toast("Sign-in is not set up on this server yet"); return; }
+  try {
+    if (IS_ANDROID) { await sdk.signInWithRedirect(auth, provider); return; }
+    const result = await sdk.signInWithPopup(auth, provider);
+    await establishSession(result.user);
+    toast("Signed in");
+  } catch (e) {
+    if (e && (e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request")) return;
+    if (e && e.code === "auth/unauthorized-domain") { toast("This domain is not authorized in Firebase yet"); return; }
+    toast((e && e.message) || "Could not sign in. Please try again.");
   }
-  const result = await signInWithPopup(auth, provider);
-  await establishSession(result.user);
 }
 
 async function signOutEverywhere() {
-  try { await signOut(auth); } catch (e) { /* ignore */ }
+  try { if (auth) await sdk.signOut(auth); } catch (e) {}
   await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
   currentUser = null;
   emit();
 }
 
 function connectYouTube() {
-  const platform = IS_ANDROID ? "android" : "web";
-  window.location.href = `/api/youtube/connect?platform=${platform}`;
+  if (!serverConfig.youtubeLinking) { toast("YouTube linking is not set up on this server yet"); return; }
+  window.location.href = `/api/youtube/connect?platform=${IS_ANDROID ? "android" : "web"}`;
 }
 
 async function disconnectYouTube() {
@@ -82,47 +76,38 @@ async function disconnectYouTube() {
   emit();
 }
 
-// Called by MainActivity (evaluateJavascript) once the melofy://auth/complete
-// deep link hands a one-time code back to the app's own WebView.
 window.completeAndroidHandoff = async function (code) {
   const res = await fetch(`/api/auth/exchange?code=${encodeURIComponent(code)}`, { credentials: "same-origin" });
   const data = await res.json();
-  if (res.ok) {
-    currentUser = { uid: data.uid, email: data.email, displayName: data.displayName, youtubeConnected: data.youtubeConnected };
-    emit();
-    if (window.UI) window.UI.toast("Signed in");
-  }
+  if (res.ok) { currentUser = asUser(data); emit(); toast("Signed in"); }
 };
 
 async function init() {
-  try {
-    const result = await getRedirectResult(auth);
-    if (result && result.user) {
-      if (IS_ANDROID) {
-        // This code is actually running inside the throwaway Custom Tab
-        // right now, not the app's WebView — hand off instead of trying to
-        // keep a session here.
-        const idToken = await result.user.getIdToken();
-        const res = await fetch("/api/auth/mobile-handoff", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idToken })
-        });
-        const data = await res.json();
-        if (res.ok) window.location.href = `melofy://auth/complete?code=${encodeURIComponent(data.code)}`;
+  const ready = await loadFirebase();
+  if (ready) {
+    try {
+      const result = await sdk.getRedirectResult(auth);
+      if (result && result.user) {
+        if (IS_ANDROID) {
+          const idToken = await result.user.getIdToken();
+          const res = await fetch("/api/auth/mobile-handoff", {
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken })
+          });
+          const data = await res.json();
+          if (res.ok) window.location.href = `melofy://auth/complete?code=${encodeURIComponent(data.code)}`;
+          return;
+        }
+        await establishSession(result.user);
         return;
       }
-      await establishSession(result.user);
-      return;
-    }
-  } catch (e) { /* no pending redirect, or Firebase isn't configured yet */ }
-
+    } catch (e) { /* no pending redirect */ }
+  }
   await refreshSessionFromServer();
 }
 
-export const FirebaseAuth = {
+window.FirebaseAuth = {
   init, signIn, signOutEverywhere, connectYouTube, disconnectYouTube,
   onChange: (cb) => listeners.push(cb),
-  getUser: () => currentUser
+  getUser: () => currentUser,
+  isConfigured: () => !!serverConfig.firebase
 };
-window.FirebaseAuth = FirebaseAuth;

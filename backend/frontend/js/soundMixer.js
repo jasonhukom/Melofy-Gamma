@@ -1,34 +1,49 @@
-/* soundMixer.js — the floating "sound mixer": a button bottom-right that
-   reveals a vertical volume slider when clicked (replaces having a volume
-   slider inline in the player bar). */
+/* soundMixer.js - the volume dock. A round button (tap to mute on desktop,
+   tap to open on touch screens) that expands into a horizontal slider with a
+   live gradient fill. Keyboard accessible; arrow keys adjust by 5. */
 const SoundMixer = (() => {
-  let root, btn, panel, slider, valueLabel;
-  let panelOpen = false;
+  let root, btn, slider, valueLabel;
+  let lastVolume = 80;
+  const canHover = window.matchMedia('(hover: hover)').matches;
+
+  function paint(v) {
+    slider.style.setProperty('--fill', v + '%');
+    valueLabel.textContent = String(v);
+    btn.innerHTML = v === 0 ? UI.icons.volumeMute : UI.icons.volumeHigh;
+    btn.setAttribute('aria-label', v === 0 ? 'Unmute' : 'Mute');
+  }
+  function apply(v) { Player.setVolume(v); paint(v); }
+  function setOpen(open) { root.classList.toggle('open', open); }
 
   function render() {
     root = document.getElementById('sound-mixer');
     btn = document.getElementById('sound-mixer-btn');
-    panel = document.getElementById('sound-mixer-panel');
     slider = document.getElementById('sound-mixer-slider');
     valueLabel = document.getElementById('sound-mixer-value');
 
-    const startVolume = Storage.getSettings().volume ?? 80;
-    slider.value = String(startVolume);
-    valueLabel.textContent = String(startVolume);
-    updateIcon(startVolume);
+    const start = Storage.getSettings().volume ?? 80;
+    if (start > 0) lastVolume = start;
+    slider.value = String(start);
+    paint(start);
 
-    btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(!panelOpen); });
-    document.addEventListener('click', (e) => { if (panelOpen && !root.contains(e.target)) setOpen(false); });
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!canHover) { setOpen(!root.classList.contains('open')); return; }
+      const v = Number(slider.value);
+      const next = v === 0 ? (lastVolume || 80) : 0;
+      if (v > 0) lastVolume = v;
+      slider.value = String(next);
+      apply(next);
+    });
     slider.addEventListener('input', (e) => {
       const v = Number(e.target.value);
-      Player.setVolume(v);
-      valueLabel.textContent = String(v);
-      updateIcon(v);
+      if (v > 0) lastVolume = v;
+      apply(v);
     });
+    root.addEventListener('mouseenter', () => canHover && setOpen(true));
+    root.addEventListener('mouseleave', () => canHover && !root.contains(document.activeElement) && setOpen(false));
+    root.addEventListener('focusin', () => setOpen(true));
+    document.addEventListener('click', (e) => { if (!root.contains(e.target)) setOpen(false); });
   }
-
-  function updateIcon(v) { btn.innerHTML = v > 0 ? UI.icons.volumeHigh : UI.icons.volumeMute; }
-  function setOpen(open) { panelOpen = open; root.classList.toggle('open', open); }
-
   return { render };
 })();

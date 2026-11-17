@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("config", views.public_config, name="public_config"),
     path("auth/session", views.session_login, name="session_login"),
     path("auth/mobile-handoff", views.mobile_login_handoff, name="mobile_login_handoff"),
     path("auth/exchange", views.session_exchange, name="session_exchange"),

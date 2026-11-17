@@ -1,27 +1,27 @@
 :root {
-  /* Lyra Melofy Warm Dark Palette */
-  --bg-void: #120F0C;
-  --bg-base: #17130F;
-  --bg-elevated: #1E1914;
-  --bg-player: #1A1510;
-  --bg-highlight: #28221B;
-  --bg-card: #211B16;
-  --bg-chip: rgba(255, 248, 235, 0.06);
-  --bg-chip-hover: rgba(242, 169, 60, 0.16);
+  /* Lyra Melofy: midnight violet base, ember accent */
+  --bg-void: #0B0814;
+  --bg-base: #0F0B1A;
+  --bg-elevated: #171127;
+  --bg-player: #140F22;
+  --bg-highlight: #241B3A;
+  --bg-card: #1B1430;
+  --bg-chip: rgba(236, 228, 255, 0.07);
+  --bg-chip-hover: rgba(255, 123, 92, 0.18);
 
   /* Lyra Melofy Accents: Amber/Gold for action & control, Rose for love/liked */
-  --accent: #F2A93C;
-  --accent-hover: #FFC266;
-  --accent-soft: rgba(242, 169, 60, 0.16);
-  --love: #E85D6B;
+  --accent: #FF8A5B;
+  --accent-hover: #FFB07F;
+  --accent-soft: rgba(255, 138, 91, 0.16);
+  --love: #FF5D8F;
 
-  --text-primary: #F6F1EA;
-  --text-secondary: #B4A99C;
-  --text-muted: #7A6F62;
-  --border: #2E2721;
-  --border-strong: #3D342C;
+  --text-primary: #F5F1FF;
+  --text-secondary: #B5ABCE;
+  --text-muted: #7B7094;
+  --border: #2B2142;
+  --border-strong: #3E3160;
 
-  --danger: #E85D6B;
+  --danger: #FF5D8F;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -39,5 +39,7 @@
 
   --transition-fast: 120ms ease;
   --transition-base: 220ms ease;
+  --grad-ember: linear-gradient(135deg, #FF6B6B 0%, #FFB547 100%);
+  --mint: #5EEAD4;
   --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.45);
 }

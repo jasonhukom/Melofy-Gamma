@@ -28,6 +28,7 @@ lyra-melofy/
 - **Sign in with Google, connect your YouTube account.** Once connected,
   Your Library shows your actual liked videos, subscriptions, and playlists
   from YouTube, pulled live via the YouTube Data API.
+- **New identity (Nov 2026):** midnight violet surfaces with an ember gradient accent, a new logo mark and icon set, a horizontal volume dock with mute, and a reworked mobile tab bar.
 - **No emoji anywhere in the UI** — every icon is a small inline SVG.
 - **Sidebar is now a slidable, closeable drawer** (menu button, top left).
 - **Volume moved into a floating "sound mixer"** button, bottom right —
@@ -52,17 +53,17 @@ it here.** It goes in an environment variable, never in a committed file.
 
 You'll set up to three things, all free. Do them in this order.
 
-### a) YouTube Data API key (for search + Home's random picks)
+### a) Search (no key needed)
+Search and Home picks now use ytmusicapi, the keyless YouTube Music API, so there is nothing to set up. Optionally set `YOUTUBE_API_KEY` as a fallback to the official Data API v3 (skip the rest of this step otherwise).
+
+#### Optional: YouTube Data API key
 Google Cloud Console → **APIs & Services → Library** → enable **YouTube
 Data API v3** → **Credentials → Create Credentials → API key**.
 
 ### b) Firebase project (for "Sign in with Google")
 1. [Firebase Console](https://console.firebase.google.com/) → **Add project**.
 2. **Build → Authentication → Sign-in method** → enable **Google**.
-3. **Project settings → General → Your apps → Add app → Web** — copy the
-   config object into `backend/frontend/js/firebaseConfig.js` (this one is
-   *designed* to be public client-side config — unlike the YouTube key,
-   it's safe to commit).
+3. **Project settings → General → Your apps → Add app → Web** — copy `apiKey`, `authDomain`, `projectId` and `appId` into the environment variables `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`. The server hands them to the browser through `/api/config`; nothing is hardcoded in the repo. Also add your domain (e.g. `music.jasonhukom.my.id`) under **Authentication → Settings → Authorized domains**.
 4. **Project settings → Service accounts → Generate new private key** —
    downloads a JSON file. Paste its entire content as one line into the
    `FIREBASE_SERVICE_ACCOUNT_JSON` environment variable (used server-side

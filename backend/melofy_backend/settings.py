@@ -21,12 +21,13 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "10.0.2.2",
     ".vercel.app",
+    "music.jasonhukom.my.id",
 ]
 extra_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "")
 if extra_hosts:
     ALLOWED_HOSTS += [h.strip() for h in extra_hosts.split(",") if h.strip()]
 
-CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app"]
+CSRF_TRUSTED_ORIGINS = ["https://*.vercel.app", "https://music.jasonhukom.my.id"]
 extra_origins = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "")
 if extra_origins:
     CSRF_TRUSTED_ORIGINS += [o.strip() for o in extra_origins.split(",") if o.strip()]
@@ -127,6 +128,15 @@ PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "http://127.0.0.1:8000")
 # file) so it works on serverless hosts like Vercel — never commit the
 # actual key content anywhere.
 FIREBASE_SERVICE_ACCOUNT_JSON = os.environ.get("FIREBASE_SERVICE_ACCOUNT_JSON", "")
+
+# Public (client-side) Firebase web config. Safe to expose: Firebase protects
+# the project with authorized domains, not by hiding these values.
+FIREBASE_WEB_CONFIG = {
+    "apiKey": os.environ.get("FIREBASE_API_KEY", ""),
+    "authDomain": os.environ.get("FIREBASE_AUTH_DOMAIN", ""),
+    "projectId": os.environ.get("FIREBASE_PROJECT_ID", ""),
+    "appId": os.environ.get("FIREBASE_APP_ID", ""),
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
