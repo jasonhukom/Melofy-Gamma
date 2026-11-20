@@ -28,5 +28,12 @@ android/.cxx/
 android/app/release/
 android/app/debug/
 
-# Node
+# Node & Electron Desktop
 node_modules/
+desktop/node_modules/
+desktop/dist/
+desktop/app-frontend/
+desktop/assets/icon.png
+
+# Synced Android web assets (copied from backend/frontend at build time)
+android/app/src/main/assets/www/

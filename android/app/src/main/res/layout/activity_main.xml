@@ -1,189 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_void">
 
-    <!-- Fragment Container -->
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <WebView
+        android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_bar_container" />
+        android:overScrollMode="never" />
 
-    <!-- Persistent Bottom Footer (Mini Player + Bottom Navbar) -->
-    <LinearLayout
-        android:id="@+id/bottom_bar_container"
+    <FrameLayout
+        android:id="@+id/fullscreen_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:visibility="gone" />
 
-        <!-- Mini Player Bar -->
-        <include
-            android:id="@+id/mini_player_layout"
-            layout="@layout/layout_mini_player"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <!-- Bottom Navigation Bar -->
-        <RelativeLayout
-            android:id="@+id/bottom_nav_bar"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:background="@color/nav_bg">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/surface_border" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <!-- 1. Home Tab -->
-                <LinearLayout
-                    android:id="@+id/btn_nav_home"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/icon_nav_home"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:contentDescription="Home"
-                        android:src="@drawable/ic_house"
-                        app:tint="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/text_nav_home"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/manrope"
-                        android:text="Home"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- 2. Trending Tab -->
-                <LinearLayout
-                    android:id="@+id/btn_nav_trending"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.melofy.app.ui.SixteenthNoteView
-                        android:id="@+id/icon_nav_trending"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp" />
-
-                    <TextView
-                        android:id="@+id/text_nav_trending"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/manrope"
-                        android:text="Trending"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- 3. Center Circular Search Tab (Bigger 62dp Button) -->
-                <FrameLayout
-                    android:id="@+id/btn_nav_search"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <FrameLayout
-                        android:id="@+id/container_search_circle"
-                        android:layout_width="62dp"
-                        android:layout_height="62dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_circle_purple_gradient">
-
-                        <ImageView
-                            android:id="@+id/icon_center_search"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="Search"
-                            android:src="@android:drawable/ic_menu_search"
-                            app:tint="@color/bg_void" />
-                    </FrameLayout>
-                </FrameLayout>
-
-                <!-- 4. Download Tab (Full Solid White Download Icon) -->
-                <LinearLayout
-                    android:id="@+id/btn_nav_download"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/icon_nav_download"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:contentDescription="Downloads"
-                        android:src="@drawable/ic_download_solid"
-                        app:tint="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/text_nav_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/manrope"
-                        android:text="Downloads"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <!-- 5. Profile Tab -->
-                <LinearLayout
-                    android:id="@+id/btn_nav_profile"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/icon_nav_profile"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:contentDescription="Profile"
-                        android:src="@drawable/ic_anonymous_pfp"
-                        app:tint="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/text_nav_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:fontFamily="@font/manrope"
-                        android:text="Profile"
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
-
-</RelativeLayout>
+</FrameLayout>

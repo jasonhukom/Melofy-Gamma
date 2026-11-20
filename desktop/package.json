@@ -1,0 +1,71 @@
+{
+  "name": "lyra-melofy-desktop",
+  "version": "1.1.0",
+  "description": "Lyra Melofy desktop application powered by YouTube Music",
+  "main": "src/main.js",
+  "scripts": {
+    "prepare-assets": "node scripts/prepare-assets.js",
+    "start": "electron .",
+    "test:ytm": "node scripts/test-ytm.js",
+    "test:smoke": "node scripts/smoke-test.js",
+    "pack": "npm run prepare-assets && electron-builder --dir",
+    "build": "npm run prepare-assets && electron-builder --win portable nsis --x64",
+    "build:portable": "npm run prepare-assets && electron-builder --win portable --x64"
+  },
+  "keywords": [
+    "lyra-melofy",
+    "youtube-music",
+    "music-player",
+    "electron"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.lyramelofy.desktop",
+    "productName": "Lyra Melofy",
+    "artifactName": "Lyra-Melofy-${target}-${version}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "files": [
+      "src/**/*",
+      "app-frontend/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "portable": {
+      "artifactName": "Lyra-Melofy-Portable-${version}.exe"
+    },
+    "nsis": {
+      "artifactName": "Lyra-Melofy-Setup-${version}.exe",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

@@ -4,7 +4,34 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Outer Yellow Sound-Wave Ring (split into acoustic arcs) -->
     <path
-        android:fillColor="#F2A93C"
-        android:pathData="M54,24 A30,30 0 1,1 53.99,24 Z"/>
+        android:pathData="M29,34 A32,32 0 0,1 79,34"
+        android:strokeColor="#FACC15"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.8" />
+    <path
+        android:pathData="M79,74 A32,32 0 0,1 29,74"
+        android:strokeColor="#FACC15"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.8" />
+    <!-- Middle Yellow Sound-Wave Ring -->
+    <path
+        android:pathData="M34.5,41 A23,23 0 0,1 73.5,41"
+        android:strokeColor="#FACC15"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.6" />
+    <path
+        android:pathData="M73.5,67 A23,23 0 0,1 34.5,67"
+        android:strokeColor="#FACC15"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.6" />
+    <!-- Full Inner Ring & Core Yellow Circle -->
+    <path
+        android:fillColor="#FACC15"
+        android:pathData="M54,41 A13,13 0 1,0 54,67 A13,13 0 1,0 54,41 Z" />
+    <path
+        android:pathData="M54,32.5 A21.5,21.5 0 1,0 54,75.5 A21.5,21.5 0 1,0 54,32.5 Z"
+        android:strokeColor="#FACC15"
+        android:strokeWidth="2.4" />
 </vector>

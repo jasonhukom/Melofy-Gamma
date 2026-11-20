@@ -12,6 +12,8 @@ import requests
 from django.conf import settings
 
 SEARCH_URL = "https://www.googleapis.com/youtube/v3/search"
+INNERTUBE_SEARCH_URL = "https://music.youtube.com/youtubei/v1/search?prettyPrint=false"
+SONGS_PARAMS = "EgWKAQIIAWoMEAMQBBAJEAoQBRAV"
 CACHE_TTL = 600
 _cache = {}
 _ytm = None
@@ -49,6 +51,74 @@ def _search_keyless(query, limit):
     return songs
 
 
+def _search_innertube_direct(query, limit):
+    payload = {
+        "context": {
+            "client": {
+                "clientName": "WEB_REMIX",
+                "clientVersion": "1.20241118.01.00",
+                "hl": "en",
+                "gl": "US",
+            }
+        },
+        "query": query,
+        "params": SONGS_PARAMS,
+    }
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "Origin": "https://music.youtube.com",
+        "Referer": "https://music.youtube.com/",
+    }
+    resp = requests.post(INNERTUBE_SEARCH_URL, json=payload, headers=headers, timeout=10)
+    resp.raise_for_status()
+    data = resp.json()
+
+    songs = []
+    seen = set()
+    tabs = data.get("contents", {}).get("tabbedSearchResultsRenderer", {}).get("tabs", [])
+    for tab in tabs:
+        sections = tab.get("tabRenderer", {}).get("content", {}).get("sectionListRenderer", {}).get("contents", [])
+        for section in sections:
+            for item in section.get("musicShelfRenderer", {}).get("contents", []):
+                renderer = item.get("musicResponsiveListItemRenderer")
+                if not renderer:
+                    continue
+                vid = (
+                    renderer.get("playlistItemData", {}).get("videoId")
+                    or renderer.get("overlay", {})
+                    .get("musicItemThumbnailOverlayRenderer", {})
+                    .get("content", {})
+                    .get("musicPlayButtonRenderer", {})
+                    .get("playNavigationEndpoint", {})
+                    .get("watchEndpoint", {})
+                    .get("videoId")
+                )
+                if not vid or vid in seen:
+                    continue
+                seen.add(vid)
+                cols = renderer.get("flexColumns", [])
+                title_runs = cols[0].get("musicResponsiveListItemFlexColumnRenderer", {}).get("text", {}).get("runs", []) if len(cols) > 0 else []
+                artist_runs = cols[1].get("musicResponsiveListItemFlexColumnRenderer", {}).get("text", {}).get("runs", []) if len(cols) > 1 else []
+                title = "".join(r.get("text", "") for r in title_runs).strip()
+                artist_parts = [
+                    r.get("text", "").strip()
+                    for r in artist_runs
+                    if r.get("navigationEndpoint", {}).get("browseEndpoint", {}).get("browseId", "").startswith("UC")
+                    or r.get("navigationEndpoint", {}).get("browseEndpoint", {}).get("browseEndpointContextSupportedConfigs", {}).get("browseEndpointContextMusicConfig", {}).get("pageType") == "MUSIC_PAGE_TYPE_ARTIST"
+                ]
+                artist = ", ".join(p for p in artist_parts if p) or (artist_runs[0].get("text", "").strip() if artist_runs else "")
+                thumbs = renderer.get("thumbnail", {}).get("musicThumbnailRenderer", {}).get("thumbnail", {}).get("thumbnails", [])
+                songs.append({
+                    "id": vid,
+                    "title": title or "Untitled",
+                    "artist": artist or "YouTube Music",
+                    "thumbnail": thumbs[-1].get("url", "") if thumbs else "",
+                })
+                if len(songs) >= limit:
+                    return songs
+    return songs
+
+
 def _search_data_api(query, limit):
     params = {"part": "snippet", "type": "video", "maxResults": limit,
               "videoCategoryId": "10", "q": query, "key": settings.YOUTUBE_API_KEY}
@@ -73,11 +143,18 @@ def search(query, max_results=20):
     hit = _cache.get(key)
     if hit and time.time() - hit[0] < CACHE_TTL:
         return hit[1]
+    songs = []
     try:
         songs = _search_keyless(query, max_results)
     except Exception:
-        if not settings.YOUTUBE_API_KEY:
-            raise
+        pass
+    if not songs:
+        try:
+            songs = _search_innertube_direct(query, max_results)
+        except Exception:
+            if not settings.YOUTUBE_API_KEY:
+                raise
+    if not songs and settings.YOUTUBE_API_KEY:
         songs = _search_data_api(query, max_results)
     if songs:
         _cache[key] = (time.time(), songs)

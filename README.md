@@ -1,175 +1,96 @@
 # Lyra Melofy
 
-A free, YouTube-powered music player with a Spotify-style UI — now rebuilt
-as a proper Django + Python backend, with Google/YouTube account sign-in
-and a single-page app frontend so music never stops when you navigate. Plus
-an Android Studio project that wraps the whole thing.
+A free, YouTube-powered music player with a Midnight Violet & Ember UI —
+now unified in one repository across **Web** (Django + SPA), **Windows Desktop**
+(Electron `.exe`), and **Android** (WebView + embedded local YouTube Music bridge `.apk`).
 
 ```
 lyra-melofy/
-├── backend/            Django project — the API and the app itself
+├── backend/            Django project — Web API + shared SPA frontend
 │   ├── melofy_backend/ settings, urls, wsgi
-│   ├── core/           search + "discover" endpoints (server-side YouTube key)
+│   ├── core/           keyless ytmusicapi / InnerTube search + random picks
 │   ├── accounts/       Firebase login + YouTube account linking
-│   ├── frontend/       the single-page app (HTML/CSS/JS, served by Django)
-│   ├── requirements.txt, .env.example, .python-version
-├── android/            Android Studio project (WebView + Custom Tabs wrapper)
-├── LICENSE, .gitignore
+│   ├── frontend/       shared single-page app (HTML/CSS/JS)
+│   └── requirements.txt, .env.example, .python-version
+├── desktop/            Electron desktop app (Windows .exe — JavaScript / Node.js)
+│   ├── src/main.js     BrowserWindow, Tray, background playback, clean Chrome UA
+│   ├── src/server.js   embedded HTTP server on 127.0.0.1 serving shared frontend
+│   ├── src/ytmusic.js  keyless YouTube Music InnerTube WEB_REMIX client
+│   └── package.json    electron-builder config (Portable + NSIS Setup .exe)
+├── android/            Android Studio project (.apk — Java + WebView + local YouTube Music server)
+├── figma/              Figma UI kit
+└── .github/workflows/  CI/CD builds for Windows .exe, Android .apk, and Web
 ```
 
-## What changed from the static version
+## Architecture across Web, `.exe`, and `.apk`
 
-- **One backend now serves everything.** The frontend is still plain
-  HTML/CSS/JS (no framework, no build step) but it's served by Django, and
-  it's a genuine single-page app — clicking around never stops the music,
-  including when the tab or app loses focus.
-- **No API key needed by anyone using the app.** The YouTube key lives on
-  the server as an environment variable now, not typed into the app.
-- **Sign in with Google, connect your YouTube account.** Once connected,
-  Your Library shows your actual liked videos, subscriptions, and playlists
-  from YouTube, pulled live via the YouTube Data API.
-- **New identity (Nov 2026):** midnight violet surfaces with an ember gradient accent, a new logo mark and icon set, a horizontal volume dock with mute, and a reworked mobile tab bar.
-- **No emoji anywhere in the UI** — every icon is a small inline SVG.
-- **Sidebar is now a slidable, closeable drawer** (menu button, top left).
-- **Volume moved into a floating "sound mixer"** button, bottom right —
-  click it to reveal a slider.
-- **Home page shows random picks** on top of your recently played.
-- Real favicon + app icons (SVG + PNG), generated from the app's own logo mark.
+- **Single shared UI (`backend/frontend/`):** Plain HTML/CSS/JS SPA (no build step required), with midnight violet surfaces, ember gradient accent, slidable drawer, floating sound mixer, mobile 5-tab navigation, and persistent YouTube IFrame Player API playback.
+- **Desktop `.exe` (`desktop/` — Electron + JavaScript/Node.js):**
+  - **Best fit & language:** **Electron (JavaScript / Node.js)** shares the exact same language and UI as `backend/frontend/`, embeds Chromium + Node.js into a standalone `.exe` (requiring zero Python or API key setup from end users), disables background throttling so music never stops when minimized, and runs a built-in loopback HTTP server + keyless YouTube Music InnerTube client (`WEB_REMIX`) so YouTube IFrame Player API always has a valid `http://127.0.0.1:<port>` origin and `Referer`.
+- **Android `.apk` (`android/` — Java + WebView + embedded `LocalMelofyServer`):**
+  - Syncs `backend/frontend/` at build time (`syncWebFrontend` Gradle task), runs a loopback HTTP server (`LocalMelofyServer`) + keyless InnerTube client (`YouTubeMusicClient`) directly inside the APK so search, random picks, playlists, liked songs, and YouTube Music playback work out of the box without requiring an external backend server.
+- **Web (`backend/` — Django + Python):**
+  - Uses `ytmusicapi` with direct InnerTube `WEB_REMIX` and optional `YOUTUBE_API_KEY` fallbacks, plus optional Firebase Auth & Google OAuth YouTube library integration.
 
 ## What's still true
 
-Playback still goes through YouTube's official IFrame Player API — the
-legitimate way to embed YouTube, and the reason ads on individual videos
-can't be suppressed (that's controlled by YouTube/the content owner, not
-this app). Downloading/saving audio to the device isn't built for the same
-reason: that requires extracting streams outside YouTube's player, which
-violates YouTube's Terms of Service.
+Playback goes through YouTube's official IFrame Player API — the legitimate way to embed YouTube, and the reason ads on individual videos can't be suppressed (that's controlled by YouTube/the content owner, not this app). Downloading/saving audio streams outside YouTube's player isn't built for the same reason.
 
-**If you pasted a YouTube API key anywhere it could be seen (a chat, a
-screenshot, a commit) — regenerate it in Google Cloud Console before using
-it here.** It goes in an environment variable, never in a committed file.
+## 1. Run / Build the Windows `.exe` (`desktop/`)
 
-## 1. One-time setup
+Requires **Node.js 20+**:
 
-You'll set up to three things, all free. Do them in this order.
+```bash
+cd desktop
+npm install
+npm start          # launch desktop app in dev mode
+npm run test:smoke # verify YouTube Music search, random picks, and local server
+npm run build      # builds Portable + Setup .exe into desktop/dist/
+```
 
-### a) Search (no key needed)
-Search and Home picks now use ytmusicapi, the keyless YouTube Music API, so there is nothing to set up. Optionally set `YOUTUBE_API_KEY` as a fallback to the official Data API v3 (skip the rest of this step otherwise).
+Outputs in `desktop/dist/`:
+- `Lyra-Melofy-Portable-1.1.0.exe` — run directly without installing
+- `Lyra-Melofy-Setup-1.1.0.exe` — standard Windows installer
 
-#### Optional: YouTube Data API key
-Google Cloud Console → **APIs & Services → Library** → enable **YouTube
-Data API v3** → **Credentials → Create Credentials → API key**.
+## 2. Run / Build the Android `.apk` (`android/`)
 
-### b) Firebase project (for "Sign in with Google")
-1. [Firebase Console](https://console.firebase.google.com/) → **Add project**.
-2. **Build → Authentication → Sign-in method** → enable **Google**.
-3. **Project settings → General → Your apps → Add app → Web** — copy `apiKey`, `authDomain`, `projectId` and `appId` into the environment variables `FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`. The server hands them to the browser through `/api/config`; nothing is hardcoded in the repo. Also add your domain (e.g. `music.jasonhukom.my.id`) under **Authentication → Settings → Authorized domains**.
-4. **Project settings → Service accounts → Generate new private key** —
-   downloads a JSON file. Paste its entire content as one line into the
-   `FIREBASE_SERVICE_ACCOUNT_JSON` environment variable (used server-side
-   only, to verify sign-ins — never commit the file itself).
+Open `android/` in Android Studio or build via Gradle:
 
-### c) Google OAuth client (for "Connect your YouTube account")
-This is separate from Firebase's config — it's what lets the backend keep
-reading someone's liked videos/subscriptions/playlists after they leave.
-1. Same Google Cloud project as (a) → **APIs & Services → OAuth consent
-   screen** — fill in the basics. While testing, "Testing" mode + adding
-   yourself as a test user is enough; production use with real users needs
-   Google's verification for the `youtube.readonly` scope.
-2. **Credentials → Create Credentials → OAuth client ID → Web application.**
-   Authorized redirect URI: `<PUBLIC_BASE_URL>/api/youtube/callback`
-   (e.g. `https://your-app.vercel.app/api/youtube/callback` — update this
-   after your first deploy, since you won't have the URL yet).
-3. Copy the client ID and client secret into your environment.
+```bash
+cd android
+./gradlew testDebugUnitTest assembleDebug assembleRelease
+```
 
-Put everything from (a)–(c) into `backend/.env` for local dev (copy
-`backend/.env.example` first) or into your host's environment variable
-settings for production.
+APKs are generated under `android/app/build/outputs/apk/`.
 
-## 2. Run it locally
+## 3. Run / Deploy the Web App (`backend/`)
+
+### One-time optional setup (Account Sign-in & YouTube Library Sync)
+Search and home picks use keyless YouTube Music (`ytmusicapi` / InnerTube `WEB_REMIX`), so **no API key is required**.
+
+Optionally set in `backend/.env` (copy from `backend/.env.example`):
+1. `YOUTUBE_API_KEY`: Optional YouTube Data API v3 fallback key.
+2. Firebase Auth (`FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`, `FIREBASE_SERVICE_ACCOUNT_JSON`): Enables "Sign in with Google".
+3. Google OAuth (`GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `PUBLIC_BASE_URL`): Enables "Connect your YouTube account" (liked videos, subscriptions, playlists).
+
+### Run locally
 
 ```bash
 cd backend
 python -m venv venv && source venv/bin/activate   # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env        # then fill in the values from step 1
+cp .env.example .env
 python manage.py migrate
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000 — search, playback, and the random Home picks
-all work immediately (they only need the YouTube API key). Sign-in and
-YouTube account linking need the Firebase/OAuth steps above and a real
-`PUBLIC_BASE_URL` matching wherever you're running this.
+Open http://127.0.0.1:8000.
 
-## 3. Deploy — GitHub + Vercel
+### Deploy to Vercel
 
-```bash
-git init && git add . && git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/<you>/<repo>.git
-git push -u origin main
-```
-
-Then on [vercel.com](https://vercel.com): **Add New → Project** → import
-the repo → set the **Root Directory** to `backend`. Vercel auto-detects
-Django (zero configuration needed) from `manage.py` and the
-`WSGI_APPLICATION` setting. Add all the environment variables from step 1
-in the project's **Settings → Environment Variables**, plus:
-
-- `DATABASE_URL` — a hosted Postgres connection string. SQLite's file
-  won't persist reliably on Vercel's serverless filesystem, and the
-  YouTube-account-linking feature needs a real database. Vercel Postgres,
-  [Neon](https://neon.tech), and [Supabase](https://supabase.com) all have
-  workable free tiers — create one, copy its connection string here.
-- `PUBLIC_BASE_URL` — your deployment's URL, e.g. `https://your-app.vercel.app`
-  (no trailing slash). Update this and the OAuth redirect URI (step 1c)
-  once you know your actual URL.
-- `DJANGO_SECRET_KEY` — any long random string.
-
-After deploying, run the database migration once against your production
-database (`vercel env pull` locally, then `python manage.py migrate`, or
-your host's equivalent one-off command runner).
-
-## 4. Android app
-
-1. Open `MainActivity.kt` and set `APP_URL` to your deployed URL (Google
-   sign-in needs a real public HTTPS address, so this can no longer be a
-   bundled local copy the way the first version was).
-2. Open Android Studio → **Open** → select the `android/` folder, let
-   Gradle sync, run.
-
-**How sign-in works here:** a plain WebView isn't allowed to complete
-Google sign-in (Google blocks it as an "embedded user agent"), so
-`MainActivity` detects navigation to `accounts.google.com` and opens it in
-a Chrome Custom Tab instead. Completing sign-in there hands control back to
-the app through a `melofy://auth/complete` deep link with a one-time code,
-which the app's own WebView redeems to establish its session — this is
-necessary because Custom Tabs and the WebView don't share cookies. This is
-the most involved, least-tested part of the whole project (I can author
-Django/Kotlin/JS code but can't run the full Google OAuth round-trip in the
-environment that built this) — the pattern is correct and standard, but
-budget some time for debugging it against your own Firebase/OAuth
-credentials.
-
-Before publishing anywhere, change the placeholder package name
-(`com.melofy.app`) in `android/app/build.gradle.kts` and
-`AndroidManifest.xml`, and swap in your own launcher icon.
-
-**Versions used:** Android Gradle Plugin 9.0.1, Gradle 9.1.0, Kotlin 2.4.20,
-compileSdk/targetSdk 36, minSdk 26.
-
-## Notes & possible next steps
-
-- Clicking into one of "Your YouTube playlists" currently shows its title
-  and video count but not its contents — fetching a playlist's actual
-  videos (`playlistItems.list`) is a small, separate addition if you want it.
-- Not built: a visible reorderable queue, drag-to-reorder within a
-  playlist, a full-screen mobile "Now Playing" view.
-- The app's name, colors, and fonts are easy to change — "Melofy" appears
-  in `index.html`'s `<title>`, the sidebar logo, `strings.xml` (Android),
-  and `app/build.gradle.kts`; colors are CSS variables in
-  `backend/frontend/css/variables.css`.
+1. Push to GitHub and import the repo on [vercel.com](https://vercel.com) with **Root Directory** set to `backend`.
+2. Add environment variables from `backend/.env.example` (including `DATABASE_URL` Postgres connection string, `PUBLIC_BASE_URL`, and `DJANGO_SECRET_KEY`).
+3. Run `python manage.py migrate` against your production database.
 
 ## License
 

@@ -8,10 +8,41 @@ const Player = (() => {
   let queue = [];
   let queueIndex = -1;
   let isReady = false;
+  let pendingPlay = false;
+  let consecutiveErrors = 0;
   let listeners = [];
 
   function onEvent(cb) { listeners.push(cb); }
   function emit(type, data) { listeners.forEach(cb => { try { cb(type, data); } catch (e) {} }); }
+
+  function updateMediaSession(song, state) {
+    if (!('mediaSession' in navigator)) return;
+    try {
+      if (song && typeof MediaMetadata !== 'undefined') {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: song.title || 'Lyra Melofy',
+          artist: song.artist || 'YouTube Music',
+          album: 'Lyra Melofy',
+          artwork: song.thumbnail ? [{ src: song.thumbnail, sizes: '512x512', type: 'image/jpeg' }] : []
+        });
+      }
+      if (state) navigator.mediaSession.playbackState = state;
+    } catch (e) {}
+  }
+
+  function registerMediaSessionHandlers() {
+    if (!('mediaSession' in navigator)) return;
+    const safeHandle = (action, fn) => {
+      try { navigator.mediaSession.setActionHandler(action, fn); } catch (e) {}
+    };
+    safeHandle('play', () => togglePlay());
+    safeHandle('pause', () => togglePlay());
+    safeHandle('previoustrack', () => prev());
+    safeHandle('nexttrack', () => next());
+    safeHandle('seekto', (details) => {
+      if (details && typeof details.seekTime === 'number') seekTo(details.seekTime);
+    });
+  }
 
   function loadYouTubeAPI() {
     return new Promise((resolve) => {
@@ -27,11 +58,25 @@ const Player = (() => {
   }
 
   async function init(containerId) {
+    registerMediaSessionHandlers();
     await loadYouTubeAPI();
+    const playerVars = {
+      autoplay: 0,
+      controls: 0,
+      disablekb: 1,
+      modestbranding: 1,
+      rel: 0,
+      playsinline: 1,
+      enablejsapi: 1
+    };
+    if (window.location && /^https?:/.test(window.location.origin)) {
+      playerVars.origin = window.location.origin;
+      playerVars.widget_referrer = window.location.href;
+    }
     ytPlayer = new YT.Player(containerId, {
       height: '100%',
       width: '100%',
-      playerVars: { autoplay: 0, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1 },
+      playerVars,
       events: { onReady: handleReady, onStateChange: handleStateChange, onError: handleError }
     });
   }
@@ -41,19 +86,26 @@ const Player = (() => {
     const settings = Storage.getSettings();
     ytPlayer.setVolume(settings.volume ?? 80);
 
-    const saved = Storage.getPlayerState();
-    if (saved && saved.videoId && saved.queue && saved.queue.length) {
-      queue = saved.queue;
-      queueIndex = saved.queueIndex ?? 0;
-      ytPlayer.cueVideoById(saved.videoId, saved.positionSeconds || 0);
-      emit('trackchange', currentSong());
-      if (saved.isPlaying) {
-        // Resuming playback after a page navigation. Browsers may block
-        // autoplay here until the user interacts with the new page — if so
-        // the bar will simply show a paused state, which is expected.
-        setTimeout(() => {
-          try { ytPlayer.seekTo(saved.positionSeconds || 0, true); ytPlayer.playVideo(); } catch (e) {}
-        }, 300);
+    if (pendingPlay && currentSong()) {
+      pendingPlay = false;
+      playCurrent();
+    } else {
+      const saved = Storage.getPlayerState();
+      if (saved && saved.videoId && saved.queue && saved.queue.length) {
+        queue = saved.queue;
+        queueIndex = saved.queueIndex ?? 0;
+        ytPlayer.cueVideoById(saved.videoId, saved.positionSeconds || 0);
+        const restored = currentSong();
+        emit('trackchange', restored);
+        updateMediaSession(restored, 'paused');
+        if (saved.isPlaying) {
+          // Resuming playback after a page navigation. Browsers may block
+          // autoplay here until the user interacts with the new page — if so
+          // the bar will simply show a paused state, which is expected.
+          setTimeout(() => {
+            try { ytPlayer.seekTo(saved.positionSeconds || 0, true); ytPlayer.playVideo(); } catch (e) {}
+          }, 300);
+        }
       }
     }
     setInterval(savePlayerState, 3000);
@@ -63,15 +115,36 @@ const Player = (() => {
 
   function handleStateChange(e) {
     const S = window.YT.PlayerState;
-    if (e.data === S.PLAYING) emit('play');
-    if (e.data === S.PAUSED) emit('pause');
+    if (e.data === S.PLAYING) {
+      consecutiveErrors = 0;
+      updateMediaSession(currentSong(), 'playing');
+      emit('play');
+    }
+    if (e.data === S.PAUSED) {
+      updateMediaSession(currentSong(), 'paused');
+      emit('pause');
+    }
     if (e.data === S.ENDED) handleEnded();
     if (e.data === S.PLAYING || e.data === S.PAUSED) savePlayerState();
   }
 
-  function handleError() {
-    emit('error');
-    setTimeout(() => next(), 1200); // skip a track that fails to load/play
+  function handleError(e) {
+    const code = e && typeof e.data !== 'undefined' ? e.data : null;
+    consecutiveErrors++;
+    emit('error', { code, song: currentSong() });
+
+    const settings = Storage.getSettings();
+    const canAdvance = queue.length > 1 &&
+      consecutiveErrors < Math.min(queue.length, 5) &&
+      (queueIndex < queue.length - 1 || settings.repeat === 'all');
+
+    if (canAdvance) {
+      if (window.UI) window.UI.toast('Track unavailable — skipping to next');
+      setTimeout(() => next(), 900);
+    } else {
+      emit('pause');
+      if (window.UI) window.UI.toast('Unable to play this track — try another song');
+    }
   }
 
   function handleEnded() {
@@ -86,16 +159,23 @@ const Player = (() => {
     if (!songs || !songs.length) return;
     queue = songs.slice();
     queueIndex = startIndex;
+    consecutiveErrors = 0;
     if (Storage.getSettings().shuffle) shuffleQueue(true);
     playCurrent();
   }
 
   function playCurrent() {
     const song = currentSong();
-    if (!song || !ytPlayer || !isReady) return;
-    ytPlayer.loadVideoById(song.id);
+    if (!song) return;
     Storage.addRecent(song);
     emit('trackchange', song);
+    updateMediaSession(song, 'playing');
+    if (!ytPlayer || !isReady) {
+      pendingPlay = true;
+      return;
+    }
+    pendingPlay = false;
+    ytPlayer.loadVideoById(song.id);
     savePlayerState();
   }
 
@@ -188,3 +268,4 @@ const Player = (() => {
     seekTo, setVolume, toggleShuffle, cycleRepeat, currentSong, getState
   };
 })();
+window.Player = Player;
