@@ -50,6 +50,10 @@ public class LocalMelofyServer {
     private byte[] renderedIndexBytes;
 
     public LocalMelofyServer(AssetManager assetManager) {
+        this(assetManager, new YouTubeMusicClient());
+    }
+
+    public LocalMelofyServer(AssetManager assetManager, YouTubeMusicClient ytMusicClient) {
         this(relativePath -> {
             String clean = relativePath.replaceFirst("^/+", "");
             try (InputStream is = assetManager.open("www/" + clean)) {
@@ -61,7 +65,7 @@ public class LocalMelofyServer {
                 }
                 return buffer.toByteArray();
             }
-        }, new YouTubeMusicClient());
+        }, ytMusicClient);
     }
 
     public LocalMelofyServer(AssetLoader assetLoader, YouTubeMusicClient ytMusicClient) {

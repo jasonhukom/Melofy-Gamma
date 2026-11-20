@@ -6,12 +6,18 @@ android {
     namespace = "com.melofy.app"
     compileSdk = 36
 
+    val youtubeApiKey = ((project.findProperty("YOUTUBE_API_KEY") as String?)
+        ?: System.getenv("YOUTUBE_API_KEY")
+        ?: "").replace("\"", "\\\"")
+
     defaultConfig {
         applicationId = "com.melofy.app"
         minSdk = 26
         targetSdk = 36
         versionCode = 2
         versionName = "1.1.0"
+
+        buildConfigField("String", "YOUTUBE_API_KEY", "\"$youtubeApiKey\"")
     }
 
     buildTypes {
@@ -25,6 +31,10 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 

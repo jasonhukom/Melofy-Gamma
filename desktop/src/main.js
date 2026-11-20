@@ -147,7 +147,7 @@ function createWindow() {
     minWidth: 420,
     minHeight: 620,
     title: 'Lyra Melofy',
-    backgroundColor: '#0F0B1A',
+    backgroundColor: '#0A0905',
     icon: iconPath || undefined,
     autoHideMenuBar: true,
     webPreferences: {

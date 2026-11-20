@@ -1,4 +1,4 @@
-/* Lyra Melofy Bottom Player Bar — YouTube Music Layout with Lyra Melofy Palette */
+/* Lyra Melofy Bottom Player Bar — Metrolist-Inspired Desktop Bar & Floating Mobile Card */
 
 .player-bar {
   position: fixed;
@@ -6,36 +6,52 @@
   right: 0;
   bottom: 0;
   height: var(--player-height);
-  background: var(--bg-elevated);
+  background: rgba(18, 16, 11, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(260px, 2fr) minmax(140px, 1fr);
-  align-items: center;
-  gap: 16px;
-  padding: 0 24px 0 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 20px 8px;
   z-index: 38;
-  transition: bottom var(--transition-base), height var(--transition-base);
+  transition: bottom var(--transition-base), height var(--transition-base), border-radius var(--transition-base);
 }
 
-/* Top-edge full-width amber progress bar */
+/* Desktop Top Row: Time - Seek Slider - Duration (Metrolist DesktopMiniPlayerProgress) */
 .pb-progress-row {
-  position: absolute;
-  top: -2px;
-  left: 0;
-  right: 0;
-  height: 4px;
   display: flex;
   align-items: center;
-  z-index: 5;
+  gap: 12px;
+  width: 100%;
+  height: 18px;
+}
+
+.pb-time {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  min-width: 34px;
+}
+
+.pb-time-start {
+  text-align: right;
+}
+
+.pb-time-end {
+  text-align: left;
 }
 
 .pb-progress {
   --progress-pct: 0%;
   -webkit-appearance: none;
   appearance: none;
+  flex: 1;
   width: 100%;
-  height: 3px;
-  border-radius: 0;
+  height: 4px;
+  border-radius: 999px;
   background: linear-gradient(
     to right,
     var(--accent) 0%,
@@ -48,8 +64,8 @@
   transition: height 120ms ease;
 }
 
-.player-bar:hover .pb-progress {
-  height: 4px;
+.pb-progress-row:hover .pb-progress {
+  height: 5px;
 }
 
 .pb-progress::-webkit-slider-thumb {
@@ -58,73 +74,41 @@
   height: 12px;
   border-radius: 50%;
   background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
   opacity: 0;
   transform: scale(0.75);
   transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
-.player-bar:hover .pb-progress::-webkit-slider-thumb,
+.pb-progress-row:hover .pb-progress::-webkit-slider-thumb,
 .pb-progress:focus-visible::-webkit-slider-thumb {
   opacity: 1;
   transform: scale(1);
 }
 
-/* Left: Transport Controls & Time */
-.pb-transport {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.pb-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pb-play {
-  width: 40px;
-  height: 40px;
-  background: var(--text-primary);
-  color: var(--bg-void);
+.pb-progress::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 0;
   border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--transition-fast), background var(--transition-fast);
-}
-
-.pb-play svg {
-  width: 18px;
-  height: 18px;
-}
-
-.pb-play:hover {
   background: var(--accent);
-  color: #1A1206;
-  transform: scale(1.06);
 }
 
-.pb-play:active {
-  transform: scale(0.95);
-}
-
-.pb-time-wrap {
-  display: inline-flex;
+/* Desktop Main Row: 3-Zone Metrolist Layout */
+.pb-main-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.3fr) auto minmax(220px, 1fr);
   align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
 }
 
-/* Center: Track Art + Info + Like */
-.pb-track-center {
+/* Left Zone: Artwork + Metadata + Quick Action Pills */
+.pb-track-left {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -132,14 +116,26 @@
   position: relative;
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-sm);
+  border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
-  background: #000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.pb-art-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .pb-art iframe {
+  position: relative;
+  z-index: 1;
   width: 100% !important;
   height: 100% !important;
 }
@@ -148,8 +144,8 @@
   position: absolute;
   right: 3px;
   bottom: 3px;
-  background: rgba(18, 15, 12, 0.85);
-  border-radius: 3px;
+  background: rgba(10, 9, 5, 0.88);
+  border-radius: 4px;
   padding: 2px 3px;
   display: none;
   align-items: flex-end;
@@ -180,11 +176,12 @@
 
 .pb-info {
   min-width: 0;
-  max-width: 420px;
+  flex: 1;
 }
 
 .pb-title {
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: 13.5px;
   white-space: nowrap;
   overflow: hidden;
@@ -201,131 +198,283 @@
   margin-top: 1px;
 }
 
-.pb-like {
+.pb-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   flex-shrink: 0;
 }
 
-/* Right: Repeat, Shuffle & Volume area */
-.pb-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  padding-right: 48px;
-}
-
-/* Sound Mixer */
-.sound-mixer {
-  position: fixed;
-  right: 18px;
-  bottom: 19px;
-  z-index: 39;
-  transition: bottom var(--transition-base), right var(--transition-base);
-}
-
-.sound-mixer-btn {
-  width: 38px;
-  height: 38px;
+.pb-action-pill {
+  min-width: 34px;
+  min-height: 34px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: transparent;
-  border: none;
+  border: 1px solid var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.pb-action-pill svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pb-action-pill:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+  background: var(--bg-highlight);
+}
+
+.pb-like.active {
+  color: var(--love);
+  border-color: rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Center Zone: Expressive Transport Controls (Metrolist PlayerPrimaryControls) */
+.pb-transport-center {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
-  transition: background var(--transition-fast), color var(--transition-fast);
+  gap: 10px;
 }
 
-.sound-mixer-btn:hover {
+.pb-side-btn {
+  min-width: 38px;
+  min-height: 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   background: var(--bg-highlight);
   color: var(--text-primary);
 }
 
+.pb-side-btn:hover {
+  background: var(--border-strong);
+  color: var(--accent);
+}
+
+.pb-play {
+  min-width: 46px;
+  min-height: 46px;
+  width: 46px;
+  height: 46px;
+  background: var(--grad-ember);
+  color: #0A0905;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(250, 204, 21, 0.25);
+  transition: transform var(--transition-fast), border-radius var(--transition-base), filter var(--transition-fast);
+}
+
+.pb-play.is-playing {
+  border-radius: 15px;
+}
+
+.pb-play svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pb-play:hover {
+  filter: brightness(1.08);
+  transform: scale(1.05);
+}
+
+.pb-play:active {
+  transform: scale(0.95);
+}
+
+/* Right Zone: Shuffle, Repeat & Inline Sound Mixer Slot */
+.pb-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-right: 184px;
+}
+
+.pb-util-btn {
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-secondary);
+}
+
+.pb-util-btn.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Desktop Inline Sound Mixer (sits neatly inside right zone of player bar) */
+.sound-mixer {
+  position: fixed;
+  right: 20px;
+  bottom: 12px;
+  z-index: 40;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 8px;
+}
+
+.sound-mixer-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-highlight);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.sound-mixer-btn:hover,
+.sound-mixer.open .sound-mixer-btn {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .sound-mixer-btn svg {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
 }
 
 .sound-mixer-panel {
-  position: absolute;
-  right: 0;
-  bottom: 50px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 16px 14px 14px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 10px;
-  box-shadow: var(--shadow-elevated);
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity var(--transition-base), transform var(--transition-base);
+  gap: 8px;
+  width: 112px;
+  height: 34px;
+  padding: 0 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  transition: border-color var(--transition-fast), width var(--transition-base), opacity var(--transition-base);
 }
 
 .sound-mixer.open .sound-mixer-panel {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+  border-color: var(--accent);
 }
 
 .sound-mixer-value {
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 700;
+  min-width: 22px;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
 .sound-mixer-slider {
   -webkit-appearance: none;
   appearance: none;
-  writing-mode: vertical-lr;
-  direction: rtl;
-  width: 6px;
-  height: 115px;
-  accent-color: var(--accent);
-  background: var(--border);
+  writing-mode: horizontal-tb;
+  direction: ltr;
+  --fill: 80%;
+  width: 100%;
+  height: 5px;
+  margin: 0;
   border-radius: 999px;
   cursor: pointer;
+  background: linear-gradient(90deg, #FACC15 0, #F59E0B var(--fill), var(--border-strong) var(--fill));
 }
 
-/* Mobile & Tablet Responsive Player Bar */
+.sound-mixer-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid var(--accent);
+}
+
+.sound-mixer-slider::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid var(--accent);
+}
+
+.sound-mixer-slider::-moz-range-track {
+  background: transparent;
+}
+
+/* Mobile Floating Mini-Player Card (Metrolist MiniPlayerCard aesthetic) */
 @media (max-width: 768px) {
   .player-bar {
-    bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px));
+    left: 8px;
+    right: 8px;
+    bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom, 0px) + 6px);
     height: var(--player-height-mobile);
-    display: flex;
-    justify-content: space-between;
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
     padding: 0 12px;
-    gap: 10px;
-    background: rgba(30, 25, 20, 0.96);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(24, 22, 15, 0.97);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+    overflow: hidden;
+    justify-content: center;
   }
 
-  .pb-track-center {
-    order: 1;
-    flex: 1;
-    justify-content: flex-start;
-    gap: 10px;
+  .pb-progress-row {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    gap: 0;
+    z-index: 3;
   }
 
-  .pb-transport {
-    order: 2;
-    flex: 0 0 auto;
-  }
-
-  .pb-time-wrap,
-  .pb-right {
+  .pb-time-start,
+  .pb-time-end,
+  .pb-right,
+  #pb-prev,
+  .pb-add {
     display: none;
+  }
+
+  .pb-progress {
+    height: 3px;
+    border-radius: 0;
+  }
+
+  .pb-progress::-webkit-slider-thumb {
+    display: none;
+  }
+
+  .pb-main-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .pb-track-left {
+    flex: 1;
+    min-width: 0;
+    gap: 10px;
   }
 
   .pb-art {
     width: 44px;
     height: 44px;
-    border-radius: 6px;
+    border-radius: 10px;
   }
 
   .pb-title {
@@ -336,37 +485,73 @@
     font-size: 11.5px;
   }
 
-  .pb-controls {
-    gap: 4px;
+  .pb-quick-actions {
+    gap: 0;
+  }
+
+  .pb-action-pill {
+    min-width: 32px;
+    min-height: 32px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+  }
+
+  .pb-transport-center {
+    flex: 0 0 auto;
+    gap: 6px;
   }
 
   .pb-play {
-    width: 36px;
-    height: 36px;
+    min-width: 38px;
+    min-height: 38px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .pb-play.is-playing {
+    border-radius: 12px;
   }
 
   .pb-play svg {
-    width: 15px;
-    height: 15px;
+    width: 17px;
+    height: 17px;
   }
 
+  .pb-side-btn {
+    min-width: 34px;
+    min-height: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Mobile Volume Dock clears floating mini-player card */
   .sound-mixer {
     right: 12px;
-    bottom: calc(var(--tabbar-height) + var(--player-height-mobile) + env(safe-area-inset-bottom, 0px) + 12px);
+    bottom: calc(var(--tabbar-height) + var(--player-height-mobile) + env(safe-area-inset-bottom, 0px) + 16px);
   }
 
   .sound-mixer-btn {
     width: 40px;
     height: 40px;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
     box-shadow: var(--shadow-elevated);
   }
-}
 
-@media (max-width: 420px) {
-  #pb-prev {
-    display: none;
+  .sound-mixer-panel {
+    width: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    border-color: transparent;
+  }
+
+  .sound-mixer.open .sound-mixer-panel {
+    width: min(210px, calc(100vw - 80px));
+    padding: 0 14px;
+    opacity: 1;
+    pointer-events: auto;
+    border-color: var(--border-strong);
   }
 }

@@ -24,6 +24,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.melofy.app.data.YouTubeMusicClient;
 import com.melofy.app.server.LocalMelofyServer;
 
 import org.json.JSONObject;
@@ -50,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        getWindow().setStatusBarColor(Color.parseColor("#0F0B1A"));
-        getWindow().setNavigationBarColor(Color.parseColor("#0F0B1A"));
+        getWindow().setStatusBarColor(Color.parseColor("#0A0905"));
+        getWindow().setNavigationBarColor(Color.parseColor("#0A0905"));
 
         WindowInsetsControllerCompat insetsController =
                 WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
@@ -108,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
             settings.setUserAgentString(baseUa + ANDROID_UA_SUFFIX);
         }
 
-        webView.setBackgroundColor(Color.parseColor("#0F0B1A"));
+        webView.setBackgroundColor(Color.parseColor("#0A0905"));
         webView.setWebViewClient(new MelofyWebViewClient());
         webView.setWebChromeClient(new MelofyWebChromeClient());
     }
 
     private void startLocalServerAndLoad() {
-        localServer = new LocalMelofyServer(getAssets());
+        localServer = new LocalMelofyServer(getAssets(), new YouTubeMusicClient(BuildConfig.YOUTUBE_API_KEY));
         try {
             appBaseUrl = localServer.start();
             webView.loadUrl(appBaseUrl + "/");

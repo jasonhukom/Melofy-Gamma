@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,13 +21,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 /**
- * Keyless YouTube Music search client using YouTube Music's InnerTube WEB_REMIX API.
- * Mirrors backend/core/youtube.py and desktop/src/ytmusic.js so Android searches and plays
- * real YouTube Music tracks without needing an API key or external backend server.
+ * YouTube Music search client for Android:
+ * - Primary: Keyless YouTube Music InnerTube WEB_REMIX API (zero API key required).
+ * - Fallback: Official YouTube Data API v3 (https://www.googleapis.com/youtube/v3/search)
+ *   when YOUTUBE_API_KEY is supplied via constructor or environment variable.
+ * Mirrors backend/core/youtube.py and desktop/src/ytmusic.js.
  */
 public class YouTubeMusicClient {
 
     private static final String INNERTUBE_SEARCH_URL = "https://music.youtube.com/youtubei/v1/search?prettyPrint=false";
+    private static final String DATA_API_SEARCH_URL = "https://www.googleapis.com/youtube/v3/search";
     private static final String SONGS_PARAMS = "EgWKAQIIAWoMEAMQBBAJEAoQBRAV";
     private static final long CACHE_TTL_MS = 600_000L;
 
@@ -52,6 +56,15 @@ public class YouTubeMusicClient {
 
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
     private final Random random = new Random();
+    private final String apiKey;
+
+    public YouTubeMusicClient() {
+        this(System.getenv("YOUTUBE_API_KEY"));
+    }
+
+    public YouTubeMusicClient(String apiKey) {
+        this.apiKey = apiKey != null ? apiKey.trim() : "";
+    }
 
     public JSONArray search(String query, int limit) throws Exception {
         String normalized = query == null ? "" : query.trim();
@@ -65,8 +78,22 @@ public class YouTubeMusicClient {
             return hit.songs;
         }
 
-        String rawResponse = postSearchRequest(normalized);
-        JSONArray songs = parseInnerTubeSongs(rawResponse, limit);
+        JSONArray songs = new JSONArray();
+        Exception primaryError = null;
+        try {
+            String rawResponse = postSearchRequest(normalized);
+            songs = parseInnerTubeSongs(rawResponse, limit);
+        } catch (Exception e) {
+            primaryError = e;
+        }
+
+        if (songs.length() == 0 && !apiKey.isEmpty()) {
+            String rawDataApi = getDataApiSearchRequest(normalized, limit);
+            songs = parseDataApiSongs(rawDataApi, limit);
+        } else if (songs.length() == 0 && primaryError != null) {
+            throw primaryError;
+        }
+
         if (songs.length() > 0) {
             cache.put(cacheKey, new CacheEntry(System.currentTimeMillis(), songs));
         }
@@ -114,10 +141,33 @@ public class YouTubeMusicClient {
             os.write(bodyBytes);
         }
 
+        return readHttpResponse(conn, "InnerTube");
+    }
+
+    protected String getDataApiSearchRequest(String query, int limit) throws Exception {
+        if (apiKey.isEmpty()) {
+            throw new IllegalStateException("YOUTUBE_API_KEY not configured");
+        }
+        String urlStr = DATA_API_SEARCH_URL
+                + "?part=snippet"
+                + "&type=video"
+                + "&videoCategoryId=10"
+                + "&maxResults=" + Math.max(1, Math.min(50, limit))
+                + "&q=" + URLEncoder.encode(query, "UTF-8")
+                + "&key=" + URLEncoder.encode(apiKey, "UTF-8");
+
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(8_000);
+        conn.setReadTimeout(10_000);
+        return readHttpResponse(conn, "YouTube Data API v3");
+    }
+
+    private static String readHttpResponse(HttpURLConnection conn, String label) throws Exception {
         int status = conn.getResponseCode();
         InputStream stream = status >= 200 && status < 300 ? conn.getInputStream() : conn.getErrorStream();
         if (stream == null) {
-            throw new IllegalStateException("InnerTube HTTP " + status);
+            throw new IllegalStateException(label + " HTTP " + status);
         }
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
@@ -127,9 +177,50 @@ public class YouTubeMusicClient {
             }
         }
         if (status < 200 || status >= 300) {
-            throw new IllegalStateException("InnerTube HTTP " + status);
+            throw new IllegalStateException(label + " HTTP " + status);
         }
         return sb.toString();
+    }
+
+    public static JSONArray parseDataApiSongs(String rawJson, int limit) throws Exception {
+        JSONArray songs = new JSONArray();
+        Set<String> seen = new HashSet<>();
+        JSONObject root = new JSONObject(rawJson);
+        JSONArray items = root.optJSONArray("items");
+        if (items == null) return songs;
+
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject item = items.optJSONObject(i);
+            if (item == null) continue;
+            JSONObject idObj = item.optJSONObject("id");
+            String videoId = idObj != null ? idObj.optString("videoId", "") : "";
+            if (videoId.isEmpty() || seen.contains(videoId)) continue;
+            seen.add(videoId);
+
+            JSONObject snippet = item.optJSONObject("snippet");
+            String title = snippet != null ? snippet.optString("title", "") : "";
+            String artist = snippet != null ? snippet.optString("channelTitle", "") : "";
+            String thumbnail = "";
+            JSONObject thumbs = snippet != null ? snippet.optJSONObject("thumbnails") : null;
+            if (thumbs != null) {
+                JSONObject preferred = thumbs.optJSONObject("medium");
+                if (preferred == null) preferred = thumbs.optJSONObject("default");
+                if (preferred == null) preferred = thumbs.optJSONObject("high");
+                if (preferred != null) thumbnail = preferred.optString("url", "");
+            }
+
+            JSONObject song = new JSONObject();
+            song.put("id", videoId);
+            song.put("title", title.isEmpty() ? "Untitled" : title);
+            song.put("artist", artist.isEmpty() ? "YouTube Music" : artist);
+            song.put("thumbnail", thumbnail);
+            songs.put(song);
+
+            if (songs.length() >= limit) {
+                break;
+            }
+        }
+        return songs;
     }
 
     public static JSONArray parseInnerTubeSongs(String rawJson, int limit) throws Exception {

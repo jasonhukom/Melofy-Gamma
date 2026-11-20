@@ -3,6 +3,7 @@ name: Build & Release Lyra Melofy (EXE, APK & Web)
 on:
   push:
     branches:
+      - main
       - feat/desktop-exe-and-ytm-apps
     tags:
       - 'v*'

@@ -1,27 +1,27 @@
 :root {
-  /* Lyra Melofy: midnight violet base, ember accent */
-  --bg-void: #0B0814;
-  --bg-base: #0F0B1A;
-  --bg-elevated: #171127;
-  --bg-player: #140F22;
-  --bg-highlight: #241B3A;
-  --bg-card: #1B1430;
-  --bg-chip: rgba(236, 228, 255, 0.07);
-  --bg-chip-hover: rgba(255, 123, 92, 0.18);
+  /* Lyra Melofy: original Android black base & yellow accent palette */
+  --bg-void: #0A0905;
+  --bg-base: #0E0D08;
+  --bg-elevated: #18160F;
+  --bg-player: #12100B;
+  --bg-highlight: #262217;
+  --bg-card: #16140E;
+  --bg-chip: rgba(255, 255, 255, 0.06);
+  --bg-chip-hover: rgba(250, 204, 21, 0.16);
 
-  /* Lyra Melofy Accents: Amber/Gold for action & control, Rose for love/liked */
-  --accent: #FF8A5B;
-  --accent-hover: #FFB07F;
-  --accent-soft: rgba(255, 138, 91, 0.16);
-  --love: #FF5D8F;
+  /* Lyra Melofy Accents: Vibrant Yellow primary, Amber hover, Red love */
+  --accent: #FACC15;
+  --accent-hover: #F59E0B;
+  --accent-soft: rgba(250, 204, 21, 0.16);
+  --love: #EF4444;
 
-  --text-primary: #F5F1FF;
-  --text-secondary: #B5ABCE;
-  --text-muted: #7B7094;
-  --border: #2B2142;
-  --border-strong: #3E3160;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A096;
+  --text-muted: #6E6C60;
+  --border: #2A261A;
+  --border-strong: #3D3624;
 
-  --danger: #FF5D8F;
+  --danger: #EF4444;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -29,8 +29,8 @@
   --radius-full: 999px;
 
   --sidebar-width: 240px;
-  --player-height: 76px;
-  --player-height-mobile: 64px;
+  --player-height: 88px;
+  --player-height-mobile: 66px;
   --topbar-height: 64px;
   --tabbar-height: 56px;
 
@@ -39,7 +39,7 @@
 
   --transition-fast: 120ms ease;
   --transition-base: 220ms ease;
-  --grad-ember: linear-gradient(135deg, #FF6B6B 0%, #FFB547 100%);
-  --mint: #5EEAD4;
-  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --grad-ember: linear-gradient(135deg, #FACC15 0%, #F59E0B 100%);
+  --mint: #10B981;
+  --shadow-elevated: 0 12px 32px rgba(0, 0, 0, 0.55);
 }

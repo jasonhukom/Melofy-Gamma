@@ -1,8 +1,11 @@
 # Lyra Melofy
 
-A free, YouTube-powered music player with a Midnight Violet & Ember UI —
-now unified in one repository across **Web** (Django + SPA), **Windows Desktop**
+A free, YouTube-powered music player with a **Black & Yellow (`#0A0905` / `#FACC15`) UI**,
+concentric sound-wave circle logo, and a **Metrolist-inspired bottom player bar** —
+unified in one repository across **Web** (Django + SPA), **Windows Desktop**
 (Electron `.exe`), and **Android** (WebView + embedded local YouTube Music bridge `.apk`).
+
+> **AI Agents:** Read [`AGENTS.md`](AGENTS.md) (and [`CLAUDE.md`](CLAUDE.md)) before making changes for the full architecture and file map across all three platforms.
 
 ```
 lyra-melofy/
@@ -24,11 +27,11 @@ lyra-melofy/
 
 ## Architecture across Web, `.exe`, and `.apk`
 
-- **Single shared UI (`backend/frontend/`):** Plain HTML/CSS/JS SPA (no build step required), with midnight violet surfaces, ember gradient accent, slidable drawer, floating sound mixer, mobile 5-tab navigation, and persistent YouTube IFrame Player API playback.
+- **Single shared UI (`backend/frontend/`):** Plain HTML/CSS/JS SPA (no build step required), featuring a black (`#0A0905`) & yellow (`#FACC15`) palette, circular concentric sound-wave branding, Metrolist-inspired 3-zone desktop player bar + floating mobile mini-player card, slidable drawer, inline/floating sound mixer, mobile 5-tab navigation, and persistent YouTube IFrame Player API playback.
 - **Desktop `.exe` (`desktop/` — Electron + JavaScript/Node.js):**
   - **Best fit & language:** **Electron (JavaScript / Node.js)** shares the exact same language and UI as `backend/frontend/`, embeds Chromium + Node.js into a standalone `.exe` (requiring zero Python or API key setup from end users), disables background throttling so music never stops when minimized, and runs a built-in loopback HTTP server + keyless YouTube Music InnerTube client (`WEB_REMIX`) so YouTube IFrame Player API always has a valid `http://127.0.0.1:<port>` origin and `Referer`.
 - **Android `.apk` (`android/` — Java + WebView + embedded `LocalMelofyServer`):**
-  - Syncs `backend/frontend/` at build time (`syncWebFrontend` Gradle task), runs a loopback HTTP server (`LocalMelofyServer`) + keyless InnerTube client (`YouTubeMusicClient`) directly inside the APK so search, random picks, playlists, liked songs, and YouTube Music playback work out of the box without requiring an external backend server.
+  - Syncs `backend/frontend/` at build time (`syncWebFrontend` Gradle task), runs a loopback HTTP server (`LocalMelofyServer`) + YouTube Music client (`YouTubeMusicClient` supporting both keyless InnerTube `WEB_REMIX` and optional YouTube Data API v3 via `YOUTUBE_API_KEY`) directly inside the APK so search, random picks, playlists, liked songs, and YouTube Music playback work out of the box without requiring an external backend server.
 - **Web (`backend/` — Django + Python):**
   - Uses `ytmusicapi` with direct InnerTube `WEB_REMIX` and optional `YOUTUBE_API_KEY` fallbacks, plus optional Firebase Auth & Google OAuth YouTube library integration.
 

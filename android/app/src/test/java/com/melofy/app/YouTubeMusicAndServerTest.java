@@ -54,6 +54,27 @@ public class YouTubeMusicAndServerTest {
     }
 
     @Test
+    public void parseDataApiSongsExtractsValidTracks() throws Exception {
+        String v3Json = new JSONObject()
+                .put("items", new JSONArray().put(new JSONObject()
+                        .put("id", new JSONObject().put("videoId", "v3Track999"))
+                        .put("snippet", new JSONObject()
+                                .put("title", "Midnight City")
+                                .put("channelTitle", "M83")
+                                .put("thumbnails", new JSONObject().put("medium",
+                                        new JSONObject().put("url", "https://example.com/v3.jpg"))))))
+                .toString();
+
+        JSONArray songs = YouTubeMusicClient.parseDataApiSongs(v3Json, 10);
+        assertEquals(1, songs.length());
+        JSONObject song = songs.getJSONObject(0);
+        assertEquals("v3Track999", song.getString("id"));
+        assertEquals("Midnight City", song.getString("title"));
+        assertEquals("M83", song.getString("artist"));
+        assertEquals("https://example.com/v3.jpg", song.getString("thumbnail"));
+    }
+
+    @Test
     public void parseInnerTubeSongsExtractsValidTracks() throws Exception {
         String sampleJson = buildSampleInnerTubeJson(
                 "4D7u5KF7SP8", "Get Lucky", "Daft Punk", "https://example.com/thumb.jpg");
