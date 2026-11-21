@@ -132,3 +132,6 @@ This document gives AI coding agents a complete, accurate map of **Lyra Melofy**
 2. **Preserve Django template tags** (`{% load static %}`, `{% static '...' %}`) in `backend/frontend/index.html`; both `LocalMelofyServer.renderIndexHtml()` and `desktop/src/server.js` `renderIndexHtml()` rewrite them automatically.
 3. **Keyless by default, API v3 compatible**: Every platform (`backend/core/youtube.py`, `desktop/src/ytmusic.js`, `android/.../YouTubeMusicClient.java`) must keep keyless InnerTube `WEB_REMIX` working with zero API key while supporting `YOUTUBE_API_KEY` (YouTube Data API v3) when provided.
 4. **No hardcoded secrets** in code or commits (`backend/.env` and `android/local.properties` are gitignored).
+5. **Cross-platform UI source**: Apply shared UI changes in `backend/frontend/`; desktop and Android consume that source through their asset-sync steps. Platform-specific window and native UI changes belong in their platform folders.
+6. **Commit every completed change**: Create a separate commit for each coherent change, using a descriptive subject and a body that explains the user-visible result. Do not include unrelated or unreviewed files in a commit.
+7. **YouTube account data**: Describe only data available through the YouTube Data API. Watch history is not available through that API; Melofy's recent-played list is device-local.
