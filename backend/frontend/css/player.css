@@ -313,6 +313,93 @@
   background: var(--accent-soft);
 }
 
+.pb-track-menu {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.pb-more-btn {
+  color: var(--text-secondary);
+}
+
+.pb-track-menu-panel {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: min(320px, calc(100vw - 24px));
+  max-height: min(70vh, 480px);
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: rgba(22, 20, 14, 0.98);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.65);
+  z-index: 45;
+}
+
+.pb-track-menu-panel[hidden],
+.pb-menu-field[hidden] {
+  display: none !important;
+}
+
+.pb-menu-heading {
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pb-menu-field {
+  display: grid;
+  gap: 2px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+}
+
+.pb-menu-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.pb-menu-value,
+.pb-menu-description p {
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.pb-menu-description {
+  display: grid;
+  gap: 5px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.pb-menu-links {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pb-menu-links a {
+  display: block;
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: var(--bg-highlight);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pb-menu-links a:hover {
+  background: var(--accent-soft);
+}
+
 /* Desktop Inline Sound Mixer (sits neatly inside right zone of player bar) */
 .sound-mixer {
   position: fixed;
@@ -442,9 +529,7 @@
 
   .pb-time-start,
   .pb-time-end,
-  .pb-right,
-  #pb-prev,
-  .pb-add {
+  #pb-prev {
     display: none;
   }
 
@@ -458,6 +543,7 @@
   }
 
   .pb-main-row {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -501,6 +587,33 @@
   .pb-transport-center {
     flex: 0 0 auto;
     gap: 6px;
+    margin-right: 34px;
+  }
+
+  .pb-right {
+    display: flex;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 0;
+    padding: 0;
+  }
+
+  .pb-right > .pb-util-btn {
+    display: none;
+  }
+
+  .pb-more-btn {
+    min-width: 34px;
+    min-height: 38px;
+    width: 34px;
+    height: 38px;
+  }
+
+  .pb-track-menu-panel {
+    right: -2px;
+    bottom: calc(100% + 14px);
   }
 
   .pb-play {

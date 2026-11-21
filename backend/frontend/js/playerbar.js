@@ -64,11 +64,35 @@ const PlayerBar = (() => {
     const nextBtn = mk('pb-next', 'Next', UI.icons.next, 'pb-side-btn');
     controlsWrap.append(prevBtn, playBtn, nextBtn);
 
-    // Right: Shuffle + Repeat (sound-mixer volume sits adjacent on desktop)
+    // Right: Playback options and a track details menu; external track links live in the menu.
     const right = UI.el('div', { class: 'pb-right' });
     const shuffleBtn = mk('pb-shuffle', 'Shuffle', UI.icons.shuffle, 'pb-util-btn');
     const repeatBtn = mk('pb-repeat', 'Repeat', UI.icons.repeat, 'pb-util-btn');
-    right.append(shuffleBtn, repeatBtn);
+    const trackMenu = UI.el('div', { class: 'pb-track-menu' });
+    const moreBtn = mk('pb-more', 'Track details', UI.icons.more, 'pb-util-btn pb-more-btn');
+    moreBtn.setAttribute('aria-haspopup', 'dialog');
+    moreBtn.setAttribute('aria-expanded', 'false');
+    const menuPanel = UI.el('section', {
+      class: 'pb-track-menu-panel',
+      attrs: { id: 'pb-track-menu-panel', role: 'dialog', 'aria-label': 'Track details', hidden: '' }
+    });
+    const titleField = UI.el('div', { class: 'pb-menu-field' });
+    titleField.append(UI.el('span', { class: 'pb-menu-label', text: 'Title' }), UI.el('span', { class: 'pb-menu-value', attrs: { id: 'pb-menu-title' } }));
+    menuPanel.append(UI.el('div', { class: 'pb-menu-heading', text: 'Track details' }), titleField);
+    const artistField = UI.el('div', { class: 'pb-menu-field' });
+    artistField.append(UI.el('span', { class: 'pb-menu-label', text: 'Artist' }), UI.el('span', { class: 'pb-menu-value', attrs: { id: 'pb-menu-artist' } }));
+    const albumField = UI.el('div', { class: 'pb-menu-field', attrs: { id: 'pb-menu-album-field' } });
+    albumField.append(UI.el('span', { class: 'pb-menu-label', text: 'Album' }), UI.el('span', { class: 'pb-menu-value', attrs: { id: 'pb-menu-album' } }));
+    const descriptionField = UI.el('div', { class: 'pb-menu-description' });
+    descriptionField.append(UI.el('span', { class: 'pb-menu-label', text: 'Description' }), UI.el('p', { attrs: { id: 'pb-menu-description' } }));
+    const links = UI.el('div', { class: 'pb-menu-links' });
+    links.append(
+      UI.el('a', { text: 'Open on YouTube', attrs: { id: 'pb-menu-youtube', target: '_blank', rel: 'noopener noreferrer' } }),
+      UI.el('a', { text: 'Open on YouTube Music', attrs: { id: 'pb-menu-youtube-music', target: '_blank', rel: 'noopener noreferrer' } })
+    );
+    menuPanel.append(artistField, albumField, descriptionField, links);
+    trackMenu.append(moreBtn, menuPanel);
+    right.append(shuffleBtn, repeatBtn, trackMenu);
 
     mainRow.append(trackLeft, controlsWrap, right);
     bar.append(progressRow, mainRow);
@@ -103,6 +127,24 @@ const PlayerBar = (() => {
     document.getElementById('pb-repeat').addEventListener('click', () => {
       const mode = Player.cycleRepeat();
       updateRepeatButton(mode);
+    });
+
+    const moreBtn = document.getElementById('pb-more');
+    const menuPanel = document.getElementById('pb-track-menu-panel');
+    const closeTrackMenu = () => {
+      menuPanel.hidden = true;
+      moreBtn.setAttribute('aria-expanded', 'false');
+    };
+    moreBtn.addEventListener('click', () => {
+      const opening = menuPanel.hidden;
+      menuPanel.hidden = !opening;
+      moreBtn.setAttribute('aria-expanded', String(opening));
+    });
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element) || !event.target.closest('.pb-track-menu')) closeTrackMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeTrackMenu();
     });
 
     const progressEl = document.getElementById('pb-progress');
@@ -168,6 +210,16 @@ const PlayerBar = (() => {
     const likeBtn = document.getElementById('pb-like');
     likeBtn.innerHTML = liked ? UI.icons.heartFilled : UI.icons.heart;
     likeBtn.classList.toggle('active', liked);
+
+    document.getElementById('pb-menu-title').textContent = song.title || 'Unknown Title';
+    document.getElementById('pb-menu-artist').textContent = song.artist || 'Unknown Artist';
+    const albumField = document.getElementById('pb-menu-album-field');
+    albumField.hidden = !song.album;
+    document.getElementById('pb-menu-album').textContent = song.album || '';
+    document.getElementById('pb-menu-description').textContent = song.description || 'Open the track on YouTube to view its description and additional details.';
+    const videoId = encodeURIComponent(song.id || '');
+    document.getElementById('pb-menu-youtube').href = `https://www.youtube.com/watch?v=${videoId}`;
+    document.getElementById('pb-menu-youtube-music').href = `https://music.youtube.com/watch?v=${videoId}`;
   }
 
   function setPlayIcon(isPlaying) {
