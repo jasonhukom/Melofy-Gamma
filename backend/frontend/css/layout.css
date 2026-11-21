@@ -506,6 +506,49 @@
 
   .topbar-left {
     min-width: auto;
+    flex: 0 1 auto;
+    gap: 7px;
+  }
+
+  .topbar-center {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .topbar-right {
+    flex: 0 0 auto;
+  }
+
+  .ytm-brand {
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .ytm-search-box {
+    min-width: 0;
+  }
+
+  .ytm-search-input {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .ytm-search-icon {
+    width: 34px;
+  }
+
+  .ytm-search-input::placeholder {
+    text-overflow: ellipsis;
+  }
+
+  .ytm-logo-badge,
+  .ytm-logo-badge svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .topbar-title {
+    font-size: 15px;
   }
 
   .app-shell {
@@ -639,5 +682,47 @@
 @media (max-width: 480px) {
   .main-content {
     padding: 10px 12px 24px;
+  }
+
+  .topbar {
+    padding-left: max(8px, env(safe-area-inset-left, 0px));
+    padding-right: max(8px, env(safe-area-inset-right, 0px));
+    gap: 6px;
+  }
+
+  .topbar-left {
+    gap: 3px;
+  }
+
+  .topbar-menu-btn {
+    min-width: 34px;
+    width: 34px;
+  }
+
+  .topbar-title {
+    font-size: 13px;
+  }
+
+  .ytm-search-input {
+    font-size: 11px;
+  }
+
+  .ytm-search-icon {
+    width: 30px;
+  }
+
+  .ytm-signin-pill {
+    padding: 7px 10px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 370px) {
+  .topbar-title {
+    display: none;
+  }
+
+  .topbar-center {
+    max-width: none;
   }
 }

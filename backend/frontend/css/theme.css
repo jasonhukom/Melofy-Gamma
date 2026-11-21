@@ -19,7 +19,7 @@ body {
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
 }
-.ytm-logo-badge, .ytm-logo-badge svg { width: 32px; height: 32px; display: block; border-radius: 50%; }
+.ytm-logo-badge, .ytm-logo-badge svg { width: 32px; height: 32px; display: block; border-radius: 10px; }
 .topbar-title {
   font-family: var(--font-display);
   letter-spacing: 0.01em;
