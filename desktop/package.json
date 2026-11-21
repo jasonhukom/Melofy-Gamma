@@ -1,6 +1,6 @@
 {
   "name": "lyra-melofy-desktop",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Lyra Melofy desktop application powered by YouTube Music",
   "main": "src/main.js",
   "scripts": {
@@ -57,6 +57,12 @@
       ],
       "icon": "assets/icon.png"
     },
+    "protocols": [
+      {
+        "name": "Lyra Melofy Authentication",
+        "schemes": ["melofy"]
+      }
+    ],
     "portable": {
       "artifactName": "Lyra-Melofy-Portable-${version}.exe"
     },

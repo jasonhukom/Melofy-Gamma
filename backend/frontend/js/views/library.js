@@ -7,6 +7,15 @@ const LibraryView = {
     renderLocalGrid(grid);
 
     const user = window.FirebaseAuth ? window.FirebaseAuth.getUser() : null;
+    const recent = Storage.getRecent();
+    if (recent.length) {
+      const history = UI.el('section', {});
+      history.appendChild(UI.el('h2', { class: 'section-heading', text: 'Listening history on this device' }));
+      const historyList = UI.el('div', { class: 'song-list' });
+      recent.slice(0, 12).forEach(song => historyList.appendChild(UI.songRow(song, { context: recent })));
+      history.appendChild(historyList);
+      container.appendChild(history);
+    }
     if (user && user.youtubeConnected) {
       renderYouTubeSections(container);
     } else if (user) {
@@ -76,8 +85,9 @@ function renderYouTubeSections(container) {
   const playlistsGrid = UI.el('div', { class: 'library-grid' });
   playlistsGrid.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading…' }));
   playlistsSection.appendChild(playlistsGrid);
+  const playlistItems = UI.el('section', { class: 'youtube-playlist-items' });
 
-  container.append(likedSection, subsSection, playlistsSection);
+  container.append(likedSection, subsSection, playlistsSection, playlistItems);
 
   fetch('/api/youtube/liked', { credentials: 'same-origin' })
     .then(r => r.json())
@@ -125,6 +135,35 @@ function renderYouTubeSections(container) {
           UI.el('div', { class: 'library-card-title', text: pl.title }),
           UI.el('div', { class: 'library-card-subtitle', text: `${pl.itemCount} video${pl.itemCount === 1 ? '' : 's'}` })
         );
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Open playlist ${pl.title}`);
+        const openPlaylist = async () => {
+          playlistItems.innerHTML = '';
+          playlistItems.appendChild(UI.el('h2', { class: 'section-heading', text: pl.title }));
+          playlistItems.appendChild(UI.el('p', { class: 'empty-state', text: 'Loading playlist…' }));
+          try {
+            const response = await fetch(`/api/youtube/playlist-items?id=${encodeURIComponent(pl.id)}`, { credentials: 'same-origin' });
+            const payload = await response.json();
+            playlistItems.innerHTML = '';
+            playlistItems.appendChild(UI.el('h2', { class: 'section-heading', text: pl.title }));
+            if (!response.ok || !payload.results?.length) {
+              playlistItems.appendChild(UI.el('p', { class: 'empty-state', text: payload.error || 'This playlist has no playable videos.' }));
+              return;
+            }
+            const list = UI.el('div', { class: 'song-list' });
+            payload.results.forEach(song => list.appendChild(UI.songRow(song, { context: payload.results })));
+            playlistItems.appendChild(list);
+            playlistItems.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } catch (_) {
+            playlistItems.innerHTML = '';
+            playlistItems.appendChild(UI.el('p', { class: 'empty-state', text: 'Could not load playlist items.' }));
+          }
+        };
+        card.addEventListener('click', openPlaylist);
+        card.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openPlaylist(); }
+        });
         playlistsGrid.appendChild(card);
       });
     })

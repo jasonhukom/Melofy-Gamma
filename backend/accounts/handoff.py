@@ -2,7 +2,7 @@
 1. As the OAuth `state` param for the YouTube-connect redirect (carries the
    Firebase uid + which platform started the flow through Google's
    redirect, without relying on a session cookie surviving the round trip).
-2. On Android only, as a one-time "handoff code" that the app's WebView
+2. As a one-time "handoff code" that a native app's WebView
    redeems (via /api/auth/exchange) after a Chrome Custom Tab completes
    sign-in, to establish a real session cookie inside the WebView's own
    storage — Custom Tabs and the WebView do not share cookies.

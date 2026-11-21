@@ -129,6 +129,19 @@ function wireTopbarSearch() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const windowControls = document.getElementById('desktop-window-controls');
+  if (window.LyraDesktop?.platform === 'win32' && windowControls) {
+    windowControls.hidden = false;
+    windowControls.querySelectorAll('[data-window-action]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const action = button.dataset.windowAction;
+        if (action === 'minimize') window.LyraDesktop.minimize();
+        if (action === 'maximize') window.LyraDesktop.toggleMaximize();
+        if (action === 'close') window.LyraDesktop.close();
+      });
+    });
+  }
+
   PlayerBar.render();
   Player.init('yt-player-mount');
   Sidebar.render();

@@ -71,7 +71,7 @@ def session_login(request):
 @csrf_exempt
 @require_POST
 def mobile_login_handoff(request):
-    """Android only. The Custom Tab that completed Firebase sign-in calls
+    """A native client that completed Firebase sign-in calls
     this with the Firebase ID token (Chrome's cookie jar, not the app's
     WebView, so it can't just rely on a session existing). Returns a
     one-time code the app can redeem from inside its own WebView via the
@@ -92,8 +92,11 @@ def mobile_login_handoff(request):
     except Exception:
         return JsonResponse({"error": "Invalid or expired sign-in token"}, status=401)
 
+    platform = body.get("platform", "android")
+    if platform not in {"android", "desktop"}:
+        return JsonResponse({"error": "Unsupported platform"}, status=400)
     code = handoff.mint(
-        decoded["uid"], platform="android", purpose="login_handoff",
+        decoded["uid"], platform=platform, purpose="login_handoff",
         email=decoded.get("email", ""), display_name=decoded.get("name", ""),
     )
     return JsonResponse({"code": code})
@@ -101,7 +104,7 @@ def mobile_login_handoff(request):
 
 @require_GET
 def session_exchange(request):
-    """Called from inside the Android WebView after the melofy://auth/complete
+    """Called from inside a native app after the melofy://auth/complete
     deep link fires, to establish a real session cookie in the WebView's own
     storage (Custom Tabs and the WebView don't share cookies)."""
     resolved = handoff.resolve(request.GET.get("code", ""), purpose="login_handoff")
@@ -155,6 +158,22 @@ def youtube_connect(request):
 
 
 @require_GET
+def youtube_authorize_url(request):
+    """Create a YouTube authorization URL for native clients to open in a
+    system browser while preserving the signed-in account association."""
+    uid = request.session.get("firebase_uid")
+    if not uid:
+        return JsonResponse({"error": "Sign in first"}, status=401)
+    if not (settings.GOOGLE_OAUTH_CLIENT_ID and settings.GOOGLE_OAUTH_CLIENT_SECRET):
+        return JsonResponse({"error": "YouTube linking is not configured"}, status=503)
+    platform = request.GET.get("platform", "desktop")
+    if platform not in {"android", "desktop"}:
+        return JsonResponse({"error": "Unsupported platform"}, status=400)
+    state_token = handoff.mint(uid, platform=platform, purpose="youtube_connect")
+    return JsonResponse({"url": google_oauth.build_auth_url(state_token)})
+
+
+@require_GET
 def youtube_callback(request):
     if request.GET.get("error"):
         return HttpResponseRedirect("/#/library?youtube=error")
@@ -191,6 +210,12 @@ def youtube_callback(request):
 
     if platform == "android":
         handoff_code = handoff.mint(uid, platform="android", purpose="login_handoff")
+        return HttpResponseRedirect(f"melofy://auth/complete?code={handoff_code}")
+    if platform == "desktop":
+        handoff_code = handoff.mint(
+            uid, platform="desktop", purpose="login_handoff",
+            email=account.email, display_name=account.display_name,
+        )
         return HttpResponseRedirect(f"melofy://auth/complete?code={handoff_code}")
     return HttpResponseRedirect("/#/library?youtube=connected")
 
@@ -252,3 +277,19 @@ def youtube_playlists(request):
     except Exception:
         return JsonResponse({"error": "Could not fetch playlists from YouTube"}, status=502)
     return JsonResponse({"results": playlists})
+
+
+@require_GET
+def youtube_playlist_items(request):
+    account, err = _require_connected_account(request)
+    if err:
+        return err
+    playlist_id = request.GET.get("id", "").strip()
+    if not playlist_id or len(playlist_id) > 128 or any(ch not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-" for ch in playlist_id):
+        return JsonResponse({"error": "Invalid playlist id"}, status=400)
+    try:
+        token = youtube_account.get_valid_access_token(account)
+        songs = youtube_account.fetch_playlist_items(token, playlist_id)
+    except Exception:
+        return JsonResponse({"error": "Could not fetch playlist items from YouTube"}, status=502)
+    return JsonResponse({"results": songs})

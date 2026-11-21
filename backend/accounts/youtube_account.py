@@ -88,3 +88,23 @@ def fetch_playlists(access_token, max_results=25):
             "thumbnail": _thumb(snippet),
         })
     return playlists
+
+
+def fetch_playlist_items(access_token, playlist_id, max_results=50):
+    data = _get("playlistItems", access_token, {
+        "part": "snippet,contentDetails", "playlistId": playlist_id,
+        "maxResults": max_results,
+    })
+    songs = []
+    for item in data.get("items", []):
+        snippet = item.get("snippet", {})
+        video_id = item.get("contentDetails", {}).get("videoId") or snippet.get("resourceId", {}).get("videoId")
+        if not video_id:
+            continue
+        songs.append({
+            "id": video_id,
+            "title": snippet.get("title", ""),
+            "artist": snippet.get("videoOwnerChannelTitle") or snippet.get("channelTitle", ""),
+            "thumbnail": _thumb(snippet),
+        })
+    return songs

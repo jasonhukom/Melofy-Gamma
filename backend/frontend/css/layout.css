@@ -19,6 +19,43 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
+  -webkit-app-region: drag;
+}
+
+.topbar button,
+.topbar input,
+.topbar a,
+.topbar .topbar-account {
+  -webkit-app-region: no-drag;
+}
+
+.desktop-window-controls {
+  display: flex;
+  align-items: stretch;
+  height: calc(var(--topbar-height) + env(safe-area-inset-top, 0px));
+  margin-right: calc(-1 * max(24px, env(safe-area-inset-right, 0px)));
+  -webkit-app-region: no-drag;
+}
+
+.desktop-window-controls[hidden] {
+  display: none !important;
+}
+
+.desktop-window-controls button {
+  width: 46px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.desktop-window-controls button:hover {
+  background: var(--bg-highlight);
+  color: var(--text-primary);
+}
+
+.desktop-window-controls button:last-child:hover {
+  background: #C42B1C;
+  color: #FFFFFF;
 }
 
 .topbar-left {
@@ -564,6 +601,10 @@
     padding: 0 14px;
     height: var(--topbar-height);
     gap: 10px;
+  }
+
+  .desktop-window-controls {
+    display: none !important;
   }
 
   .sidebar {

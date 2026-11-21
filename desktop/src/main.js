@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, Menu, Tray, nativeImage, shell, session } = require('electron');
+const { app, BrowserWindow, Menu, Tray, nativeImage, shell, session, ipcMain } = require('electron');
 const { createAppServer } = require('./server');
 
 // Allow continuous playback & auto-advance between queued YouTube Music tracks.
@@ -20,7 +20,51 @@ let mainWindow = null;
 let tray = null;
 let appServer = null;
 let serverUrl = '';
+let appUrl = '';
 let isQuitting = false;
+let pendingAuthCode = '';
+const DEFAULT_BACKEND_URL = 'https://music.jasonhukom.my.id';
+
+if (process.platform === 'win32' && !IS_SMOKE_VERIFY) {
+  app.setAsDefaultProtocolClient('melofy');
+}
+
+function handleAuthDeepLink(rawUrl) {
+  if (!rawUrl || !rawUrl.startsWith('melofy://auth/complete')) return;
+  let code = '';
+  try { code = new URL(rawUrl).searchParams.get('code') || ''; } catch (_) {}
+  if (!code) return;
+  if (!mainWindow || mainWindow.isDestroyed() || mainWindow.webContents.isLoading()) {
+    pendingAuthCode = code;
+    return;
+  }
+  mainWindow.webContents.executeJavaScript(
+    `window.completeDesktopHandoff ? (window.completeDesktopHandoff(${JSON.stringify(code)}), true) : false`
+  ).then((delivered) => { if (!delivered) pendingAuthCode = code; })
+    .catch(() => { pendingAuthCode = code; });
+}
+
+ipcMain.handle('window:minimize', (event) => {
+  if (mainWindow && event.sender === mainWindow.webContents) mainWindow.minimize();
+});
+ipcMain.handle('window:toggle-maximize', (event) => {
+  if (mainWindow && event.sender === mainWindow.webContents) {
+    if (mainWindow.isMaximized()) mainWindow.unmaximize();
+    else mainWindow.maximize();
+  }
+});
+ipcMain.handle('window:close', (event) => {
+  if (mainWindow && event.sender === mainWindow.webContents) mainWindow.close();
+});
+ipcMain.handle('external:open', (event, rawUrl) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) return;
+  try {
+    const url = new URL(rawUrl);
+    const appHost = new URL(appUrl || DEFAULT_BACKEND_URL).hostname;
+    if (url.protocol !== 'https:' || ![appHost, 'accounts.google.com'].includes(url.hostname)) return;
+    return shell.openExternal(url.href);
+  } catch (_) {}
+});
 
 function resolveIconPath() {
   const candidates = [
@@ -49,7 +93,7 @@ function setupSessionHeaders() {
     (details, callback) => {
       const headers = { ...details.requestHeaders };
       if (!headers.Referer && !headers.referer && serverUrl) {
-        headers.Referer = `${serverUrl}/`;
+        headers.Referer = `${appUrl || serverUrl}/`;
       }
       callback({ requestHeaders: headers });
     }
@@ -147,6 +191,7 @@ function createWindow() {
     minWidth: 420,
     minHeight: 620,
     title: 'Lyra Melofy',
+    frame: process.platform !== 'win32',
     backgroundColor: '#0A0905',
     icon: iconPath || undefined,
     autoHideMenuBar: true,
@@ -170,7 +215,13 @@ function createWindow() {
     mainWindow = null;
   });
 
-  mainWindow.loadURL(serverUrl);
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (!pendingAuthCode) return;
+    const code = pendingAuthCode;
+    pendingAuthCode = '';
+    handleAuthDeepLink(`melofy://auth/complete?code=${encodeURIComponent(code)}`);
+  });
+  mainWindow.loadURL(appUrl);
   if (!IS_SMOKE_VERIFY) {
     createTray(iconPath);
   }
@@ -215,12 +266,19 @@ async function runSmokeVerify() {
   }
 }
 
-app.on('second-instance', () => {
+app.on('second-instance', (_event, commandLine) => {
+  const deepLink = commandLine.find((arg) => arg.startsWith('melofy://auth/complete'));
+  if (deepLink) handleAuthDeepLink(deepLink);
   if (mainWindow) {
     if (!mainWindow.isVisible()) mainWindow.show();
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
   }
+});
+
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleAuthDeepLink(url);
 });
 
 app.on('before-quit', async () => {
@@ -242,6 +300,9 @@ app.whenReady().then(async () => {
   try {
     appServer = createAppServer();
     serverUrl = await appServer.start(0, '127.0.0.1');
+    const configuredBackend = process.env.MELOFY_BACKEND_URL || DEFAULT_BACKEND_URL;
+    appUrl = IS_SMOKE_VERIFY ? serverUrl : configuredBackend.replace(/\/+$/, '');
+    handleAuthDeepLink(process.argv.find((arg) => arg.startsWith('melofy://auth/complete')));
     setupSessionHeaders();
     if (!IS_SMOKE_VERIFY) {
       createMenu();

@@ -5,6 +5,8 @@
    nothing. Exposes window.FirebaseAuth for the non-module app code. */
 const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
 const IS_ANDROID = /MelofyAndroidApp/.test(navigator.userAgent);
+const IS_DESKTOP = !!(window.LyraDesktop && window.LyraDesktop.isDesktop);
+const IS_DESKTOP_AUTH = new URLSearchParams(location.search).get('desktop-auth') === '1';
 
 let sdk = null, auth = null, provider = null;
 let serverConfig = { firebase: null, youtubeLinking: false };
@@ -48,6 +50,11 @@ async function signIn() {
   if (!auth) { toast("Sign-in is not set up on this server yet"); return; }
   try {
     if (IS_ANDROID) { await sdk.signInWithRedirect(auth, provider); return; }
+    if (IS_DESKTOP) {
+      await window.LyraDesktop.openExternal(`${location.origin}/?desktop-auth=1`);
+      toast("Finish Google sign-in in your browser");
+      return;
+    }
     const result = await sdk.signInWithPopup(auth, provider);
     await establishSession(result.user);
     toast("Signed in");
@@ -67,6 +74,17 @@ async function signOutEverywhere() {
 
 function connectYouTube() {
   if (!serverConfig.youtubeLinking) { toast("YouTube linking is not set up on this server yet"); return; }
+  if (IS_DESKTOP) {
+    fetch('/api/youtube/authorize-url?platform=desktop', { credentials: 'same-origin' })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Could not start YouTube connection');
+        await window.LyraDesktop.openExternal(data.url);
+        toast('Finish YouTube connection in your browser');
+      })
+      .catch((error) => toast(error.message || 'Could not connect YouTube'));
+    return;
+  }
   window.location.href = `/api/youtube/connect?platform=${IS_ANDROID ? "android" : "web"}`;
 }
 
@@ -82,22 +100,28 @@ window.completeAndroidHandoff = async function (code) {
   if (res.ok) { currentUser = asUser(data); emit(); toast("Signed in"); }
 };
 
+window.completeDesktopHandoff = window.completeAndroidHandoff;
+
 async function init() {
   const ready = await loadFirebase();
   if (ready) {
     try {
       const result = await sdk.getRedirectResult(auth);
       if (result && result.user) {
-        if (IS_ANDROID) {
+        if (IS_ANDROID || IS_DESKTOP_AUTH) {
           const idToken = await result.user.getIdToken();
           const res = await fetch("/api/auth/mobile-handoff", {
-            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken })
+            method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ idToken, platform: IS_ANDROID ? 'android' : 'desktop' })
           });
           const data = await res.json();
           if (res.ok) window.location.href = `melofy://auth/complete?code=${encodeURIComponent(data.code)}`;
           return;
         }
         await establishSession(result.user);
+        return;
+      }
+      if (IS_DESKTOP_AUTH) {
+        await sdk.signInWithRedirect(auth, provider);
         return;
       }
     } catch (e) { /* no pending redirect */ }
