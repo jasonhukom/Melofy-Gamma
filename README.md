@@ -76,7 +76,7 @@ Optionally set in `backend/.env` (copy from `backend/.env.example`):
 2. Firebase Auth (`FIREBASE_API_KEY`, `FIREBASE_AUTH_DOMAIN`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID`, `FIREBASE_SERVICE_ACCOUNT_JSON`): Enables "Sign in with Google".
 3. Google OAuth (`GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `PUBLIC_BASE_URL`): Enables "Connect your YouTube account" (liked videos, subscriptions, playlists, and playlist tracks).
 
-The Windows desktop app opens the production web backend (`https://music.jasonhukom.my.id`) by default so Google sign-in and YouTube account linking use the same configured service as web and Android. Set `MELOFY_BACKEND_URL` to use another deployment. Desktop Google authorization opens in the system browser and returns to the app through the `melofy://` protocol.
+The Windows desktop app opens the production web backend (`https://melofy-gamma.vercel.app`) by default so Google sign-in and YouTube account linking use the same configured service as web and Android. Set `MELOFY_BACKEND_URL` to use another deployment. Desktop Google authorization opens in the system browser and returns to the app through the `melofy://` protocol. Set Vercel's `PUBLIC_BASE_URL` to this hostname for Google OAuth callbacks; use `https://music.jasonhukom.my.id` after the home server and DNS are ready.
 
 YouTube's Data API does not expose a user's watch history. Melofy shows its own recently played list from the current device instead; that list is stored locally and is not the Google account's YouTube history.
 

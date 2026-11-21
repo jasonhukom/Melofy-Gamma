@@ -23,7 +23,7 @@ let serverUrl = '';
 let appUrl = '';
 let isQuitting = false;
 let pendingAuthCode = '';
-const DEFAULT_BACKEND_URL = 'https://music.jasonhukom.my.id';
+const DEFAULT_BACKEND_URL = 'https://melofy-gamma.vercel.app';
 
 if (process.platform === 'win32' && !IS_SMOKE_VERIFY) {
   app.setAsDefaultProtocolClient('melofy');

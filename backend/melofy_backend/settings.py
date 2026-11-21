@@ -122,7 +122,10 @@ GOOGLE_OAUTH_CLIENT_SECRET = os.environ.get("GOOGLE_OAUTH_CLIENT_SECRET", "")
 # Public base URL of this deployment, used to build the OAuth redirect_uri —
 # e.g. https://your-app.vercel.app (no trailing slash). Falls back to
 # localhost for local dev.
-PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "http://127.0.0.1:8000")
+PUBLIC_BASE_URL = os.environ.get(
+    "PUBLIC_BASE_URL",
+    "http://127.0.0.1:8000" if DEBUG else "https://melofy-gamma.vercel.app",
+)
 # The full contents of a Firebase service-account JSON key (see README), used
 # server-side to verify Firebase ID tokens. Stored as one env var (not a
 # file) so it works on serverless hosts like Vercel — never commit the
