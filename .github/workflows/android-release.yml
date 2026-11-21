@@ -135,16 +135,16 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.1.0' }}
-          name: "Lyra Melofy ${{ github.ref_type == 'tag' && github.ref_name || 'v1.1.0' }} (Windows EXE, Android APK & Web)"
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v1.2.0' }}
+          name: "Lyra Melofy ${{ github.ref_type == 'tag' && github.ref_name || 'v1.2.0' }} (Windows EXE, Android APK & Web)"
           body: |
             ## Lyra Melofy — Cross-Platform Release (`.exe`, `.apk`, Web)
 
             Built from commit `${{ github.sha }}` (`${{ github.ref_name }}`).
 
             ### Downloads
-            - **`Lyra-Melofy-Portable-1.1.0.exe`** — Standalone portable Windows `.exe` (no installer required)
-            - **`Lyra-Melofy-Setup-1.1.0.exe`** — Windows installer `.exe` (Start Menu & Desktop shortcuts)
+            - **`Lyra-Melofy-Portable-1.2.0.exe`** — Standalone portable Windows `.exe` (no installer required)
+            - **`Lyra-Melofy-Setup-1.2.0.exe`** — Windows installer `.exe` (Start Menu & Desktop shortcuts)
             - **`Lyra-Melofy-release.apk`** — Signed Android APK (Android 8.0+ / API 26+) with built-in keyless YouTube Music
             - **`Lyra-Melofy-debug.apk`** — Android Debug APK for testing
             - **`Lyra-Melofy-web.zip`** — Django Web App + SPA source bundle
