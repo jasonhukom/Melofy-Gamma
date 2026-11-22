@@ -1,5 +1,6 @@
-# Lyra Melofy
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# <h1 align='center'>Lyra Melofy</h1>
+<h4 align='center'>[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)</h4>
+
 <br>
 A free, YouTube-powered music player with a **Black & Yellow (`#0A0905` / `#FACC15`) UI**,
 concentric sound-wave circle logo, and a **Metrolist-inspired bottom player bar** —
