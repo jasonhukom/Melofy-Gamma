@@ -1,5 +1,5 @@
 # Lyra Melofy
-
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 A free, YouTube-powered music player with a **Black & Yellow (`#0A0905` / `#FACC15`) UI**,
 concentric sound-wave circle logo, and a **Metrolist-inspired bottom player bar** —
 unified in one repository across **Web** (Django + SPA), **Windows Desktop**
