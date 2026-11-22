@@ -6,26 +6,6 @@ concentric sound-wave circle logo, and a **Metrolist-inspired bottom player bar*
 unified in one repository across **Web** (Django + SPA), **Windows Desktop**
 (Electron `.exe`), and **Android** (WebView + embedded local YouTube Music bridge `.apk`).
 
-> **AI Agents:** Read [`AGENTS.md`](AGENTS.md) (and [`CLAUDE.md`](CLAUDE.md)) before making changes for the full architecture and file map across all three platforms.
-
-```
-lyra-melofy/
-├── backend/            Django project — Web API + shared SPA frontend
-│   ├── melofy_backend/ settings, urls, wsgi
-│   ├── core/           keyless ytmusicapi / InnerTube search + random picks
-│   ├── accounts/       Firebase login + YouTube account linking
-│   ├── frontend/       shared single-page app (HTML/CSS/JS)
-│   └── requirements.txt, .env.example, .python-version
-├── desktop/            Electron desktop app (Windows .exe — JavaScript / Node.js)
-│   ├── src/main.js     BrowserWindow, Tray, background playback, clean Chrome UA
-│   ├── src/server.js   embedded HTTP server on 127.0.0.1 serving shared frontend
-│   ├── src/ytmusic.js  keyless YouTube Music InnerTube WEB_REMIX client
-│   └── package.json    electron-builder config (Portable + NSIS Setup .exe)
-├── android/            Android Studio project (.apk — Java + WebView + local YouTube Music server)
-├── figma/              Figma UI kit
-└── .github/workflows/  CI/CD builds for Windows .exe, Android .apk, and Web
-```
-
 ## Architecture across Web, `.exe`, and `.apk`
 
 - **Single shared UI (`backend/frontend/`):** Plain HTML/CSS/JS SPA (no build step required), featuring a black (`#0A0905`) & yellow (`#FACC15`) palette, circular concentric sound-wave branding, Metrolist-inspired 3-zone desktop player bar + floating mobile mini-player card, slidable drawer, inline/floating sound mixer, mobile 5-tab navigation, and persistent YouTube IFrame Player API playback.
